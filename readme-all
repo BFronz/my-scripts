@@ -1,0 +1,639 @@
+ REPORT PROCEDURE
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+### Get Data and some prep work ###
+ - Do Prep Work 
+    Don't need WebTrends data for this. Can be run anytime after 1st of month
+    go to crater:/usr/tnetlogs/wt
+    Run as ./prep-tnet YYMM
+     creates/loads history tables: listings, premiums and covlist
+     cleans bad profile words/phrases (ringer.pl) 
+     updates category registration tables
+     updates mt_profile_history (with tnet,TR and TRD registry data) 
+
+  - Pull WebTrends data when they give the OK to pull. 
+   Go to crater:/usr/tnetlogs/wt/monthly/
+   Change date and run ./mk-site-tnet
+   Go to taurus:/usr/tnet and run ./ld-one-table thomas tnetlogSITEN 
+   Go to taurus:/usr/tnet and run ./ld-one-table thomas newsSITEN 
+   This copys the news & tnet site report tables live
+   Make site report pdf at http://reports.tnt.com/tnetrpt/sitereport.html
+   Make site report pdf at http://reports.tnt.com/news/sitereport.html
+   Send these to Brian
+    
+   Go to crater:/usr/tnetlogs/wt/monthly/
+   Change date and run ./mk-all-tnet-org (might want to run before mk-all-tnet)
+   When complete (takes a while to run), move files to year directory  /usr/tnetlogs/wt/YYYY 
+   cp *.txt /usr/tnetlogs/wt/2010    
+
+  Change date and run ./mk-all-tnet
+  Run ./checkfiles.pl YYMM  to check for missing files  
+  This will take a while so start "Load Org drill down" below
+   
+ - Load Org drill down (data by site, acct and heading)
+   Run this while pulling down the rest of the TNET data   
+
+   NOTE: IF RUN MULTIPLE TIMES, SCRIPTS MUST BE RUN WITH DELETE OPTION FIRST
+  
+   Check import results carefully after each script 
+   To check: select date,count(*) from tnetlogORGD10  group by date;
+ 
+   Run ./load-org-drill-tnet-site.pl YYMM  (loads TNET site wide orgs file: orgDomainVisitsDrillYYMM.txt)
+   Run ./load-org-drill-tnet-adv.pl  YYMM  (loads TNET orgs by acct file: advOrgVisitsDrillYYMM.txt)
+        The following proc gave us problems in 1109 because of bad data "\".  
+        This proc now accounts for it, and removes it. 
+        Check the results very carefully.
+   Run ./load-org-drill-tnet-cat.pl  YYMM  (loads TNET orgs by categories file OrgVisitsCatDrillYYMM.txt)
+   Run ./load-org-drill-news.pl   YYMM     (loads news)                      
+   Run ./load-org-extra.pl YYMM (loads Tnet, TGR & News Org data w/o geo file tnetlogORGNYY.txt)  	 
+        Note: May have to run the above more than once per month if they add many isps/blocks to flag 
+        so these can be run as ./script YYMM DELETE takes forever, better off doing it manually    
+   Run ./load-org-flg YYMM   (loads bad and isp )     
+   Run ./update-orgs.pl YYMM
+   Run ./mk-orgbad.pl        (makes bad/isp organization include file)  
+    copy orgbad.inc to taurus:/www/tnetrpt/tnetrpt/inc   
+
+   New: org-run-all 
+     runs all org scripts above
+     this will take a while, need to check all imports as they go
+     run as ./org-run-all YYMM 
+ __________________________________________________________
+
+   TNET 
+    Pick up files at ftp.catalognavigator.com (alias for ftp.productnew.com)
+    cd/usr/tnet/wt/catnav
+    sudo ftp: ftp cd/usr/tnet/wt/catnav
+    U: tgramuser P: $tgram$user$
+    Files:
+    ls *{date}.txt (Should see the six files below)  
+     
+    need these files in /usr/tnetlogs/wt/catnav   
+      CATALOG_KEYWORD_SEARCHES_{date}.txt
+      INQUIRIES_{date}.txt      
+      REFERRING_DOMAINS_{date}.txt
+      REFERRING_KEYWORD_SEARCHES_{date}.txt
+      USER_IP_ADDRESSES_{date}.txt
+      CN_ACTIVITY_MONTHLY_{date}.txt
+
+    need copy of CN_ACTIVITY_MONTHLY_{date}.txt in
+       /usr/tnetlogs/wt and  /usr/tnetlogs/wt/catnav
+    
+____________________________________________________________
+     **CAN BE RUN BEFORE FILES ARE READY**
+     New >>> Need to get CAD detail data via and api
+     Run sudo ./get-cad-new.pl start{mm/dd/yyyy} end{mm/dd/yyyy} 
+     in /usr/tnetlogs/wt/monthly
+____________________________________________________________
+  
+    News
+     Get image PDF from Bruce Jenkins (bruce@usabusiness.net)
+     Now get from Audit#'s > Get additional data from Jerome : Unique Visitors, Page views, 
+         Search Industrial Web, Links to tnet Profiles
+     Get contacts (E-mail Sent) from Jeff (jeff@usabusiness.net)
+     Place contacts in /usr/tnetlogs/news/
+____________________________________________________________   
+
+### PROCESS TNET ###  
+taurus:/usr/tnetlogs/wt
+Try to run in this order if you can't see Bob
+                   
+ - Load Supplier Report summary table - (check output after each run)     
+    Run ./load-artu.pl YYMM
+    Run ./load-artu-counts.pl YYMM (updates "Email Sent.." our contact data)
+
+ - Load Asset Link data
+    Run ./load-alinks.pl YYMM
+    Optional: to check total links vs broken out links run  ./checklinks.pl YYMM 
+    if many problems found in the out put of checklinks.pl, can run this to fix ./checklinks-fix.pl YYMM
+
+ - Load CAD data used in CAD Activity  
+    Run ./load-CAD-md.pl  YYMM
+    Run ./mk-CAD-ip YYMM (loads ip data) 
+    Run ./run-CAD-xls.pl M YYMM  (Makes CC CAD excel for big accts  )
+    #Run ./run-CAD.pl makes CAD PDFs > don't run yet
+ 
+ - Load registry tables (by adv, hd & updates contacts)
+    Run ./mk-reg-all YYMM 
+
+ - Load referer by heading
+    Run ./load-refhead.pl YYMM
+
+ - User Sessions by heading for the month (for t, n and coverages)
+    Run ./load-quick-us.pl YYMM
+ 
+ - Loads PNN data
+    Run ./load-PNN.pl YYMM   
+    Run ./load-PNN-conv.pl YYMM
+
+ - Load quick log table for Query Tools
+    Run ./load-quick-log-new.pl  YYMM
+    Run ./load-quick-contacts-new.pl YYMM (updates "Email Sent...")
+   
+ - Site TNET Site report    
+    Run ./load-site-new.pl YYMM
+    Run ./load-topcat.pl YYMM
+           
+ - Extra user session & conversion summary uses in query tools
+    Run ./load-summaryu.pl yy        (year & quarter summary uses at heading)
+    Run ./load-summaryc_new.pl yy q  (year & quarter summary conv at heading) (DON'T FORGET CURRENT QUARTER IN ARGS)
+    Run ./load-summaryc_new-NOCAT.pl yy q  (year & quarter summary conv at heading) (DON'T FORGET CURRENT QUARTER IN ARGS)
+      (this is a specal table for catalog view exclusions) 
+
+
+ - Run some counts for scheduler
+   run scheduler-counts.pl YYMM
+
+_______________________________________________________
+ 
+ - Process News Ad Data (run in order 1,2,3) 
+    Check with Jeff(jeff@usabusiness.net) and/or Bruce(bruce@c.net) that the data is 
+    ready to pull 
+    cd /usr/tnetlogs/wt/newsxml
+       
+    Run sudo ./news-get-xml1.pl YYMM
+     Retreives xml, adds newline characters and writes to a local file
+
+    >>>	Check first line of xml output to verify this months date. 
+ 
+    Change date in news-xml-parse2.php.
+    Run  sudo php -q news-xml-parse2.php
+      ls -ltr 
+      Also run mysqlimport -i thomas news_ad_cat{YY}.txt
+
+    Run sudo ./news-get-img3.pl YYMM
+     Gets images
+ 
+    Copy images from crater to taurus     
+     cd taurus:/www/tnetrpt/tnetrpt/imagesx
+     scp crater:/usr/pdf/imagesx/*.* .  
+       
+    Run ./update_news_flag.pl YYMM
+     updates news flags
+_____________________________________________________
+
+ - CATNAV Detail Reports
+    Scripts located in /usr/tnetlogs/wt/catnav
+    Run sudo ./load-files.pl YYMM file
+      for the following files:
+      CATALOG_KEYWORD_SEARCHES
+      CN_ACTIVITY_MONTHLY
+      REFERRING_DOMAINS
+      USER_IP_ADDRESSES
+      REFERRING_KEYWORD_SEARCHES
+      INQUIRIES
+ 
+    Run ./load-inquiries.pl YYMM file
+      file INQUIRIES
+ 
+    Run ./lookup.php  to resolve the ip (MUST HAVE DATE CHANGED FOR EVERY NEW YEAR)
+                     THIS TAKES A LONG TIME TO RUN!
+      (uses file ipsin.txt created in load-files.pl when USER_IP_ADDRESSES is run
+
+    Run sudo mysql thomas < catnav_ipnYY.txt
+      (can verify this is running typing:  sudo mysqladmin pr stat)  
+
+    Run in wt directory ./load-catalog-extra-new.pl YYMM 
+    Check first then 
+       Run mysql thomas < catnavlog.bak2
+  
+    Check for test data, run this query and delete any records that look like "test data":       
+       select company, tgramsid from thomcatnav_summmaryYY where  isactive='yes' and company like '%-test%' and date=yymm   
+
+    Now restore the Profiles Viewed Site Number:
+	select sum(pc) from tnetlogARTU10 where date = 'yymm';
+	update tnetlogSITEN set cv = {above value} where date = 'yymm';
+
+    Makes the category catalog views=total catalog views if category catalog views > total catalog views 
+    Run ./checkcats.pl YYMM
+    check checkcats.txt if ok
+    mysql thomas < checkcats.txt
+
+    To check can run this:          
+    select company, pc, totalpageviews, a.acct from tnetlogARTUYY as a, catnav_summmaryYY as c   
+    where  acct=tgramsid and a.date='YYMM' and a.date=c.date and a.covflag='t' and  isactive='yes' 
+     add this to check if:  having pc = totalpageviews # if this is empty then all is ok
+     add this to check if:  having pc < totalpageviews # if some records then catnav count > webtrends 
+     add this to check if:  having pc > totalpageviews # if some records then webtrends count> catnav
+__________________________________________________
+    **CAN BE RUN BEFORE FILES ARE READY**
+  -  Loads special word table (Crater)
+     located in /usr/tnetlogs/wt
+     Run sudo ./mk-wordhead.pl 
+__________________________________________________
+ 
+  - Load visitor tool data CHECK OUTPUT AFTER EACH RUN >>THIS IS VERY SLOW. TRY TO RUN OFF HRS.
+     located in /usr/tnetlogs/wt/visitor
+     Run ./load-visitor-tool-new.pl YYMM 
+     Run ./mk-word-tables 
+ 
+ - Load Formers tables  CAN TAKE VERY LONG TIME ALSO
+   go to /usr/tnetlogs/wt/formers
+   run  ./mk-formers      
+   Note: Have to adjust code in load-formers-hd.pl after each position change
+    and also look over all scripts at year end/ begining 
+
+ - Check for orphaned rep accounts
+   Go to taurus:/usr/tgrams
+   Run as ./checksales.pl
+   Need  run update seniormap-main-table-update.txt on taurus, crater & libra
+   Follow instructions.
+    
+ - Make TNET Site Report pdf: 
+    Update audited numbers given by Brian/Ken
+    Crater:thomas update tnetlogSITEN  set us=xxx where date=YYMM
+    Rename the pie chart pdf that Thomas supplies to "siteYYMM.pdf"
+    Place in crater:/www/tnetrpt/pie (tnetrpt.c.net/pie/siteYYMM.pdf)
+    Go to: http://rpt.thomasregional.com/tnetrpt/sitereport.html
+    Run month
+    Click on upper right "PDF Version". Save the pdf as "TnetSite-mmyy.pdf"
+    Place TnetSite-YYMM.pdf in taurus:/www/tnetrpt/tnetrpt/site
+ 
+ - TestDrive Report (This can always be run last)
+    Run ./testdrive.pl YYMM
+     Copy output(testdrive_cnts.txt) to orion, libra and taurus (most important) and insert into tgrams
+     mysqlimport -i tgrams testdrive_cnts.txt
+
+  - Create the Advertiser Contact Conversions Report.
+	/usr/tnetlogs/wt/accr
+	Run ./mk-accr YYMM
+	Copy to Orion: 
+	orion:/www/tnetadmin/reports
+	scp:crater:/usr/tnetlogs/wt/accr/accr_rpt_new_YYMM.txt .
+	Add new report to advcontconv.html.
+
+  - For Leandro run each thomas quarter
+    NOTE: Wait for Leandro to emails us when he wants this files. 
+    Creates file of heading, cov and pop based on a given position table
+    run as ./hddollars-one-new.pl YY Q
+
+    Run this query
+    select p.acct, company, heading, p.cov, pop
+    into outfile '/tmp/cid_pop_YY_Q#.txt'
+    from  thompositionYYQ# as p left join tgrams.main as m on p.acct=m.acct
+    where m.adv>'' and pop>0
+    order by p.acct, heading, p.cov;
+
+    The zip (nice zip zipname filename) the 2 files an place in orion:/www/tnetadmin/webtraxs so available as
+    http://admin.tnt.com/webtraxs/category_pop_YY_Q#.zip
+    http://admin.tnt.com/webtraxs/cid_pop_YY_Q#.zip
+
+    Email leandro LPena@tnt.com
+    The files are located here:
+    http://admin.tnt.com/webtraxs/category_pop_YY_Q#.zip
+    http://admin.tnt.com/webtraxs/cid_pop_YY_Q#.zip
+    Go to /www/tnetadmin/webtraxs to see files  
+
+  - Special ReachLocal Report for Leandro
+    Run this script every quarter
+    Run as ./rlocal-special-rpt.pl startdate(yymmdd) enddate(yymmdd)
+    Example: ./rlocal-special-rpt.pl 100101 100531
+    Post at orion:/www/tnetadmin/files for Leandro 
+    Email link to him http://admin.tnt.com/files/rlocal_rpt_startdate(yymmdd)_enddate(yymmdd).txt
+
+  - Optional: Run ./checktables.pl YYMM
+    Checks tables for data on the above TNET scripts
+    
+  - Reach local check for the month. in thomas db
+    run: select report_date as d, count(*) from Campaign_Event_Detail_v2 where date=YYDD group by d;
+    There should be data for almost each day of the month 
+
+  - Estara check for the month. in thomas db
+    run: select DAYOFMONTH(created) as d,count(*) from estara where date=YYDD  group by d;
+    There should be data for almost each day of the month 
+ 
+    
+  TNET QUARTERLY ONLY
+  - Make a dump of new registry data.
+     Run ./mk-regdump-new.pl  (change unix time and file name)
+     Add bottom of http://rpt.thomasregional.com/tnetrpt/regsearch.html
+
+  -  Make CATEGORY SUMMARY REPORT - Quarter Q yyyy  (xls)
+      Posted under "Category Reports" on index page
+      Run ./mk-conv (QUARTERLY ONLY) (Need to change/add dates/quarters in the following:)
+      Runs mk-conv-AL-10 and mk-conv-MZ-10.
+      Format Excel, zip and post to /usr/pdf/zip (Naming Convention: CategorySummaryReportQuarterQ_YYYY.xls)
+        
+  - Every Jan archive reports that are over 3 years old or. Look in config.inc
+    there is an if statement around each date array block, Also block any site reports
+     
+ 
+### PROCESS NEWS ### 
+cd /usr/tnetlogs/news 
+Run all News perl scripts in this order and only run 
+ after  "Load Org drill" &  "TNET Site Report" has been run   
+
+ - News Domains & Orgs
+    Run ./new-domains-orgs.pl YYMM
+  
+ - News Site report 
+   Run ./news-site.pl  YYMM U (add U for insert, first time only) 
+   
+ - News Contacts  (run after both load-PNN.pl load-PNN-conv.pl)
+   Run ./news-contacts-adv.pl YYMM file
+    file = get from Jeff (newsroom) ( usually sentemailMMYY.txt)
+
+ - News Colleague Contacts (newsroom calls the conversion E-Mail Story we call it E-mail Sent to Colleague)
+   (run after both load-PNN.pl load-PNN-conv.pl)
+   Run ./news-contacts-adv-colleague.pl yymm colleaguefile
+    file = get from Jeff (newsroom)  
+  
+  
+ - Add additional data from audit # (use to be Jerome) and plug in newsSITEN table    
+     Unique visitors (uvisits)
+     Page Views (pageviews)
+     Search Industrial Web (search_indweb)
+     Links to tnet Profiles (links_tnet_prof)
+
+ - Add additional data from Bruce Jenkins and plug in newsSITEN table  
+    companyads       (Company Ad Impressions)
+    spon_cat_imp     (Sponsored Category Impressions)
+    cat_tile_ad_imp  (Category Tile Ad Impressions)
+  
+     Definitions:
+     Company Full Story Banner Ads 
+     Company Ad Impressions  
+     Large squares in center column advertised by company
+
+     Center Banner Ads
+     Sponsored Category Impressions
+     Category sponsorships (wide)
+ 
+     Right Column Banner Ads 
+     Category Tile Ad Impressions
+     Right column ads
+
+ - Make News Site Report pdf:
+    Update audited numbers given by Brian/Ken
+    Crater:thomas update newsSITEN  set field=xxx where date=YYMM
+    Rename the pie chart pdf that Thomas supplies to "siteYYMM.pdf"
+    Place in crater:/www/news/pie (tnetrpt7.c.net/pie/newssiteYYMM.pdf)
+    Go to: http://rpt.thomasregional.com/news/sitereport.html
+    Run month
+    Click on upper right "PDF Version". Save the pdf as "NewsSite-YYMM.pdf"
+    Place NewsSite-YYMM.pdf in taurus:/www/tnetrpt/news/site
+___________________________________________________
+   **CAN BE RUN BEFORE FILES ARE READY**
+ - Process news ad reverse IP reporting  
+   go to adweb.news.c.net pull view & click data
+   files in /mnt/adweb/archive_table
+   ls -ltr
+   files look like: archive_reportclicks_DATE.txt  & archive_reportviews_dATE.txt 
+   place on server rpt.news.c.net in /mnt/bob/adclicks & /mnt/bob/adviews
+   in /mnt/bob process load-adfiles1.pl, load-adfiles2.pl, load-adfiles3.php, load-adfiles4.pl
+   head each script for directions
+   when done dump tables in db bob: adcvYYMM & adipYYMM an place in taurus:thomas
+   also import adcvmaster.txt
+__________________________________________________
+    **CAN BE RUN BEFORE FILES ARE READY**
+  - Process  News Letter Ad data in wt/adxtenit 
+    change date in script and run wt/adxtenit   
+    copy images from crater:/usr/pdf/imagesx/newsletter to taurus:/usr/pdf/imagesx/newsletter  
+    (Select images from current month, Bob must move images)         
+
+
+  - Optional: Run ./checktables-news.pl YYMM
+    Checks tables for data on the above NEWS scripts
+
+ - Dump tables news_conversions{YY}  and tnetlogPNN{YY} 
+    nice mysqldump -T ${DIR} ${DB} ${TABLE}
+    The scp both sql & txt Orion:/www/tnetadmin/files
+    Example:
+    nice mysqldump -T /tmp thomas news_conversions10
+    nice gzip /tmp/news_conversions10*
+    scp /tmp/news_conversions10*  orion:/www/tnetadmin/files
+    rm -rf /tmp/news_conversions10*
+
+
+NEWS YEAR-END REPORT ONLY:
+	modify /www/news/inc/sitereport_convy.inc
+	change table names - news_orgYY to correct year
+
+### Once reports are given OK by Brian/Ken
+ 
+ - Turn reports on in config.inc file in tnetrpt, tgr & news
+    Use "if( ereg("Super_User", $sm_usergroups)" so Brian/Ken can check
+    Add default date:  $logdate="MYYMM"
+    Add to array:      $RDATE["MYYMM"]
+    Also "controls quarter columns and ranked columns" in
+      quickreportnew.html (note: this needs work at end of year)
+    Make "Year to Date" live
+    !NEW! >> Change Bulk Order Report Dashboard  program dates
+  
+ - Turn on Site Reports - /www/tnetrpt/inc/index_new.inc 
+ 
+ - Turn on Client Center reports
+    orion:/www/tnetcc/inc/reports.inc
+    Test at: http://cc.tnt.com/reports/cmgindex.html?cid=1102844
+    !NEW! >> Add dates in Orion:/www/tnetcc/inc/config_rpt.inc 
+ 
+ - Scheduler - Get date to run from Brian/Ken
+    crater: /usr/scheduler
+    Follow readme there
+    Tool to check pdf file sizes located at taurus:/usr/tnet/checkpdfs.pl
+      change statedate & report type 
+   
+ - Bounced/Bad Email Report: Change $datelabel in admin/emailcheck.html after adding bounce report.  
+
+ - Before Every NEW RANK! (4 times a year)
+    This is handled by R with the weekly reload and is here for imformation
+    Located in /usr/tgrams/readme
+    Run ./mk-rank-new YY Q
+    Makes and loads in thomas, a copy of position table
+    Thomas Quarters: Feb May Aug nov
+ 
+
+Contacts:
+ Jerome Shaver JShaver@tnt.com 
+ Bruno Moretzsohn BMoretzsohn@tnt.com
+ David Millrod dmillrod@technologyleaders.com 
+ Jeff jeff@opensourceonline.com
+ Bruce Jenkins bruce@c.net
+ 
+Site Report Names
+ TnetSite-0704.pdf 
+ NewsSite-0704.pdf
+ TgrSite-0704.pdf
+
+
+To shorten Site Report PDF:
+/www/tnetrpt/inc/sitereport_conv.inc
+/www/tgr/inc/sitereport_conv.inc
+remove the comments from 
+//$TESTONLY=1;
+
+Turning on sites:
+
+Turn on Client Center reports:
+Orion:/www/tnetcc/inc/reports.inc
+
+Turn on ALL BUT site reports:
+/www/tnetrpt/inc/config.inc (search for 9976)
+/www/tgr/inc/config.inc (search for 9976)
+
+Turn on Site Reports for all:
+Copy finished reports to ORACLE:/www/newreports/tnetrpt/pdf
+ORACLE:/www/newreports/news/pdf
+ORACLE:/www/newreports/tgr/pdf
+Turn live in:		
+/www/tnetrpt/inc/index_new.inc
+
+
+After Brian has given his final blessing for all reports, 
+run the database syncing scripts:
+taurus:/usr/tnet/
+monthly-news YYMM
+monthly-tgr YYMM
+monthly-tgri YYMM
+monthly-tnet1 YYMM
+monthly-tnet2 YYMM
+monthly-tnet3 YYMM
+ 
+# To make room on Crater after all processing is completed
+ Go to crater:/usr/tnetlogs/wt
+ run: mysql thomas < delete
+ This will delete data from set up tables, should gain about 7G  
+
+  
+# Process Scheduler Bad, Change and Remove emails in to tables on taurus and Mailboxes 
+ After notification (via email from Rich's group) of location of scheduler mailing info 
+ go to taurus /usr/scheduler_new/mailings
+ place add.ls, change.ls and remove.ls in YYMM folder
+ run run as ./load-data.pl YYMM bad 
+ run as ./load-data.pl YYMM rmv
+ run as ./load-data.pl YYMM chg
+
+ go to crater /usr/tnetlogs/wt/parsembox
+ load manual.mbox, passon.mbox and speical.mbox in parsembox directory
+ run ./parse-mbox.pl YYMM manual
+ run ./parse-mbox.pl YYMM passon
+ run ./parse-mbox.pl YYMM speical
+     
+ CHECK!!! the files for anything strange, edit and send txt files crated to Brian
+ 
+
+
+
+### COPY DATA TO TAURUS ###
+ 
+
+CONTACTS
+TGR email
+Timothy Little
+TLittle@ThomasGlobal.com
+
+Thomas News contact data
+Jeff Chamberlain
+jeff@c.net
+
+News PDF
+Bruce Jenkins
+bruce@c.net
+
+Audit numbers
+NLewis@tnt.com
+
+CAD files/problems
+Knudsen, Mark" MKnudsen@tnt.com
+Nevsky, Georgy (Consultant) GNevsky@tnt.com
+Holcomb, Andra  AHolcomb@tnt.com
+
+Catalog Navigator
+Surdykowski, Lester LSurdykowski@tnt.com
+Knudsen, Mark  MKnudsen@tnt.com
+Nevsky, Georgy (Consultant) GNevsky@tnt.com
+
+
+select salesman,sum(if(rpt_type='M',1,0)) as m,
+sum(if(rpt_type='Q',1,0)) as q, 
+sum(if(rpt_type='Y',1,0)) as y
+from reports_sch_rpt where hold='' group by salesman;
+ 
+FOR TGR NUMBERS:
+select salesman,sum(if(rpt_type='M',1,0)) as m, sum(if(rpt_type='Q',1,0)) as q,  
+sum(if(rpt_type='Y',1,0)) as y from reports_sch_rpt where hold='' and contents like '%G' group by salesman;
+
+
+
+//////// ALL Report Merge Table SQL /////
+
+create table tnetlogARTU (
+date varchar(4) NOT NULL default '',
+  acct bigint(20) NOT NULL default '0',
+  covflag char(2) NOT NULL default '',
+  us int(11) NOT NULL default '0',
+  pv int(11) NOT NULL default '0',
+  pc int(11) NOT NULL default '0',
+  ln int(11) NOT NULL default '0',
+  mi int(11) NOT NULL default '0',
+  ca int(11) NOT NULL default '0',
+  ec int(11) NOT NULL default '0',
+  mt int(11) NOT NULL default '0',
+  tr int(11) NOT NULL default '0',
+  se int(11) NOT NULL default '0',
+  fi int(11) NOT NULL default '0',
+  nw int(11) NOT NULL default '0',
+  cl int(11) NOT NULL default '0',
+  cv int(11) NOT NULL default '0',
+  cd int(11) NOT NULL default '0',
+  lc int(11) NOT NULL default '0',
+  ce int(11) NOT NULL default '0',
+  ci int(11) NOT NULL default '0',
+  KEY date (date),
+  KEY acct (acct),
+  KEY covflag (covflag) )  
+ENGINE=MERGE UNION=(tnetlogARTU07,tnetlogARTU08,tnetlogARTU09,tnetlogARTU10) INSERT_METHOD=LAST;
+
+create table qlogY  (
+  date varchar(4) NOT NULL default '',
+  acct bigint(20) NOT NULL default '0',
+  heading bigint(20) NOT NULL default '0',
+  covflag char(2) NOT NULL default '',
+  us int(11) NOT NULL default '0',
+  cd int(11) NOT NULL default '0',
+  cl int(11) NOT NULL default '0',
+  ec int(11) NOT NULL default '0',
+  em int(11) NOT NULL default '0',
+  lw int(11) NOT NULL default '0',
+  mi int(11) NOT NULL default '0',
+  mt int(11) NOT NULL default '0',
+  pc int(11) NOT NULL default '0',
+  pv int(11) NOT NULL default '0',
+  lc int(11) NOT NULL default '0',
+  PRIMARY KEY  (date,acct,heading,covflag),
+  KEY date (date),
+  KEY acct (acct),
+  KEY heading (heading),
+  KEY covflag (covflag) )
+  ENGINE=MERGE UNION=(qlog07Y,qlog08Y,qlog09Y, qlog10Y ) INSERT_METHOD=LAST;
+  
+CREATE TABLE tnetlogPNN (
+  date varchar(4) NOT NULL default '',
+  acct bigint(20) NOT NULL default '0',
+  storyviews int(11) NOT NULL default '0',
+  ecomp int(11) NOT NULL default '0',
+  estory int(11) NOT NULL default '0',
+  press int(11) NOT NULL default '0',
+  linksweb int(11) NOT NULL default '0',
+  PRIMARY KEY  (date,acct))
+  ENGINE=MERGE UNION=(tnetlogPNN07,tnetlogPNN08,tnetlogPNN09,tnetlogPNN10 ) INSERT_METHOD=LAST;
+  
+CREATE TABLE news_ad_cat (
+  date varchar(4) NOT NULL default '',
+  Advertiser varchar(100) NOT NULL default '',
+  AdvertiserID int(11) NOT NULL default '0',
+  AdvertiserCid int(11) NOT NULL default '0',
+  Campaign varchar(100) NOT NULL default '',
+  CampaignID int(11) NOT NULL default '0',
+  CampaignType varchar(100) NOT NULL default '',
+  BannerID int(11) NOT NULL default '0',
+  BannerCategory varchar(100) NOT NULL default '',
+  BannerImageURL varchar(255) NOT NULL default '',
+  BannerViews int(11) NOT NULL default '0',
+  BannerClicks int(11) NOT NULL default '0',
+  badimg char(1) NOT NULL default '',
+  PRIMARY KEY  (date,AdvertiserCid,CampaignID,BannerID),
+  KEY BannerCategory (BannerCategory),
+  KEY badimg (badimg))
+  ENGINE=MERGE UNION=(news_ad_cat07,news_ad_cat08,news_ad_cat09,news_ad_cat10 ) INSERT_METHOD=LAST;
+  
+  

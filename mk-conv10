@@ -1,0 +1,16 @@
+#!/bin/sh
+#
+# Makes conversion report, Modify perl scripts, run, open in Excel, format zip and post
+# Run each quarter
+
+date
+ 
+echo ""
+echo "mk-conv-AL-10"
+./mk-conv-AL-10.pl
+ 
+echo "mk-conv-MZ-10"
+echo ""
+./mk-conv-MZ-10.pl
+
+date

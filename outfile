@@ -1,0 +1,191 @@
+#!/bin/sh
+#
+#
+     
+ 
+FILE="sept2107ads.txt"
+rm -f ${FILE}   
+echo "Advertiser	AdvertiserID	AdvertiserCid	Campaign	CampaignID	CampaignType	BannerID	BannerCategory	BannerImageURL	BannerViews	BannerClicks" >>  ${FILE}
+echo "select Advertiser,AdvertiserID,AdvertiserCid,Campaign,CampaignID,CampaignType,BannerID,BannerCategory,BannerImageURL,BannerViews,BannerClicks from news_ad_cat where date=1709 "  |  mysql -As thomas >> ${FILE}
+exit;  
+
+
+
+FILE="sso_profile2.txt"
+rm -f ${FILE}   
+echo "select * from sso_profile where jobfunction>'' "  |  mysql -As tgrams >> ${FILE}
+exit; 
+
+
+FILE="reg-visitors1607-1706.txt"
+rm -f ${FILE}
+echo "org       jobfunction        industry        city        state        zip"   > ${FILE}
+echo "select t.org, jobfunction, t.industry, t.city, t.state, t.zip from tnetlogORGDAllM as t
+left join tgrams.sso_profile  as p on t.org=p.company 
+where t.date in ('1607','1608','1609','1610','1611','1612','1701','1702','1703','1704','1705','1706')
+and  (t.longitude='0.0001' && t.latitude='0.0001') 
+group by t.org, t.city, t.state, t.zip "  |  mysql -As thomas >> ${FILE}
+exit;  
+
+FILE="tnetlogORGD17_05-1279956.txt"
+rm -f ${FILE}   
+echo "org	state	industry	subindustry"   > ${FILE} 
+echo "select org, state,industry, subindustry from tnetlogORGD17_05 where date = '1705' and acct=1279956 order by org "  |  mysql -As thomas >> ${FILE}
+exit; 
+
+
+
+FILE="CategoryFamilySpendReportTotals-new.txt"
+rm -f ${FILE}  
+echo "family_id	taxonomy_family_name	pop_dollars	compcounts	advertisers	spend_minimum"   > ${FILE} 
+echo "SELECT * FROM taxonomy.category_family_counts"  |  mysql -As thomas >> ${FILE}
+exit; 
+
+
+
+
+FILE="tnetlogORGCATD17_04W";
+rm -f ${FILE}
+echo "SELECT * FROM tnetlogORGCATD17_04W"  |  mysql -As thomas >> ${FILE}
+exit;
+
+
+
+FILE="ad-dollars-report-march-2016.txt";
+rm -f ${FILE}    
+echo "Account Number	Account Name	Category Dollars	Total Dollars">> ${FILE}
+echo "select acct, company,  pop_dollars, all_dollars from  category_family_report  where all_dollars>0 group by acct order by company "  |  mysql -As taxonomy >> ${FILE}
+exit;
+    
+
+FILE="industrymap_new.txt";
+rm -f ${FILE}
+echo "select '', industry,subindustry from  tnetlogORGCATD16M where length(subindustry)>2 and subindustry not like '2%' group by industry, subindustry"  |  mysql -As thomas >> ${FILE} 
+ 
+exit;
+
+exit;
+FILE="tealium_test.txt";
+rm -f ${FILE}
+echo "Account_Number	Account_Name	Advertiser_Y_N	Quantity_of_Co_Org_Names_on_Display	Quantity_of_ISP_Names_on_Display	Quantity_of_Registered_User_Names_on_Display	User_Sessions	All_Profile_Views	All_Links_to_Website	Profile_Views_at_Categories	Links_to_Websites_at_Categories	tnet_RFIs_Categories	Links_to_Catalog_CAD_at_Categories	On_tnet_Catalog_Page_Views_at_Categories	Sum_of_Conversions_at_a_Category	Sum_of_Conversions_not_at_a_Category	Quantity_of_Tracked_URL_Links_to_Website	tnet_RFIs_Form_Fills	News_Release_Views	News_Release_Specific_Links_to_Website	Video_Views	Document_Views	Image_Views	Social_Media_Links	Profile_Print_Requests	Map_Location_Views	Links_to_Catalog_CAD	Flat_Page_Views	Flat_RFI_Count	Flat_User_Sessions	Flat_Search_Engine_Referrals	Flat_Asset_Downloads__Views	Flat_Printed_Pages	Flat_Emailed_Pages	Flat_Saved_to_Favorites	Flat_Total_Count_Product_Service_Line_Views	Flat_Total_Count_of_Captured_Referring_Keywords	Flat_Quantity_of_Co_Org_Names_on_Display	Flat_Quantity_of_ISP_Names_on_Display	date	source"   >> ${FILE}
+echo "SELECT * FROM  tealium_test ORDER BY Account_Name, date"  |  mysql -As thomas >> ${FILE}
+
+exit;
+
+FILE="tnetlogORGD16_10.txt";
+rm -f ${FILE}
+echo "select org, sum(cnt) as cnt, city, country, state, zip, domain, isp, block, latitude, longitude, ip from thomtnetlogORGD16_10 where acct in (149568,149567) 
+     and orgid>'' and block!='Y' and date='1610' group by org, city, state, zip order by org"  |  mysql -As thomas >> ${FILE}
+
+
+
+FILE="tnetlogORGD16_10_test.txt";
+rm -f ${FILE}
+echo "select org, sum(cnt) as cnt, city, country, state, zip, domain, isp, block, latitude, longitude, ip from thomtnetlogORGD16_10_test where acct in (149568,149567) 
+     and orgid>'' and block!='Y' and date='1610' group by org, city, state, zip order by org"  |  mysql -As thomas >> ${FILE}
+
+ 
+
+
+exit;
+ 
+FILE="tnetlogORGDWIZ_addback.txt";
+rm -f ${FILE}
+echo "select 
+date,acct,org,domain,country,city,state,zip,                                                  
+cnt,isp,block,orgid,oid,ip,naics,primary_sic,countrycode,dunsnum,domestichqdunsnumber,         
+hqdunsnumber,gltdunsnumber,countrycode3,audience,audiencesegment,b2b,employeerange,forbes2k    
+,fortune1k,industry,informationlevel,latitude,longitude,phone,revenuerange,subindustry,cov,'NA'
+from tnetlogORGD_addback" |  mysql -As thomas >> ${FILE}
+ 
+exit;
+
+
+
+FILE="Logo-detail-October2015-to-September2016.txt";
+rm -f ${FILE}
+echo "Visitor	Logo	Industry	Subindustry	Revenue Range	City	State	Zip	Tgrams Count	Description"  >> ${FILE} 
+echo "SELECT o.org, CONCAT('http://reports.tnt.com/tnetnbr/logos/',img),   industry,
+      subindustry,revenuerange, city, state, zip, count(distinct acct), description  FROM thomtnetlogORGCATDWIZ AS o, thomwizlogos AS w
+      WHERE  o.org=w.org AND date in ('1510','1511','1512','1601','1602','1603','1604','1605','1606','1607','1608','1609') 
+      AND o.isp='N' AND img>'' 
+      GROUP BY o.org, city, state, zip " |  mysql -As thomas >> ${FILE}
+  
+exit;
+  
+ 
+FILE="news_ad_cat16.bak";
+rm -f ${FILE}
+echo "select * from news_ad_cat16"  | mysql -As thomas >> ${FILE}
+ 
+exit;
+
+FILE="tnetlogORGPSSITE16W.txt";
+rm -f ${FILE}
+echo "select * from tnetlogORGPSSITE16W"  | mysql -As thomas >> ${FILE}
+
+  
+exit;
+
+
+FILE="flat_catnav_ORG14T.txt";
+rm -f ${FILE}
+echo "select * from flat_catnav_ORG14"  | mysql -As thomas >> ${FILE}
+mysqlimport -L thomas  ${FILE}                       
+
+
+FILE="flat_catnav_ORG15T.txt";
+rm -f ${FILE}
+echo "select * from flat_catnav_ORG15"  | mysql -As thomas >> ${FILE}
+mysqlimport -L thomas  ${FILE}                        
+
+exit;
+
+FILE="news_ad_cat15.txt";
+rm -f ${FILE}
+echo "select * from news_ad_cat15 where AdvertiserCid =10111935 and date=1506 and Campaign ='Triad Magnetics - Cid10111935 - Category Sponsorship October 2014'"  | mysql -As thomas >> ${FILE}
+exit;
+
+FILE="maching.txt";
+rm -f ${FILE}
+echo "select distinct headingID  from  tax_headings where FamilyID   ='151461'"  | mysql -As tgrams >> ${FILE}
+
+
+exit; 
+ 
+FILE="tnetlogORGflagExtra.bak";
+rm -f ${FILE}
+echo "select * from  tnetlogORGflagExtra"  | mysql -As thomas >> ${FILE}
+exit;
+
+
+
+FILE="webtraxs_cross.bak";
+rm -f ${FILE}
+echo "select * from  webtraxs_cross"  | mysql -As thomas >> ${FILE}
+exit;
+
+
+
+FILE="tnetlogORGflagExtra.bak";
+rm -f ${FILE}
+echo "select * from tnetlogORGflagExtra"  | mysql -As thomas >> ${FILE}
+exit;
+
+ 
+FILE="preprocessing.txt";
+rm -f ${FILE}
+echo "acct	visitor	adv	isp	block	tinid"  > ${FILE}
+echo "select acct,org,adv,isp,block,tinid from thomtnetlogORGD15_03_test where tinid>'' order by acct,tinid"  | mysql -As thomas >> ${FILE}
+  
+FILE="postprocessing.txt";
+rm -f ${FILE}
+echo "acct	visitor	adv	isp	block	tinid"  > ${FILE}
+echo "select acct,org,adv,isp,block,tinid from thomtnetlogORGD15_03_test2 where tinid>'' order by acct,tinid"  | mysql -As thomas >> ${FILE}
+
+echo "Done...";
+exit;
+
+
+
+ 

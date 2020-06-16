@@ -1,0 +1,67 @@
+#!/bin/sh
+# 
+  
+
+
+FDATE=1306
+echo ""
+echo "Date: ${FDATE}"
+echo ""
+./load-org-drill-tnet-cat.pl ${FDATE} 
+echo ""
+echo "------------------------------------" #
+
+FDATE=1305
+echo ""
+echo "Date: ${FDATE}"
+echo ""
+./load-org-drill-tnet-cat.pl ${FDATE} 
+echo ""
+echo "------------------------------------" #
+ 
+
+FDATE=1304
+echo ""
+echo "Date: ${FDATE}"
+echo ""
+./load-org-drill-tnet-cat.pl ${FDATE} 
+echo ""
+echo "------------------------------------" #
+
+
+FDATE=1303
+echo ""
+echo "Date: ${FDATE}"
+echo ""
+./load-org-drill-tnet-cat.pl ${FDATE} 
+echo ""
+echo "------------------------------------" #
+
+
+FDATE=1302
+echo ""
+echo "Date: ${FDATE}"
+echo ""
+./load-org-drill-tnet-cat.pl ${FDATE} 
+echo ""
+echo "------------------------------------" #
+
+
+
+FDATE=1301
+echo ""
+echo "Date: ${FDATE}"
+echo ""
+./load-org-drill-tnet-cat.pl ${FDATE} 
+echo ""
+echo "------------------------------------" #
+
+
+echo ${FDATE} | mail -s "Script load-get-cat-all finished for ${FDATE}   " robertf@c.net
+
+echo "Done..."
+echo ""
+
+
+ 
+

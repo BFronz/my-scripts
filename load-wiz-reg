@@ -1,0 +1,42 @@
+#!/bin/sh
+#
+
+
+
+if [ -z $1 ]
+ then
+ echo ""
+ echo "Missing date: yymm"
+ echo ""
+ exit;
+fi
+
+FDATE=$1
+YR=${FDATE:0:2}
+MON=${FDATE:2:2}
+DB="thomas"
+
+
+# ADVERTISER
+echo ""
+echo "${FDATE} Advertiseter"
+TABLE="tnetlogREG${YY}"     
+mysql -Af thomas -e "DELETE FROM  tnetlogORGSITEDREGW WHERE date='${FDATE}' ";
+      
+mysql -Af ${DB} -e "INSERT INTO  tnetlogORGSITEDREGW 
+                     (date, acct, org, domain, country, city, state, zip, cnt, isp, block, orgid, oid, ip, naics, primary_sic, countrycode,
+		     dunsnum, domestichqdunsnumber, hqdunsnumber, gltdunsnumber, countrycode3, audience, audiencesegment, b2b,employeerange, forbes2k, fortune1k, industry, informationlevel, latitude, longitude, phone, revenuerange, subindustry, cov)
+
+                     SELECT date, acct, org, domain, country, city, state, zip, cnt, isp, block, orgid, oid, ip, naics,  primary_sic, countrycode,
+                     dunsnum, domestichqdunsnumber, hqdunsnumber, gltdunsnumber, countrycode3, audience, audiencesegment, b2b,employeerange, forbes2k, fortune1k, industry, informationlevel, latitude, longitude, phone, revenuerange, subindustry, cov
+                     FROM ${TABLE)  "
+
+
+
+     
+
+echo ""
+echo "Done..."
+exit;
+
+

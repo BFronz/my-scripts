@@ -1,0 +1,20 @@
+#!/bin/sh
+# 
+#
+ 
+LABEL="Webtraxs Cross - LOR"
+ 
+echo "Running load-webtraxs1.pl"
+./load-webtraxs1.pl
+
+echo "Running load-webtraxs2.pl"
+./load-webtraxs2.pl
+
+echo "WT-clean-ISP-DELETE-new.pl" 
+./WT-clean-ISP-DELETE-new.pl
+ 
+
+echo "update thomwebtraxs_cross set vid=md5(concat(acct,visitor,city,state,country))" | mysql -As thomas 
+
+            
+echo ${LABEL} | mail -s "Script load-webtraxs has finished" robertf@c.net

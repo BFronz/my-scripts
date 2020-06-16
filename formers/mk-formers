@@ -1,0 +1,47 @@
+#!/bin/sh
+# 
+# Loads all formers tables 
+# Will have to adjust scripts each YEAR and load-formers-hd.pl each Thomas (position) QUARTER & YEAR.  
+# run as ./mk-formers
+
+date
+
+source /usr/wt/reload.sh
+
+UD="`date "+%s"`"    
+ 
+# load former main table
+echo ""
+echo "load-formers-main"
+./load-formers-main.pl    
+ 
+# load former us & conv **
+echo ""
+echo "load-formers-total"
+./load-formers-total.pl     
+ 
+# update former_main fields conv after, conv before & conv percent **
+echo ""
+echo "load-formers-diff" 
+./load-formers-diff.pl  
+
+# load former us, conv pop at headings
+echo ""
+echo "load-formers-hd"
+./load-formers-hd.pl
+
+# load former visitor **
+echo ""
+echo "load-formers-visitor" 
+./load-formers-visitor.pl
+
+# update former main table. No need to rerun old stuff each quarter
+echo "update formers_main set lastmod=$UD where lastmod=0 " | mysql -As thomas 
+
+date
+
+echo "Done";
+
+# select yymm,count(*) from formers_hd  group by yymm;       
+# select yymm,count(*) from formers_total group by yymm      
+# select yymm,count(*) from formers_visitor  group by yymm;  

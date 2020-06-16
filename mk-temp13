@@ -1,0 +1,82 @@
+#!/bin/sh
+#
+
+#SCRIPT="load-org-drill-tnet-site-new.pl";
+#SCRIPT="load-org-drill-tnet-cat.pl"; 
+#SCRIPT="load-org-drill-news-temp.pl";
+#SCRIPT="load-org-drill-news.pl";
+#SCRIPT="load-org-drill-tnet-flatcatnav.pl";
+#SCRIPT="load-org-drill-PS-adv.pl";
+#SCRIPT="load-org-drill-tnet-cat-wiz.pl"; 
+SCRIPT="load-org-drill-tnet-adv.pl";
+      
+echo "${SCRIPT}";
+echo ""
+   
+nice gunzip /usr/tnetlogs/wt/2013/advOrgVisitsDrillCovNewReg-1301.txt.gz
+./${SCRIPT} 1301
+nice gzip /usr/tnetlogs/wt/2013/advOrgVisitsDrillCovNewReg-1301.txt
+rm -f tnetlogORGD13_01.txt
+  
+nice gunzip /usr/tnetlogs/wt/2013/advOrgVisitsDrillCovNewReg-1302.txt.gz
+./${SCRIPT} 1302
+nice gzip /usr/tnetlogs/wt/2013/advOrgVisitsDrillCovNewReg-1302.txt
+rm -f tnetlogORGD13_02.txt
+
+nice gunzip /usr/tnetlogs/wt/2013/advOrgVisitsDrillCovNewReg-1303.txt.gz
+./${SCRIPT} 1303
+nice gzip /usr/tnetlogs/wt/2013/advOrgVisitsDrillCovNewReg-1303.txt
+rm -f tnetlogORGD13_03.txt
+
+nice gunzip /usr/tnetlogs/wt/2013/advOrgVisitsDrillCovNewReg-1304.txt.gz
+./${SCRIPT} 1304
+nice gzip /usr/tnetlogs/wt/2013/advOrgVisitsDrillCovNewReg-1304.txt
+rm -f tnetlogORGD13_04.txt
+
+nice gunzip /usr/tnetlogs/wt/2013/advOrgVisitsDrillCovNewReg-1305.txt.gz
+./${SCRIPT} 1305
+nice gzip /usr/tnetlogs/wt/2013/advOrgVisitsDrillCovNewReg-1305.txt
+rm -f tnetlogORGD13_05.txt
+
+nice gunzip /usr/tnetlogs/wt/2013/advOrgVisitsDrillCovNewReg-1306.txt.gz
+./${SCRIPT} 1306
+nice gzip /usr/tnetlogs/wt/2013/advOrgVisitsDrillCovNewReg-1306.txt
+rm -f tnetlogORGD13_06.txt
+
+nice gunzip /usr/tnetlogs/wt/2013/advOrgVisitsDrillCovNewReg-1307.txt.gz
+./${SCRIPT} 1307
+nice gzip /usr/tnetlogs/wt/2013/advOrgVisitsDrillCovNewReg-1307.txt
+rm -f tnetlogORGD13_07.txt
+
+nice gunzip /usr/tnetlogs/wt/2013/advOrgVisitsDrillCovNewReg-1308.txt.gz
+./${SCRIPT} 1308
+nice gzip /usr/tnetlogs/wt/2013/advOrgVisitsDrillCovNewReg-1308.txt
+rm -f tnetlogORGD13_08.txt
+
+nice gunzip /usr/tnetlogs/wt/2013/advOrgVisitsDrillCovNewReg-1309.txt.gz
+./${SCRIPT} 1309
+nice gzip /usr/tnetlogs/wt/2013/advOrgVisitsDrillCovNewReg-1309.txt
+rm -f tnetlogORGD13_09.txt
+
+nice gunzip /usr/tnetlogs/wt/2013/advOrgVisitsDrillCovNewReg-1310.txt.gz
+./${SCRIPT} 1310
+nice gzip /usr/tnetlogs/wt/2013/advOrgVisitsDrillCovNewReg-1310.txt
+rm -f tnetlogORGD13_10.txt
+
+nice gunzip /usr/tnetlogs/wt/2013/advOrgVisitsDrillCovNewReg-1311.txt.gz
+./${SCRIPT} 1311
+nice gzip /usr/tnetlogs/wt/2013/advOrgVisitsDrillCovNewReg-1311.txt
+rm -f tnetlogORGD13_11.txt 
+
+nice gunzip /usr/tnetlogs/wt/2013/advOrgVisitsDrillCovNewReg-1312.txt.gz
+./${SCRIPT} 1312
+nice gzip /usr/tnetlogs/wt/2013/advOrgVisitsDrillCovNewReg-1312.txt
+rm -f tnetlogORGD13_12.txt  
+
+echo ${SCRIPT} | mail -s "Script ${SCRIPT} for 1312 finished." robertf@c.net 
+
+echo "Done...";
+
+
+
+ 

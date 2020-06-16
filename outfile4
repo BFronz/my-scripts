@@ -1,0 +1,92 @@
+#!/bin/sh
+#
+#
+
+
+FILE="position.txt";
+echo "select * from  tgrams.position"   | mysql -As thomas > ${FILE}
+echo " ${FILE} Done...";
+exit;
+
+  
+FILE="CustomQuotesRFIApril2017.txt"
+echo "${FILE}"
+rm -f ${FILE}
+echo "registered as	 id	 acct	 company	 created	 ipaddr	 tinid	 subject	email	 heading"  > ${FILE}
+echo "
+SELECT p.company, id, c.acct, m.company, from_unixtime(c.created), ipaddr, c.tinid, SUBJECT, c.email, heading
+FROM tgrams.contacts c
+JOIN tgrams.main m ON c.acct=m.acct
+LEFT JOIN tgrams.sso_profile as p on c.tinid=p.tinid
+WHERE 1=1
+AND c.origin LIKE 'rfiapi:customqu'
+AND c.tinid<>''
+AND LEFT(from_unixtime(c.created), 7) = '2017-04'
+AND m.adv='Y'
+ORDER BY id DESC" | mysql -As thomas >> ${FILE}
+ 
+exit;
+
+FILE="SiteVisitors2016.txt";
+echo "${FILE}"
+rm -f ${FILE} 
+echo "org	domain	country	city	state	zip	count	isp	ip	naics	primary_sic	countrycode	dunsnum	domestichqdunsnumber	hqdunsnumber	gltdunsnumber	countrycode3	audience	audiencesegment	b2b	employeerange	forbes2k	fortune1k	industry	informationlevel	latitude	longitude	phone	revenuerange	subindustry" > ${FILE}
+echo "SELECT org,domain,country,city,state,zip,sum(cnt),isp,ip,naics,primary_sic,countrycode,dunsnum,
+domestichqdunsnumber,hqdunsnumber,gltdunsnumber,countrycode3,audience,audiencesegment,b2b,employeerange,
+forbes2k,fortune1k,industry,informationlevel,latitude,longitude,phone,revenuerange,subindustry  
+FROM  tnetlogORGSITEDWIZ_TEMP WHERE date IN ('1601','1602','1603','1604','1605','1606','1607','1608','1609','1610','1611','1612') AND block='N'
+GROUP BY  org,city,state,zip  ORDER BY org,city,state,zip " | mysql -As thomas >> ${FILE}
+echo "Done...";  
+exit;    
+ 
+FILE="flat_catnav_ORG_alt16.bakbak";
+rm -f ${FILE}  
+echo "select * from  flat_catnav_ORG_alt16 " | mysql -As thomas > ${FILE} 
+exit;
+
+FILE="flat_catnav_ORG_alt17_bak.txt";
+rm -f ${FILE}  
+echo "select * from flat_catnav_ORG_alt17_bak where date='1704'" | mysql -As thomas > ${FILE} 
+exit;
+
+
+FILE="tnetlogREG17.txt";
+rm -f ${FILE}  
+echo "select * from tnetlogREG17_bak where date='1704'" | mysql -As thomas > ${FILE} 
+exit;
+
+FILE="registration-dump.txt";
+rm -f ${FILE}  
+echo "uname	tinid	email	fname	lname	title	company	division	industry	jobfunction	addr1	addr2	city	state	country	zip	phone	fax	created	lastmod	lastlogin	lastaccess	origin	aboutus	oldtinid	department	origin_2	website	registration_type"  > ${FILE}
+echo " select uname,tinid,email,fname,lname,title,company,division,industry,jobfunction,addr1,addr2,city,state,country,zip,phone,fax,created,lastmod,lastlogin,lastaccess,origin,aboutus,oldtinid,department,origin_2,website,registration_type from mt_profile_history"  | mysql -As tgrams >> ${FILE} 
+    
+  
+exit;
+
+
+
+
+FILE="missing-news-images-2017.txt";
+rm -f ${FILE} 
+echo "acct	campaign id	camaign type	image url"  > ${FILE}
+echo " select AdvertiserCid,CampaignID, CampaignType, BannerImageURL  from news_ad_cat17 where badimg='Y' and date=1701;"  | mysql -As thomas >> ${FILE} 
+
+ 
+exit;
+
+FILE="preprocessing-all.txt";
+rm -f ${FILE} 
+echo "acct	visitor	adv	isp	block	tinid"  > ${FILE}
+echo "select acct,org,adv,isp,block,tinid from thomtnetlogORGD15_03_test where org>'' order by acct,org,tinid "  | mysql -As thomas >> ${FILE}
+  
+FILE="postprocessing-all.txt";
+rm -f ${FILE}
+echo "acct	visitor	adv	isp	block	tinid"  > ${FILE}
+echo "select acct,org,adv,isp,block,tinid from thomtnetlogORGD15_03_test2 where org>'' order by acct,org,tinid "  | mysql -As thomas >> ${FILE}
+
+echo "Done...";
+exit;
+
+
+
+ 

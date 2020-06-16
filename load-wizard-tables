@@ -1,0 +1,99 @@
+#!/bin/sh
+#
+# Creates Wizard non merge tables 
+
+if [ -z $1 ]
+ then
+ echo ""
+ echo "Missing date: yymm"
+ echo ""
+ exit;
+fi
+
+FDATE=$1
+
+YR=${FDATE:0:2}
+MON=${FDATE:2:2}
+MM=${FDATE:2:2}
+  
+DB="thomas"
+ 
+################# CATEGORY ##############
+echo "CATEGORY"
+NEWTABLE="tnetlogORGCATD${YR}_${MM}W"
+##./load-org-drill-tnet-cat-wiz.pl ${FDATE}
+./make-wiz-tables-cat.pl ${FDATE}
+mysql -Af ${DB} -e "SELECT count(*) FROM ${NEWTABLE} "
+mysql -Af ${DB} -e "SELECT zcov,count(*) FROM ${NEWTABLE} GROUP BY zcov "
+
+echo "" 
+echo "------------------------------------" 
+ 
+
+
+
+################# SITE ##############
+echo "SITE"
+
+ 
+### TNET SITE 
+NEWTABLE="tnetlogORGSITED${YR}_${MM}W"
+mysql -Af ${DB} -e "DELETE FROM ${NEWTABLE} WHERE date='${FDATE}' "
+./make-wiz-tables-site.pl ${NEWTABLE}
+mysql -Af ${DB} -e "SELECT count(*) FROM ${NEWTABLE} "
+mysql -Af ${DB} -e "SELECT zcov,count(*) FROM ${NEWTABLE} GROUP BY zcov "
+      
+### NEWS SITE 
+NEWTABLE="newsORGSITED${YR}W"
+mysql -Af ${DB} -e "DELETE FROM ${NEWTABLE} WHERE date='${FDATE}' "
+./make-wiz-tables-site.pl ${NEWTABLE}
+mysql -Af ${DB} -e "SELECT count(*) FROM ${NEWTABLE} WHERE date='${FDATE}' "
+mysql -Af ${DB} -e "SELECT zcov,count(*) FROM ${NEWTABLE}  WHERE date='${FDATE}' GROUP BY zcov "
+
+
+
+### PS SITE
+#OLDTABLE="tnetlogORGPS${YR}_${MM}"
+#NEWTABLE="tnetlogORGPSSITE${YR}W"
+#mysql -Af ${DB} -e "DELETE FROM ${NEWTABLE} WHERE date='${FDATE}' "
+#./make-wiz-tables-site-ps.pl ${OLDTABLE}  ${NEWTABLE}
+#mysql -Af ${DB} -e "SELECT count(*) FROM ${NEWTABLE}  WHERE date='${FDATE}' "
+#echo "SELECT zcov,count(*) FROM ${NEWTABLE}  WHERE date='${FDATE}'  GROUP BY zcov \n";
+#mysql -Af ${DB} -e "SELECT zcov,count(*) FROM ${NEWTABLE}  WHERE date='${FDATE}'  GROUP BY zcov "
+
+echo ""
+echo "------------------------------------" 
+
+ 
+################# ACCT ##############
+echo "ACCT"; 
+
+### TNET ACCT 
+NEWTABLE="tnetlogORGD${YR}_${MM}W"
+mysql -Af ${DB} -e "DELETE FROM ${NEWTABLE} WHERE date='${FDATE}' "
+./make-wiz-tables-org.pl ${NEWTABLE}
+mysql -Af ${DB} -e "SELECT count(*) FROM ${NEWTABLE} "
+mysql -Af ${DB} -e "SELECT zcov,count(*) FROM ${NEWTABLE} GROUP BY zcov "
+
+
+### NEWS ACCT 
+NEWTABLE="newsORGD${YR}W"
+mysql -Af ${DB} -e "DELETE FROM ${NEWTABLE} WHERE date='${FDATE}' "
+./make-wiz-tables-org.pl ${NEWTABLE}
+mysql -Af ${DB} -e "SELECT count(*) FROM ${NEWTABLE}  WHERE date='${FDATE}' "
+mysql -Af ${DB} -e "SELECT zcov,count(*) FROM ${NEWTABLE}  WHERE date='${FDATE}' GROUP BY zcov "
+
+
+# PS ACCT 
+#NEWTABLE="tnetlogORGPS${YR}_${MM}W"
+#mysql -Af ${DB} -e "DELETE FROM ${NEWTABLE} WHERE date='${FDATE}' "
+#./make-wiz-tables-org.pl ${NEWTABLE}
+#mysql -Af ${DB} -e "SELECT count(*) FROM ${NEWTABLE} "
+#mysql -Af ${DB} -e "SELECT zcov,count(*) FROM ${NEWTABLE} GROUP BY zcov "
+
+echo ""
+echo "------------------------------------" 
+
+echo
+echo "Done...";
+echo

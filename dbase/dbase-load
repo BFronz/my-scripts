@@ -1,0 +1,31 @@
+#!/bin/sh
+#
+# process ip addresses from dbaseNetAcuityIP, these include CAD, CATNAV & News loaded monthly
+#
+
+source /usr/wt/reload.sh
+
+date
+echo
+echo "Processing IPs";
+echo
+
+
+./dbase-lookup.pl
+
+date
+echo
+
+mysqlimport -rL thomas ${DIR}/dbase/dbaseIPresolved.txt
+echo
+  
+UDATE=`date +%s`
+Q="UPDATE dbaseNetAcuityIP SET created = '${UDATE}' WHERE created=0";
+echo "Manual Update when ready : ${Q}"; 
+echo 
+
+echo dbase | mail -s "Script dbase-load finished    " robertf@c.net
+
+date
+echo
+echo "Done...";

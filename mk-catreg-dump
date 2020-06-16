@@ -1,0 +1,23 @@
+#!/bin/sh
+#
+# Dump tnet Registration History
+ 
+
+FILE="tnetRegistry.txt" 
+rm -f /usr/pdf/${FILE}
+echo "Loading ${FILE}" 
+      
+
+
+echo "  
+    SELECT trim(company) as Company, trim(industry) as Industry, trim(jobfunction) as JobFunction, trim(zip) as Zip, trim(country) as Country
+    FROM mt_profile  
+    LEFT JOIN mt_ringer ON mt_profile.tinid=mt_ringer.tinid 
+    WHERE mt_ringer.tinid  is null 
+    AND company>''
+    AND company not in ('>','<','*','******','-','---','.','?','????','.....')
+    ORDER BY company 
+ "  | mysql -A tgrams > ${FILE}
+ 
+mv ${FILE} /usr/pdf 
+

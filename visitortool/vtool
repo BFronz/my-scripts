@@ -1,0 +1,123 @@
+#!/bin/sh
+#
+# Creates visitor tool table
+
+if [ -z $1 ]
+ then
+ echo ""
+ echo "Missing YYMM"
+ echo ""
+ exit;
+fi
+
+source /usr/wt/reload.sh
+
+FDATE=$1
+
+YR=${FDATE:0:2}
+MON=${FDATE:2:2}
+
+echo ""
+echo "Date: ${FDATE} Year: ${YR} Month: ${MON}"
+echo ""
+
+echo "Create table  vtool${YR}_${MON}"
+mysql -Af thomas -e "DROP TABLE if exists vtool${YR}_${MON}"
+mysql -Af thomas -e  "CREATE TABLE  vtool${YR}_${MON} (
+  date    varchar(4)   NOT NULL default '',
+  acct    bigint(20)   NOT NULL default '0',
+  org     varchar(125) NOT NULL default '',
+  domain  varchar(125) NOT NULL default '',
+  country varchar(100) NOT NULL default '',
+  city    varchar(100) NOT NULL default '',
+  state   varchar(50)  NOT NULL default '',
+  zip     varchar(12)  NOT NULL default '',
+  cnt     bigint(20)   NOT NULL default '0',
+  isp     char(1)      NOT NULL default '',
+  type    char(1)      NOT NULL default '',
+  naics varchar(10) NOT NULL default '',
+  primary_sic varchar(150) NOT NULL default '',
+  countrycode varchar(10) NOT NULL default '',
+  dunsnum int(11) NOT NULL default '0',
+  domestichqdunsnumber int(11) NOT NULL default '0',
+  hqdunsnumber int(11) NOT NULL default '0',
+  gltdunsnumber int(11) NOT NULL default '0',
+  countrycode3 char(3) NOT NULL default '',
+  audience varchar(125) NOT NULL default '',
+  audiencesegment varchar(125) NOT NULL default '',
+  b2b varchar(6) NOT NULL default '',
+  employeerange varchar(125) NOT NULL default '',
+  forbes2k varchar(6) NOT NULL default '',
+  fortune1k varchar(6) NOT NULL default '',
+  industry varchar(125) NOT NULL default '',
+  informationlevel varchar(6) NOT NULL default '',
+  latitude double(16,4) NOT NULL default '0.0000',
+  longitude double(16,4) NOT NULL default '0.0000',
+  phone varchar(25) NOT NULL default '',
+  revenuerange varchar(125) NOT NULL default '',
+  subindustry varchar(125) NOT NULL default '',
+  cov char(2) NOT NULL default '',
+  KEY date (date,acct,type),
+  KEY acct (acct) ) ENGINE=MyISAM DEFAULT CHARSET=latin1"
+
+
+
+echo "Loading Tnet"
+mysql -Af thomas -e "
+ INSERT INTO vtool${YR}_${MON} 
+ (      date,acct,org,domain,country,city,state,zip,cnt,isp,type,naics,primary_sic,countrycode,dunsnum, domestichqdunsnumber, hqdunsnumber, gltdunsnumber, countrycode3, audience, audiencesegment, b2b, employeerange, forbes2k, fortune1k, industry, informationlevel, latitude, longitude, phone, revenuerange, subindustry, cov)
+ SELECT date,acct,org,domain,country,city,state,zip,cnt,isp,'T', naics,primary_sic,countrycode, dunsnum, domestichqdunsnumber, hqdunsnumber, gltdunsnumber, countrycode3,  audience, audiencesegment, b2b, employeerange, forbes2k, fortune1k, industry, informationlevel, latitude, longitude, phone, revenuerange, subindustry, cov
+ FROM   tnetlogORGD${YR}_${MON}
+ WHERE  block='N' AND date=${FDATE}  AND org>'' AND org!='-' AND org!='?'  "
+ 
+
+
+ 
+#echo "Loading PS"
+#mysql -Af thomas -e "
+# INSERT INTO vtool${YR}_${MON} 
+# (      date,acct,org,domain,country,city,state,zip,cnt,isp,type,naics,primary_sic,countrycode,dunsnum, domestichqdunsnumber, hqdunsnumber, gltdunsnumber, countrycode3, audience, audiencesegment, b2b, employeerange, forbes2k, fortune1k, industry, informationlevel, latitude, longitude, phone, revenuerange, subindustry, cov)
+# SELECT date,acct,org,domain,country,city,state,zip,cnt,isp,'P', naics,primary_sic,countrycode,dunsnum, domestichqdunsnumber, hqdunsnumber, gltdunsnumber, countrycode3, audience, audiencesegment, b2b, employeerange, forbes2k, fortune1k, industry, informationlevel, latitude, longitude, phone, revenuerange, subindustry, cov 
+# FROM   tnetlogORGPS${YR}_${MON}
+# WHERE  block='N' AND date=${FDATE}  AND org>'' AND org!='-' AND org!='?'  "
+
+echo "loading News"
+mysql -Af thomas -e "
+ INSERT INTO vtool${YR}_${MON}  
+ (      date,acct,org,domain,country,city,state,zip,cnt,isp,type,naics,primary_sic,countrycode,dunsnum, domestichqdunsnumber, hqdunsnumber, gltdunsnumber, countrycode3,  audience, audiencesegment, b2b, employeerange, forbes2k, fortune1k, industry, informationlevel, latitude, longitude, phone, revenuerange, subindustry, cov)
+ SELECT date,acct,org,domain,country,city,state,zip,cnt,isp,'N',naics, primary_sic,countrycode,dunsnum, domestichqdunsnumber, hqdunsnumber, gltdunsnumber, countrycode3,  audience, audiencesegment, b2b, employeerange, forbes2k, fortune1k, industry, informationlevel, latitude, longitude, phone, revenuerange, subindustry, cov 
+ FROM   newsORGD${YR}
+ WHERE  block='N' AND date=${FDATE} AND org>'' AND org!='-' AND org!='?'   "
+
+echo "Loading catalog offsite"
+mysql -Af thomas -e " 
+ INSERT INTO vtool${YR}_${MON} ( date,acct,org,domain,country,city,state,zip,cnt,isp,type,naics,primary_sic,countrycode,   dunsnum, domestichqdunsnumber, hqdunsnumber, gltdunsnumber, countrycode3,  audience, audiencesegment, b2b, employeerange, forbes2k, fortune1k, industry, informationlevel, latitude, longitude, phone, revenuerange, subindustry )
+ SELECT date,tgramsid,co,dom,country,city,reg,zip,'1',isp,'C',naics,primary_sic,countrycode, dunsnum, domestichqdunsnumber, hqdunsnumber, gltdunsnumber, countrycode3,  audience, audiencesegment, b2b, employeerange, forbes2k, fortune1k, industry, informationlevel, lat,      longg,     phone, revenuerange, subindustry
+ FROM   catnav_ipn${YR}_${MON}
+ WHERE  block='N' AND date=${FDATE} AND co>''  AND co!='-'  AND co!='?'  "
+ 
+echo "Loading catalog onsite"
+mysql -Af thomas -e "
+ INSERT INTO vtool${YR}_${MON}  
+ (      date,acct,org,domain,country,city,state,zip,cnt,isp,type,naics,primary_sic,countrycode,dunsnum, domestichqdunsnumber, hqdunsnumber, gltdunsnumber, countrycode3, audience, audiencesegment, b2b, employeerange, forbes2k, fortune1k, industry, informationlevel, latitude, longitude, phone, revenuerange, subindustry)
+ SELECT date,acct,org,domain,country,city,state,zip,cnt,isp,'C',naics, primary_sic,countrycode, dunsnum, domestichqdunsnumber, hqdunsnumber, gltdunsnumber, countrycode3,  audience, audiencesegment, b2b, employeerange, forbes2k, fortune1k, industry, informationlevel, latitude, longitude, phone, revenuerange, subindustry  
+ FROM   flat_catnav_ORG${YR} 
+ WHERE  block='N' AND date=${FDATE} AND org>'' AND org!='-' AND org!='?'   "
+
+
+echo "Clean data";
+mysql -Af thomas -e " SELECT * FROM vtool${YR}_${MON} "  > /usr/wt/visitortool/vtool${YR}_${MON}.txt
+perl -p -i -e "s/&amp;/&/g"  /usr/wt/visitortool/vtool${YR}_${MON}.txt
+mysqlimport -dL thomas /usr/wt/visitortool/vtool${YR}_${MON}.txt
+
+
+echo ""
+echo "Counts by origin"
+mysql -Af thomas -e "SELECT type, count(*) FROM vtool${YR}_${MON} group by type"
+echo "Total Counts"
+mysql -Af thomas -e "SELECT count(*) FROM vtool${YR}_${MON} "
+
+#rm -f /usr/wt/visitortool/vtool${YR}_${MON}.txt
+
+echo ""
+echo "Done..."

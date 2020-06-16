@@ -1,0 +1,34 @@
+#!/bin/sh
+# 
+# runs all org scripts
+# this will take a while and need to check all imports as they go
+# run as  ./load-tnet-org YYMM 
+  
+if [ -z $1 ]
+ then
+ echo ""
+ echo "Missing date: YYMM"
+ echo ""
+ exit;
+fi
+ 
+FDATE=$1
+
+echo ""
+echo "Date: ${FDATE}"
+echo ""
+  
+echo "Cat" 
+./load-org-drill-tnet-cat.pl ${FDATE} 
+echo ""
+echo "------------------------------------" #
+
+
+echo ${FDATE} | mail -s "Script load-get-cat finished for ${FDATE}   " robertf@c.net
+
+echo "Done..."
+echo ""
+
+
+ 
+

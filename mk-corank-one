@@ -1,0 +1,34 @@
+#!/usr/bin/perl
+#
+# run as ./run-CAD-xls.pl acct#
+
+$acct     = $ARGV[0]; 
+if($acct eq "" )  {  print "\nMissing account\n\n";  exit; }
+
+use URI::Escape;
+
+$dom      = "http://tnetrpt.c.net"; 
+$runpage  = "corankreport.html"; 
+$rpt      = "corankreport_"  .  $acct  . ".csv";
+   
+$VARS    = "cid=$acct&"; 
+$VARS   .= "page=corankreport&";
+$VARS   .= "csvfile=$rpt&";
+$VARS   .= "user_appid=9976&";
+$VARS   .= "csv=1&";
+$VARS   .= "print=1&";
+$VARS   .= "PDF=1&";
+
+$VARS = uri_escape($VARS);
+$URL  = $dom . "/" . $runpage . "?" . $VARS ;
+
+@lines = `curl  $URL`;
+#foreach $lines (@lines) { print "$lines\n"; }
+undef(@lines);
+ 
+print "\n$rpt\n";
+
+  
+
+
+

@@ -1,0 +1,23 @@
+#!/bin/sh
+#
+ 
+echo "Loading 2008"
+./load-summaryc_new-NOCAT.pl 08 1
+./load-summaryc_new-NOCAT.pl 08 2
+./load-summaryc_new-NOCAT.pl 08 3
+./load-summaryc_new-NOCAT.pl 08 4
+
+echo "Loading 2007"
+./load-summaryc_new-NOCAT.pl 07 1
+./load-summaryc_new-NOCAT.pl 07 2
+./load-summaryc_new-NOCAT.pl 07 3
+./load-summaryc_new-NOCAT.pl 07 4
+
+echo "Loading 2006"
+./load-summaryc_new-NOCAT.pl 06 1
+./load-summaryc_new-NOCAT.pl 06 2
+./load-summaryc_new-NOCAT.pl 06 3
+./load-summaryc_new-NOCAT.pl 06 4
+ 
+   
+

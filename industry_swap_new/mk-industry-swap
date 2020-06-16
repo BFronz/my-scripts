@@ -1,0 +1,47 @@
+#!/bin/sh
+#
+
+ 
+
+if [ -z $1 ]
+ then
+ echo ""
+ echo "Missing date: YYMM"
+ echo ""
+ exit;
+fi
+
+source /usr/wt/reload.sh
+
+FDATE=$1
+
+YY=${FDATE:0:2}
+MM=${FDATE:2:2}
+
+echo ""
+echo "Date: ${FDATE}"
+echo ""
+
+
+./charon.pl newsORGD${YY}                ${FDATE}
+./charon.pl newsORGD${YY}W               ${FDATE}
+./charon.pl newsORGSITED${YY}            ${FDATE}
+./charon.pl newsORGSITED${YY}W           ${FDATE}
+./charon.pl tnetlogORGCATD${YY}_${MM}    ${FDATE}
+./charon.pl tnetlogORGCATD${YY}_${MM}W   ${FDATE}
+./charon.pl tnetlogORGD${YY}_${MM}       ${FDATE}
+./charon.pl tnetlogORGD${YY}_${MM}W      ${FDATE}
+./charon.pl tnetlogORGSITED${YY}_${MM}   ${FDATE}
+./charon.pl tnetlogORGSITED${YY}_${MM}W  ${FDATE}
+./charon.pl tnetlogORGPS${YY}_${MM}      ${FDATE}
+./charon.pl tnetlogORGPS${YY}_${MM}W     ${FDATE}
+./charon.pl tnetlogORGPSSITE${YY}W       ${FDATE}
+./charon.pl flat_catnav_ORG${YY}         ${FDATE}
+./charon.pl vtool${YY}_${MM}             ${FDATE}
+./charon.pl catnav_ipn${YY}_${MM}        ${FDATE}
+./charon.pl flat_catnav_ORG_alt${YY}     ${FDATE}
+
+./charon.pl tnetlogADviewsServerOrg${YY} ${FDATE} 
+./charon.pl adcvmaster                   ${FDATE} 
+ 
+./charon-cad.pl tnetlogCADIP  ${FDATE}  

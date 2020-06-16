@@ -1,0 +1,74 @@
+#!/bin/sh
+#
+# Loads org flag table
+# run as  ./load-org-flg yymm
+
+if [ -z $1 ]
+ then
+ echo ""
+ echo "Missing date: yymm"
+ echo ""
+ exit;
+fi
+
+FDATE=$1
+
+Y=${FDATE:0:2}
+M=${FDATE:2:2}
+
+echo "${FDATE} Year ${Y} Month ${M}";
+
+DATE="${Y}${M}"
+
+FILE="tnetlogORGflag.txt" 
+rm -f ${FILE}
+
+echo "Loading ${FILE}" 
+ 
+echo "Loading tnet orgs" 
+
+TABLE="tnetlogORGSITED${Y}_${M}"    
+#TABLE="tnetlogORGD12_12"    
+#echo "select '', trim(org) as org, sum(cnt) as n, 'N', 'N', '${FDATE}', '', trim(domain), '0'
+echo "select '', trim(org) as org, sum(cnt) as n, isp, block, '${FDATE}', '', trim(domain), '0'
+      from ${TABLE}
+      where date='${DATE}'
+      group by org order by n desc" | mysql -As thomas >> ${FILE}
+ 
+
+  
+echo "Loading news_orgs" 
+   
+#echo "select '', trim(org) as org, sum(cnt) as n, 'N', 'N' , '${FDATE}', '', trim(domain), '0'
+echo "select '', trim(org) as org, sum(cnt) as n, isp, block , '${FDATE}', '', trim(domain), '0'
+      from  newsORGSITED${Y}
+      where date='${DATE}'
+      group by org order by n desc"  | mysql -As thomas >> ${FILE}
+
+#echo "Loading tgr orgs"
+#echo "select '', trim(org) as org, sum(cnt) as n, 'N', 'N' , '${FDATE}', '',  trim(domain), '0'
+#      from  tgrORGSITED${Y}
+#      where date='${DATE}'
+#      group by org order by n desc"  | mysql -As tgr >> ${FILE}
+ 
+
+echo "Loading reachlocal orgs"
+echo "select '', trim(co) as org, count(*) as n, 'N', 'N', '${FDATE}', '', '', '0'
+      from Campaign_IP group by org order by n desc" | mysql -As thomas >> ${FILE}
+
+
+echo "loading catnav orgs" 
+echo "select '', trim(co) as org, count(*) as n, 'N', 'N', '${FDATE}', '', '', '0'
+      from catnav_ipn${Y}_${M} group by org order by n desc" | mysql -As thomas >> ${FILE}
+
+
+
+mysqlimport -i thomas ${FILE}
+
+
+
+echo " update tnetlogORGflag set oid=md5(trim(lower(org))) where oid='' " | mysql -As thomas  
+  
+#echo "update tnetlogORGflag set isp='Y', netupdate='Y' where domain like '%.net' and  date='${DATE}' " | mysql -As thomas 
+    
+#echo "update tnetlogORGflag set date='${DATE}' where date=''  "  | mysql -As thomas 

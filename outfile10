@@ -1,0 +1,15 @@
+#!/bin/sh
+#
+
+FILE="adroll_dump.txt";
+rm -f /usr/wt/${FILE}  
+
+echo "advertiser	campaign	adjusted_view_through_ratio	adjusted_attributed_view_through_rev	adjusted_ctc	attributed_click_through_rev	cpc_USD	adjusted_cpa	click_cpa	attributed_view_through_rev	adjusted_total_conversions	adjusted_total_conversion_rate	type	total_conversions	end_date	cost_USD	adjusted_attributed_view_through_rev_USD	roi	start_date	cpm_USD	budget	adjusted_vtc	clicks	eid	adjusted_attributed_rev	adjusted_click_through_ratio	total_conversion_rate	view_through_ratio	cost	click_through_conversions	impressions	adjusted_attributed_click_through_rev	adjusted_attributed_click_through_rev_USD	paid_impressions	budget_USD	attributed_rev_USD	click_through_ratio	click_cpa_USD	status	adjusted_attributed_rev_USD	created_date	attributed_view_through_rev_USD	cpa_USD	attributed_rev	attributed_click_through_rev_USD	prospects	cpm	ctr	cpa	cpc	adjusted_cpa_USD	view_through_conversions	fdate	acct	img" > ${FILE}
+    
+echo "SELECT * FROM thomadroll  "  | mysql -As thomas >> ${FILE}
+
+  
+echo "Done...";
+exit;
+
+

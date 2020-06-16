@@ -1,0 +1,305 @@
+#!/bin/sh
+#
+
+  
+ 
+YY="01"; 
+echo " CREATE TABLE tnetloghdgCovConv15_${YY} (
+  date varchar(4) NOT NULL DEFAULT '',
+  cnt int(11) NOT NULL DEFAULT '0',
+  conversions int(11) NOT NULL DEFAULT '0',
+  convertedvisits int(11) NOT NULL DEFAULT '0',
+  heading bigint(20) NOT NULL DEFAULT '0',
+  cov char(2) NOT NULL DEFAULT '',
+  KEY (date,heading,cov),
+  KEY (cov)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 "  | mysql -As thomas 
+
+YY="02"; 
+echo " CREATE TABLE tnetloghdgCovConv15_${YY} (
+  date varchar(4) NOT NULL DEFAULT '',
+  cnt int(11) NOT NULL DEFAULT '0',
+  conversions int(11) NOT NULL DEFAULT '0',
+  convertedvisits int(11) NOT NULL DEFAULT '0',
+  heading bigint(20) NOT NULL DEFAULT '0',
+  cov char(2) NOT NULL DEFAULT '',
+  KEY (date,heading,cov),
+  KEY (cov)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 "  | mysql -As thomas 
+
+YY="03"; 
+echo " CREATE TABLE tnetloghdgCovConv15_${YY} (
+  date varchar(4) NOT NULL DEFAULT '',
+  cnt int(11) NOT NULL DEFAULT '0',
+  conversions int(11) NOT NULL DEFAULT '0',
+  convertedvisits int(11) NOT NULL DEFAULT '0',
+  heading bigint(20) NOT NULL DEFAULT '0',
+  cov char(2) NOT NULL DEFAULT '',
+  KEY (date,heading,cov),
+  KEY (cov)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 "  | mysql -As thomas 
+
+
+YY="04"; 
+echo " CREATE TABLE tnetloghdgCovConv15_${YY} (
+  date varchar(4) NOT NULL DEFAULT '',
+  cnt int(11) NOT NULL DEFAULT '0',
+  conversions int(11) NOT NULL DEFAULT '0',
+  convertedvisits int(11) NOT NULL DEFAULT '0',
+  heading bigint(20) NOT NULL DEFAULT '0',
+  cov char(2) NOT NULL DEFAULT '',
+  KEY (date,heading,cov),
+  KEY (cov)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 "  | mysql -As thomas 
+
+YY="05"; 
+echo " CREATE TABLE tnetloghdgCovConv15_${YY} (
+  date varchar(4) NOT NULL DEFAULT '',
+  cnt int(11) NOT NULL DEFAULT '0',
+  conversions int(11) NOT NULL DEFAULT '0',
+  convertedvisits int(11) NOT NULL DEFAULT '0',
+  heading bigint(20) NOT NULL DEFAULT '0',
+  cov char(2) NOT NULL DEFAULT '',
+  KEY (date,heading,cov),
+  KEY (cov)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 "  | mysql -As thomas 
+
+YY="06"; 
+echo " CREATE TABLE tnetloghdgCovConv15_${YY} (
+  date varchar(4) NOT NULL DEFAULT '',
+  cnt int(11) NOT NULL DEFAULT '0',
+  conversions int(11) NOT NULL DEFAULT '0',
+  convertedvisits int(11) NOT NULL DEFAULT '0',
+  heading bigint(20) NOT NULL DEFAULT '0',
+  cov char(2) NOT NULL DEFAULT '',
+  KEY (date,heading,cov),
+  KEY (cov)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 "  | mysql -As thomas 
+
+YY="07"; 
+echo " CREATE TABLE tnetloghdgCovConv15_${YY} (
+  date varchar(4) NOT NULL DEFAULT '',
+  cnt int(11) NOT NULL DEFAULT '0',
+  conversions int(11) NOT NULL DEFAULT '0',
+  convertedvisits int(11) NOT NULL DEFAULT '0',
+  heading bigint(20) NOT NULL DEFAULT '0',
+  cov char(2) NOT NULL DEFAULT '',
+  KEY (date,heading,cov),
+  KEY (cov)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 "  | mysql -As thomas 
+
+YY="08"; 
+echo " CREATE TABLE tnetloghdgCovConv15_${YY} (
+  date varchar(4) NOT NULL DEFAULT '',
+  cnt int(11) NOT NULL DEFAULT '0',
+  conversions int(11) NOT NULL DEFAULT '0',
+  convertedvisits int(11) NOT NULL DEFAULT '0',
+  heading bigint(20) NOT NULL DEFAULT '0',
+  cov char(2) NOT NULL DEFAULT '',
+  KEY (date,heading,cov),
+  KEY (cov)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 "  | mysql -As thomas 
+
+YY="09"; 
+echo " CREATE TABLE tnetloghdgCovConv15_${YY} (
+  date varchar(4) NOT NULL DEFAULT '',
+  cnt int(11) NOT NULL DEFAULT '0',
+  conversions int(11) NOT NULL DEFAULT '0',
+  convertedvisits int(11) NOT NULL DEFAULT '0',
+  heading bigint(20) NOT NULL DEFAULT '0',
+  cov char(2) NOT NULL DEFAULT '',
+  KEY (date,heading,cov),
+  KEY (cov)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 "  | mysql -As thomas 
+
+
+YY="10"; 
+echo " CREATE TABLE tnetloghdgCovConv15_${YY} (
+  date varchar(4) NOT NULL DEFAULT '',
+  cnt int(11) NOT NULL DEFAULT '0',
+  conversions int(11) NOT NULL DEFAULT '0',
+  convertedvisits int(11) NOT NULL DEFAULT '0',
+  heading bigint(20) NOT NULL DEFAULT '0',
+  cov char(2) NOT NULL DEFAULT '',
+  KEY (date,heading,cov),
+  KEY (cov)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 "  | mysql -As thomas 
+
+YY="11"; 
+echo " CREATE TABLE tnetloghdgCovConv15_${YY} (
+  date varchar(4) NOT NULL DEFAULT '',
+  cnt int(11) NOT NULL DEFAULT '0',
+  conversions int(11) NOT NULL DEFAULT '0',
+  convertedvisits int(11) NOT NULL DEFAULT '0',
+  heading bigint(20) NOT NULL DEFAULT '0',
+  cov char(2) NOT NULL DEFAULT '',
+  KEY (date,heading,cov),
+  KEY (cov)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 "  | mysql -As thomas 
+
+YY="12"; 
+echo " CREATE TABLE tnetloghdgCovConv15_${YY} (
+  date varchar(4) NOT NULL DEFAULT '',
+  cnt int(11) NOT NULL DEFAULT '0',
+  conversions int(11) NOT NULL DEFAULT '0',
+  convertedvisits int(11) NOT NULL DEFAULT '0',
+  heading bigint(20) NOT NULL DEFAULT '0',
+  cov char(2) NOT NULL DEFAULT '',
+  KEY (date,heading,cov),
+  KEY (cov)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 "  | mysql -As thomas 
+
+
+ 
+
+YY="01"; 
+echo " CREATE TABLE tnetloghdgCovConv16_${YY} (
+  date varchar(4) NOT NULL DEFAULT '',
+  cnt int(11) NOT NULL DEFAULT '0',
+  conversions int(11) NOT NULL DEFAULT '0',
+  convertedvisits int(11) NOT NULL DEFAULT '0',
+  heading bigint(20) NOT NULL DEFAULT '0',
+  cov char(2) NOT NULL DEFAULT '',
+  KEY (date,heading,cov),
+  KEY (cov)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 "  | mysql -As thomas 
+
+YY="02"; 
+echo " CREATE TABLE tnetloghdgCovConv16_${YY} (
+  date varchar(4) NOT NULL DEFAULT '',
+  cnt int(11) NOT NULL DEFAULT '0',
+  conversions int(11) NOT NULL DEFAULT '0',
+  convertedvisits int(11) NOT NULL DEFAULT '0',
+  heading bigint(20) NOT NULL DEFAULT '0',
+  cov char(2) NOT NULL DEFAULT '',
+  KEY (date,heading,cov),
+  KEY (cov)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 "  | mysql -As thomas 
+
+ 
+YY="03"; 
+echo " CREATE TABLE tnetloghdgCovConv16_${YY} (
+  date varchar(4) NOT NULL DEFAULT '',
+  cnt int(11) NOT NULL DEFAULT '0',
+  conversions int(11) NOT NULL DEFAULT '0',
+  convertedvisits int(11) NOT NULL DEFAULT '0',
+  heading bigint(20) NOT NULL DEFAULT '0',
+  cov char(2) NOT NULL DEFAULT '',
+  KEY (date,heading,cov),
+  KEY (cov)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 "  | mysql -As thomas 
+
+
+YY="04"; 
+echo " CREATE TABLE tnetloghdgCovConv16_${YY} (
+  date varchar(4) NOT NULL DEFAULT '',
+  cnt int(11) NOT NULL DEFAULT '0',
+  conversions int(11) NOT NULL DEFAULT '0',
+  convertedvisits int(11) NOT NULL DEFAULT '0',
+  heading bigint(20) NOT NULL DEFAULT '0',
+  cov char(2) NOT NULL DEFAULT '',
+  KEY (date,heading,cov),
+  KEY (cov)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 "  | mysql -As thomas 
+
+YY="05"; 
+echo " CREATE TABLE tnetloghdgCovConv16_${YY} (
+  date varchar(4) NOT NULL DEFAULT '',
+  cnt int(11) NOT NULL DEFAULT '0',
+  conversions int(11) NOT NULL DEFAULT '0',
+  convertedvisits int(11) NOT NULL DEFAULT '0',
+  heading bigint(20) NOT NULL DEFAULT '0',
+  cov char(2) NOT NULL DEFAULT '',
+  KEY (date,heading,cov),
+  KEY (cov)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 "  | mysql -As thomas 
+
+YY="06"; 
+echo " CREATE TABLE tnetloghdgCovConv16_${YY} (
+  date varchar(4) NOT NULL DEFAULT '',
+  cnt int(11) NOT NULL DEFAULT '0',
+  conversions int(11) NOT NULL DEFAULT '0',
+  convertedvisits int(11) NOT NULL DEFAULT '0',
+  heading bigint(20) NOT NULL DEFAULT '0',
+  cov char(2) NOT NULL DEFAULT '',
+  KEY (date,heading,cov),
+  KEY (cov)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 "  | mysql -As thomas 
+
+YY="07"; 
+echo " CREATE TABLE tnetloghdgCovConv16_${YY} (
+  date varchar(4) NOT NULL DEFAULT '',
+  cnt int(11) NOT NULL DEFAULT '0',
+  conversions int(11) NOT NULL DEFAULT '0',
+  convertedvisits int(11) NOT NULL DEFAULT '0',
+  heading bigint(20) NOT NULL DEFAULT '0',
+  cov char(2) NOT NULL DEFAULT '',
+  KEY (date,heading,cov),
+  KEY (cov)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 "  | mysql -As thomas 
+
+YY="08"; 
+echo " CREATE TABLE tnetloghdgCovConv16_${YY} (
+  date varchar(4) NOT NULL DEFAULT '',
+  cnt int(11) NOT NULL DEFAULT '0',
+  conversions int(11) NOT NULL DEFAULT '0',
+  convertedvisits int(11) NOT NULL DEFAULT '0',
+  heading bigint(20) NOT NULL DEFAULT '0',
+  cov char(2) NOT NULL DEFAULT '',
+  KEY (date,heading,cov),
+  KEY (cov)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 "  | mysql -As thomas 
+
+YY="09"; 
+echo " CREATE TABLE tnetloghdgCovConv16_${YY} (
+  date varchar(4) NOT NULL DEFAULT '',
+  cnt int(11) NOT NULL DEFAULT '0',
+  conversions int(11) NOT NULL DEFAULT '0',
+  convertedvisits int(11) NOT NULL DEFAULT '0',
+  heading bigint(20) NOT NULL DEFAULT '0',
+  cov char(2) NOT NULL DEFAULT '',
+  KEY (date,heading,cov),
+  KEY (cov)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 "  | mysql -As thomas 
+
+
+YY="10"; 
+echo " CREATE TABLE tnetloghdgCovConv16_${YY} (
+  date varchar(4) NOT NULL DEFAULT '',
+  cnt int(11) NOT NULL DEFAULT '0',
+  conversions int(11) NOT NULL DEFAULT '0',
+  convertedvisits int(11) NOT NULL DEFAULT '0',
+  heading bigint(20) NOT NULL DEFAULT '0',
+  cov char(2) NOT NULL DEFAULT '',
+  KEY (date,heading,cov),
+  KEY (cov)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 "  | mysql -As thomas 
+
+YY="11"; 
+echo " CREATE TABLE tnetloghdgCovConv16_${YY} (
+  date varchar(4) NOT NULL DEFAULT '',
+  cnt int(11) NOT NULL DEFAULT '0',
+  conversions int(11) NOT NULL DEFAULT '0',
+  convertedvisits int(11) NOT NULL DEFAULT '0',
+  heading bigint(20) NOT NULL DEFAULT '0',
+  cov char(2) NOT NULL DEFAULT '',
+  KEY (date,heading,cov),
+  KEY (cov)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 "  | mysql -As thomas 
+
+YY="12"; 
+echo " CREATE TABLE tnetloghdgCovConv16_${YY} (
+  date varchar(4) NOT NULL DEFAULT '',
+  cnt int(11) NOT NULL DEFAULT '0',
+  conversions int(11) NOT NULL DEFAULT '0',
+  convertedvisits int(11) NOT NULL DEFAULT '0',
+  heading bigint(20) NOT NULL DEFAULT '0',
+  cov char(2) NOT NULL DEFAULT '',
+  KEY (date,heading,cov),
+  KEY (cov)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 "  | mysql -As thomas 
+
+echo "Done...";
+exit;
+
+

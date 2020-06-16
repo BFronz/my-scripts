@@ -1,0 +1,99 @@
+#!/bin/sh
+#  
+# loads daily files from devil:/opt/tnet/dailydump/dumpit 
+  
+HERE="/home/tnet/src/update_daily"
+cd ${HERE}
+
+echo
+echo $(date +%m-%d-%Y::%H:%M:%S)
+ 
+FROMHOST="--host= -u -p"
+TOHOST="--host=po.rds.c.net -ureporting -preporting"
+ 
+load_table () {
+
+	echo
+	echo "Loading ${TABLE} from ${DB}"
+ 
+	# check for file
+	if [ -f "${HERE}/data/${TABLE}.txt.gz" ];
+ 		then
+			# un-zip File
+			nice gunzip -f ${HERE}/data/${TABLE}.sql.gz
+			nice gunzip -f ${HERE}/data/${TABLE}.txt.gz
+  
+			# drop bak, rename current   
+			echo " drop table if exists ${TABLE}_bak " | mysql -As ${DB}  
+			echo " alter table ${TABLE}  rename ${TABLE}_bak " | mysql -As ${DB}
+    
+			# import new sql & data
+			mysql ${DB} < ${HERE}/data/${TABLE}.sql
+			mysqlimport -iL ${DB} ${HERE}/data/${TABLE}.txt 
+
+			# check record counts, if charon >0 then sync
+			C=`echo "SELECT count(*) FROM ${TABLE}" | mysql -As ${DB}`
+			P=`echo "SELECT count(*) FROM  ${TABLE}" | mysql -As ${TOHOST} tgrams`
+			if [ "${C}" -gt "0" ]; 
+				then
+    					echo "ok to sync ${TABLE}  ${C}|${P}"
+					mysqldump --opt --quick --max_allowed_packet=500m --net_buffer_length=16m --single-transaction ${FROMHOST} ${DB} ${TABLE} | mysql ${TOHOST} ${DB}
+				else
+    					echo "ERROR!!! can not sync table ${TABLE}  ${C}|${P}" 
+			fi
+			   
+			# re-gzip files
+			nice gzip -f  ${HERE}/data/${TABLE}.txt
+			nice gzip -f ${HERE}/data/${TABLE}.sql
+
+    			# remove data
+			#rm -f ${HERE}/data/${TABLE}.txt
+			#rm -f ${HERE}/data/${TABLE}.sql
+ 
+			echo "----------------------------------"
+		else
+  			echo "File ${TABLE}.txt.gz not found"
+		fi
+}
+
+
+DB="tgrams" 
+
+TABLE="ccp_content";       # load_table;
+TABLE="ccp_document";      # load_table;
+TABLE="ccp_image";         # load_table;
+TABLE="ccp_logo";          # load_table;
+TABLE="ccp_video";         # load_table;
+TABLE="contacts";          # load_table;
+#TABLE="contractors";       # load_table;
+TABLE="covlist";           # load_table;
+TABLE="email_verify";      # load_table;
+TABLE="listings";          # load_table;
+TABLE="main";              # load_table;
+TABLE="mt_optin";          # load_table;  
+TABLE="mt_pdfs";           # load_table;   
+TABLE="mt_pnnalerts";      # load_table;    
+TABLE="mt_profile";        # load_table; 
+TABLE="mt_profilehistory"; # load_table;   
+TABLE="mt_rss";            # load_table;    
+TABLE="mt_savedcatalogs";  # load_table;  
+TABLE="mt_savedprofiles";  # load_table;   
+TABLE="mt_savedresults";   # load_table;   
+TABLE="mt_searchhistory";  # load_table;  
+TABLE="mt_trcd";           # load_table;  
+TABLE="news"               # load_table;
+TABLE="newslist";          # load_table;
+TABLE="pdm";               # load_table;  
+TABLE="pna_imt_fb";        # load_table;
+TABLE="pna_imt_tp";        # load_table; 
+TABLE="premiums";          # load_table;
+TABLE="previewads_active"; # load_table;
+#TABLE="seniormap";         # load_table;  
+TABLE="sso_profile";       # load_table; 
+TABLE="toolbar_email_log"; # load_table; 
+TABLE="webtraxs_accts";     load_table;
+  
+
+
+echo 
+echo "Done..."

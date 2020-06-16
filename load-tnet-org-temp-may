@@ -1,0 +1,90 @@
+#!/bin/sh
+# 
+# runs all org scripts
+# this will take a while and need to check all imports as they go
+# run as  ./load-tnet-org YYMM 
+  
+if [ -z $1 ]
+ then
+ echo ""
+ echo "Missing date: YYMM"
+ echo ""
+ exit;
+fi
+ 
+FDATE=$1
+
+echo ""
+echo "---------------------------------------------------------------------"
+echo "Date: ${FDATE}"
+echo "load-tnet-org-temp-may"
+echo ""
+  
+echo "Site" 
+#./load-org-drill-tnet-site.pl ${FDATE}
+echo "------------------------------------" #
+
+echo "Adv" 
+./load-org-drill-tnet-adv.pl ${FDATE} 
+echo ""
+echo "------------------------------------" #
+
+echo "Cat" 
+#./load-org-drill-tnet-cat.pl ${FDATE} 
+echo ""
+echo "------------------------------------" #
+ 
+echo "News" 
+#./load-org-drill-news.pl ${FDATE} 
+echo ""
+echo "------------------------------------"
+
+echo "Product Search" 
+#./load-org-drill-PS-adv.pl ${FDATE} 
+echo ""
+echo "------------------------------------"
+
+echo "Flat Catnav" 
+#./load-org-drill-tnet-flatcatnav.pl ${FDATE} 
+#./catnav-visitor-combo-extra  ${FDATE}    # delete is already in script
+echo "" 
+echo "------------------------------------"
+ 
+echo "Extra" 
+./load-org-extra.pl ${FDATE} 
+echo ""
+echo "------------------------------------"
+
+ 
+echo "Check Tables Script. Look for missing data.";
+./checktables.pl ${FDATE}
+echo "------------------------------------"
+
+
+echo "Done..."
+echo ""
+
+
+
+
+################# OLD ################
+#echo "Flag" 
+#./load-org-flg ${FDATE}  
+#echo ""
+#echo "------------------------------------"
+
+#echo "Update Orgs" 
+#./update-orgs.pl ${FDATE} 
+#echo ""
+#echo "------------------------------------"
+ 
+#echo "Orgbad" 
+#./mk-orgbad.pl      
+#echo ""
+#echo "------------------------------------"
+
+# echo "------------------------------------" # moved
+# echo "Make Visitor Tool";
+# cd /usr/tnetlogs/wt/visitortool
+# ./vtool ${FDATE}
+# cd /usr/tnetlogs/wt

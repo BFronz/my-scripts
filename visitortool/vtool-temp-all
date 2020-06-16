@@ -1,0 +1,84 @@
+#!/bin/sh
+#
+
+ 
+mysql -Af thomas -e "DROP TABLE if exists vtoolM"
+
+#./vtool 1105
+#./vtool 1106
+#./vtool 1107
+#./vtool 1108
+#./vtool 1109
+#./vtool 1110
+#./vtool 1111
+#./vtool 1112
+
+#./vtool 1201  
+#./vtool 1202
+#./vtool 1203
+#./vtool 1204
+#./vtool 1205
+#./vtool 1206
+#./vtool 1207
+#./vtool 1208
+#./vtool 1209
+#./vtool 1210
+#./vtool 1211
+#./vtool 1212
+ 
+./vtool 1301
+./vtool 1302
+./vtool 1303
+./vtool 1304
+./vtool 1305
+./vtool 1306
+./vtool 1307
+./vtool 1308
+./vtool 1309
+./vtool 1310
+./vtool 1311
+./vtool 1312
+ 
+./vtool 1401 
+./vtool 1402 
+./vtool 1403 
+./vtool 1404 
+./vtool 1405 
+./vtool 1406 
+./vtool 1407 
+./vtool 1408 
+./vtool 1409 
+./vtool 1410 
+./vtool 1411 
+./vtool 1412 
+ 
+mysql -Af thomas -e " CREATE TABLE vtoolM (                                                
+  date varchar(4) NOT NULL default '',                                
+  acct bigint(20) NOT NULL default '0',                               
+  org varchar(125) NOT NULL default '',                               
+  domain varchar(125) NOT NULL default '',                            
+  country varchar(100) NOT NULL default '',                           
+  city varchar(100) NOT NULL default '',                              
+  state varchar(50) NOT NULL default '',                              
+  zip varchar(12) NOT NULL default '',                                
+  cnt bigint(20) NOT NULL default '0',                                
+  isp char(1) NOT NULL default '',                                    
+  type char(1) NOT NULL default '',                                   
+  KEY date (date,acct,type),                                          
+  KEY acct (acct)                                                     
+) TYPE=MRG_MyISAM INSERT_METHOD=LAST UNION=(                          
+`vtool13_01`,`vtool13_02`,`vtool13_03`,`vtool13_04`,`vtool13_05`,`vtool13_06`,
+`vtool13_07`,`vtool13_08`,`vtool13_09`,`vtool13_10`,`vtool13_11`,`vtool13_12`,
+`vtool14_01`,`vtool14_02`,`vtool14_03`,`vtool14_04`,`vtool14_05`,`vtool14_06`,
+`vtool14_07`,`vtool14_08`,`vtool14_09`,`vtool14_10`,`vtool14_11`,`vtool14_12`  ) "
+
+#echo "&amp; counts:";
+#mysql -Af thomas -e "select date,count(*) from vtoolM where org like '%&amp;%' group by date"
+ 
+echo "counts";
+mysql -Af thomas -e "select date,count(*) from vtoolM  group by date"
+
+  
+mysql -Af thomas -e "DROP TABLE if exists vtoolM"
+
+echo "Done..."

@@ -1,0 +1,65 @@
+#!/bin/sh
+#
+#
+ 
+
+
+FILE="visitors-detail-2014.txt";
+rm -f ${FILE}
+echo "select 
+ org,domain,country,city,state,zip,sum(cnt),isp,ip,naics,primary_sic,
+ countrycode,dunsnum,domestichqdunsnumber,hqdunsnumber,gltdunsnumber,countrycode3,audience,
+ audiencesegment,b2b,employeerange,forbes2k,fortune1k,industry,informationlevel,latitude,
+ longitude,phone,revenuerange,subindustry,cov, if(latitude='0.0001' && longitude='0.0001', 'Y', 'N')   
+ from tnetlogORGDAllM 
+ where date in ('1401','1402','1403','1404','1405','1406','1407','1408','1409','1410','1411','1412' )
+ and ( informationlevel='Detail' || (longitude='0.0001' || latitude='0.0001') ) and block='N'
+ group by org,city,state,zip
+"  | mysql -As thomas >> ${FILE}
+  
+  
+
+
+
+FILE="visitors-detail-2016.txt";
+rm -f ${FILE}
+echo "select 
+ org,domain,country,city,state,zip,sum(cnt),isp,ip,naics,primary_sic,
+ countrycode,dunsnum,domestichqdunsnumber,hqdunsnumber,gltdunsnumber,countrycode3,audience,
+ audiencesegment,b2b,employeerange,forbes2k,fortune1k,industry,informationlevel,latitude,
+ longitude,phone,revenuerange,subindustry,cov, if(latitude='0.0001' && longitude='0.0001', 'Y', 'N')   
+ from tnetlogORGDAllM 
+ where date in ('1601','1602','1603','1604','1605','1606','1607','1608','1609','1610','1611','1612' )
+ and ( informationlevel='Detail' || (longitude='0.0001' || latitude='0.0001') ) and block='N'
+ group by org,city,state,zip
+"  | mysql -As thomas >> ${FILE}
+  
+ 
+echo "Done...";
+
+exit;
+
+
+
+
+FILE="visitors-detail-2015.txt";
+rm -f ${FILE}
+echo "select 
+ org,domain,country,city,state,zip,sum(cnt),isp,ip,naics,primary_sic,
+ countrycode,dunsnum,domestichqdunsnumber,hqdunsnumber,gltdunsnumber,countrycode3,audience,
+ audiencesegment,b2b,employeerange,forbes2k,fortune1k,industry,informationlevel,latitude,
+ longitude,phone,revenuerange,subindustry,cov, if(latitude='0.0001' && longitude='0.0001', 'Y', 'N')   
+ from tnetlogORGDAllM 
+ where date in ('1501','1502','1503','1504','1505','1506','1507','1508','1509','1510','1511','1512' )
+ and ( informationlevel='Detail' || (longitude='0.0001' || latitude='0.0001') ) and block='N'
+ group by org,city,state,zip
+"  | mysql -As thomas >> ${FILE}
+  
+ 
+
+echo "Done...";
+exit;
+
+
+
+ 

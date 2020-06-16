@@ -1,0 +1,520 @@
+#!/bin/sh
+#
+# Creates Wizard non merge tables 
+
+if [ -z $1 ]
+ then
+ echo ""
+ echo "Missing date: yymm"
+ echo ""
+ exit;
+fi
+
+FDATE=$1
+
+YR=${FDATE:0:2}
+MON=${FDATE:2:2}
+MM=${FDATE:2:2}
+  
+DB="thomas"
+ 
+################# CATEGORY ##############
+# these tables created in load-org-drill-tnet-cat-wiz.pl  
+
+ NEWTABLE="tnetlogORGCATD${YR}_${MM}W"
+ OLDTABLE="tnetlogORGCATD${YR}_${MM}"
+ 
+ mysql -Af ${DB} -e "DROP TABLE IF EXISTS ${NEWTABLE}"
+  
+ mysql -Af ${DB} -e "
+ CREATE TABLE ${NEWTABLE} (
+  date varchar(4) NOT NULL DEFAULT '',
+  acct bigint(20) NOT NULL DEFAULT '0',
+  heading bigint(20) NOT NULL DEFAULT '0',
+  org varchar(125) NOT NULL DEFAULT '',
+  domain varchar(125) NOT NULL DEFAULT '',
+  country varchar(100) NOT NULL DEFAULT '',
+  city varchar(100) NOT NULL DEFAULT '',
+  state varchar(50) NOT NULL DEFAULT '',
+  zip varchar(12) NOT NULL DEFAULT '',
+  cnt bigint(20) NOT NULL DEFAULT '0',
+  isp char(1) NOT NULL DEFAULT '',
+  block char(1) NOT NULL DEFAULT '',
+  orgid varchar(32) NOT NULL DEFAULT '',
+  oid varchar(32) NOT NULL DEFAULT '',
+  ip varchar(39) NOT NULL DEFAULT '',
+  naics varchar(10) NOT NULL DEFAULT '',
+  primary_sic varchar(150) NOT NULL DEFAULT '',
+  countrycode varchar(10) NOT NULL DEFAULT '',
+  dunsnum int(11) NOT NULL DEFAULT '0',
+  domestichqdunsnumber int(11) NOT NULL DEFAULT '0',
+  hqdunsnumber int(11) NOT NULL DEFAULT '0',
+  gltdunsnumber int(11) NOT NULL DEFAULT '0',
+  countrycode3 char(3) NOT NULL DEFAULT '',
+  audience varchar(125) NOT NULL DEFAULT '',
+  audiencesegment varchar(125) NOT NULL DEFAULT '',
+  b2b varchar(6) NOT NULL DEFAULT '',
+  employeerange varchar(125) NOT NULL DEFAULT '',
+  forbes2k varchar(6) NOT NULL DEFAULT '',
+  fortune1k varchar(6) NOT NULL DEFAULT '',
+  industry varchar(125) NOT NULL DEFAULT '',
+  informationlevel varchar(6) NOT NULL DEFAULT '',
+  latitude double(16,4) NOT NULL DEFAULT '0.0000',
+  longitude double(16,4) NOT NULL DEFAULT '0.0000',
+  phone varchar(25) NOT NULL DEFAULT '',
+  revenuerange varchar(125) NOT NULL DEFAULT '',
+  subindustry varchar(125) NOT NULL DEFAULT '',
+  cov char(2) NOT NULL DEFAULT '',
+  KEY wdate (date,heading,acct),
+  KEY wdate2 (date,heading),
+  KEY worg (org),
+  KEY wdomain (domain),
+  KEY wcov (cov),
+  KEY wzip (zip),
+  KEY wind (industry),
+  KEY wcountry (country),
+  KEY oid (oid),
+  KEY orgid (orgid)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 "
+
+ mysql -Af ${DB} -e "INSERT INTO  ${NEWTABLE}                   
+ ( 
+ date, acct, heading, org, domain, country, city, state, zip, cnt, isp, block, orgid, oid, ip, naics, primary_sic,
+ countrycode, dunsnum, domestichqdunsnumber, hqdunsnumber, gltdunsnumber, countrycode3, audience,
+ audiencesegment, b2b, employeerange, forbes2k, fortune1k, industry, informationlevel, latitude,
+ longitude, phone, revenuerange, subindustry, cov
+ ) 
+ SELECT
+ date, acct, heading,  org, domain, country, city, state, zip, cnt, isp, block, orgid, oid, ip, naics, primary_sic,
+ countrycode, dunsnum, domestichqdunsnumber, hqdunsnumber, gltdunsnumber, countrycode3, audience,
+ audiencesegment, b2b, employeerange, forbes2k, fortune1k, industry, informationlevel, latitude,
+ longitude, phone, revenuerange, subindustry, cov
+ FROM ${OLDTABLE} "
+
+ echo "${OLDTABLE}";
+ mysql -Af ${DB} -e "SELECT count(*) FROM ${OLDTABLE} "
+ echo "${NEWTABLE}" 
+ mysql -Af ${DB} -e "SELECT count(*) FROM ${NEWTABLE} "
+
+
+
+
+
+
+################# SITE ##############
+  
+### TNET SITE 
+ NEWTABLE="tnetlogORGSITED${YR}_${MM}W"
+ OLDTABLE="tnetlogORGSITED${YR}_${MM}"
+
+ mysql -Af ${DB} -e "DROP TABLE IF EXISTS ${NEWTABLE}"
+  
+ mysql -Af ${DB} -e "
+ CREATE TABLE ${NEWTABLE} (
+  date varchar(4) NOT NULL default '',
+  org varchar(125) NOT NULL default '',
+  domain varchar(125) NOT NULL default '',
+  country varchar(100) NOT NULL default '',
+  city varchar(100) NOT NULL default '',
+  state varchar(50) NOT NULL default '',
+  zip varchar(12) NOT NULL default '',
+  cnt bigint(20) NOT NULL default '0',
+  isp char(1) NOT NULL default '',
+  block char(1) NOT NULL default '',
+  orgid varchar(32) NOT NULL default '',
+  oid varchar(32) NOT NULL default '',
+  ip varchar(39) NOT NULL default '',
+  naics varchar(10) NOT NULL default '',
+  primary_sic varchar(150) NOT NULL default '',
+  countrycode varchar(10) NOT NULL default '',
+  dunsnum int(11) NOT NULL default '0',
+  domestichqdunsnumber int(11) NOT NULL default '0',
+  hqdunsnumber int(11) NOT NULL default '0',
+  gltdunsnumber int(11) NOT NULL default '0',
+  countrycode3 char(3) NOT NULL default '',
+  audience varchar(125) NOT NULL default '',
+  audiencesegment varchar(125) NOT NULL default '',
+  b2b varchar(6) NOT NULL default '',
+  employeerange varchar(125) NOT NULL default '',
+  forbes2k varchar(6) NOT NULL default '',
+  fortune1k varchar(6) NOT NULL default '',
+  industry varchar(125) NOT NULL default '',
+  informationlevel varchar(6) NOT NULL default '',
+  latitude  double(16,4) NOT NULL default '0.0000',
+  longitude  double(16,4) NOT NULL default '0.0000',
+  phone varchar(25) NOT NULL default '',
+  revenuerange varchar(125) NOT NULL default '',
+  subindustry varchar(125) NOT NULL default '',
+  cov char(2) NOT NULL default '',
+  KEY wdate (date),
+  KEY worg (org),
+  KEY wdomain (domain),
+  KEY wcov (cov),
+  KEY wzip (zip),
+  KEY wind (industry),
+  KEY wcountry (country),
+  KEY oid (oid),
+  KEY orgid (orgid)
+ ) ENGINE=MyISAM DEFAULT CHARSET=latin1 "
+ 
+ 
+ mysql -Af ${DB} -e "INSERT INTO  ${NEWTABLE}                   
+ (
+ date, org, domain, country, city, state, zip, cnt, isp, block, orgid, oid, ip, naics, primary_sic,
+ countrycode, dunsnum, domestichqdunsnumber, hqdunsnumber, gltdunsnumber, countrycode3, audience,
+ audiencesegment, b2b, employeerange, forbes2k, fortune1k, industry, informationlevel, latitude,
+ longitude, phone, revenuerange, subindustry, cov
+ ) 
+ SELECT
+ date, org, domain, country, city, state, zip, cnt, isp, block, orgid, oid, ip, naics, primary_sic,
+ countrycode, dunsnum, domestichqdunsnumber, hqdunsnumber, gltdunsnumber, countrycode3, audience,
+ audiencesegment, b2b, employeerange, forbes2k, fortune1k, industry, informationlevel, latitude,
+ longitude, phone, revenuerange, subindustry, cov
+ FROM ${OLDTABLE} "
+
+ echo "${OLDTABLE}";
+ mysql -Af ${DB} -e "SELECT count(*) FROM ${OLDTABLE} "
+ echo "${NEWTABLE}" 
+ mysql -Af ${DB} -e "SELECT count(*) FROM ${NEWTABLE} "
+    
+
+ ### NEWS SITE 
+ NEWTABLE="newsORGSITED${YR}W"
+ OLDTABLE="newsORGSITED${YR}"
+
+ mysql -Af ${DB} -e "DROP TABLE IF EXISTS ${NEWTABLE}"
+  
+ mysql -Af ${DB} -e "
+ CREATE TABLE ${NEWTABLE} (
+  date varchar(4) NOT NULL default '',
+  org varchar(125) NOT NULL default '',
+  domain varchar(125) NOT NULL default '',
+  country varchar(100) NOT NULL default '',
+  city varchar(100) NOT NULL default '',
+  state varchar(50) NOT NULL default '',
+  zip varchar(12) NOT NULL default '',
+  cnt bigint(20) NOT NULL default '0',
+  isp char(1) NOT NULL default '',
+  block char(1) NOT NULL default '',
+  orgid varchar(32) NOT NULL default '',
+  oid varchar(32) NOT NULL default '',
+  ip varchar(39) NOT NULL default '',
+  naics varchar(10) NOT NULL default '',
+  primary_sic varchar(150) NOT NULL default '',
+  countrycode varchar(10) NOT NULL default '',
+  dunsnum int(11) NOT NULL default '0',
+  domestichqdunsnumber int(11) NOT NULL default '0',
+  hqdunsnumber int(11) NOT NULL default '0',
+  gltdunsnumber int(11) NOT NULL default '0',
+  countrycode3 char(3) NOT NULL default '',
+  audience varchar(125) NOT NULL default '',
+  audiencesegment varchar(125) NOT NULL default '',
+  b2b varchar(6) NOT NULL default '',
+  employeerange varchar(125) NOT NULL default '',
+  forbes2k varchar(6) NOT NULL default '',
+  fortune1k varchar(6) NOT NULL default '',
+  industry varchar(125) NOT NULL default '',
+  informationlevel varchar(6) NOT NULL default '',
+  latitude  double(16,4) NOT NULL default '0.0000',
+  longitude  double(16,4) NOT NULL default '0.0000',
+  phone varchar(25) NOT NULL default '',
+  revenuerange varchar(125) NOT NULL default '',
+  subindustry varchar(125) NOT NULL default '',
+  cov char(2) NOT NULL default '',
+  KEY wdate (date),
+  KEY worg (org),
+  KEY wdomain (domain),
+  KEY wcov (cov),
+  KEY wzip (zip),
+  KEY wind (industry),
+  KEY wcountry (country),
+  KEY oid (oid),
+  KEY orgid (orgid)
+ ) ENGINE=MyISAM DEFAULT CHARSET=latin1 "
+ 
+
+ mysql -Af ${DB} -e "INSERT INTO  ${NEWTABLE}                   
+ (
+ date, org, domain, country, city, state, zip, cnt, isp, block, orgid, oid, ip, naics, primary_sic,
+ countrycode, dunsnum, domestichqdunsnumber, hqdunsnumber, gltdunsnumber, countrycode3, audience,
+ audiencesegment, b2b, employeerange, forbes2k, fortune1k, industry, informationlevel, latitude,
+ longitude, phone, revenuerange, subindustry, cov
+ ) 
+ SELECT
+ date, org, domain, country, city, state, zip, cnt, isp, block, orgid, oid, ip, naics, primary_sic,
+ countrycode, dunsnum, domestichqdunsnumber, hqdunsnumber, gltdunsnumber, countrycode3, audience,
+ audiencesegment, b2b, employeerange, forbes2k, fortune1k, industry, informationlevel, latitude,
+ longitude, phone, revenuerange, subindustry, cov
+ FROM ${OLDTABLE} "
+
+ echo "${OLDTABLE}";
+ mysql -Af ${DB} -e "SELECT count(*) FROM ${OLDTABLE} "
+ echo "${NEWTABLE}" 
+ mysql -Af ${DB} -e "SELECT count(*) FROM ${NEWTABLE} "
+
+
+ ### PS SITE
+ NEWTABLE="tnetlogORGPSSITE${YR}W"
+ OLDTABLE="tnetlogORGPS${YR}_${MM}"
+ 
+ mysql -Af ${DB} -e "DELETE FROM ${NEWTABLE} WHERE date='${FDATE}' "   
+
+ mysql -Af ${DB} -e "INSERT INTO  ${NEWTABLE}                   
+ (
+ date, org, domain, country, city, state, zip, cnt, isp, block, orgid, oid, ip, naics, primary_sic,
+ countrycode, dunsnum, domestichqdunsnumber, hqdunsnumber, gltdunsnumber, countrycode3, audience,
+ audiencesegment, b2b, employeerange, forbes2k, fortune1k, industry, informationlevel, latitude,
+ longitude, phone, revenuerange, subindustry, cov
+ ) 
+ SELECT
+ date, org, domain, country, city, state, zip, sum(cnt) AS cnt, isp, block, orgid, oid, ip, naics, primary_sic,
+ countrycode, dunsnum, domestichqdunsnumber, hqdunsnumber, gltdunsnumber, countrycode3, audience,
+ audiencesegment, b2b, employeerange, forbes2k, fortune1k, industry, informationlevel, latitude,
+ longitude, phone, revenuerange, subindustry, cov
+ FROM ${OLDTABLE} GROUP BY org, domain, country, city, state, zip, cov "
+
+ echo "${OLDTABLE}";
+ mysql -Af ${DB} -e "SELECT count(*) FROM ${OLDTABLE} "
+ echo "${NEWTABLE}"; 
+ mysql -Af ${DB} -e "SELECT count(*) FROM ${NEWTABLE} "
+
+
+
+
+
+################# ACCT ##############
+ 
+
+### TNET ACCT 
+ NEWTABLE="tnetlogORGD${YR}_${MM}W"
+ OLDTABLE="tnetlogORGD${YR}_${MM}"
+ 
+ mysql -Af ${DB} -e "DROP TABLE IF EXISTS ${NEWTABLE}"
+ 
+ mysql -Af ${DB} -e "
+ CREATE TABLE ${NEWTABLE} (
+  date varchar(4) NOT NULL default '',
+  acct bigint(20) NOT NULL default '0',
+  org varchar(125) NOT NULL default '',
+  domain varchar(125) NOT NULL default '',
+  country varchar(100) NOT NULL default '',
+  city varchar(100) NOT NULL default '',
+  state varchar(50) NOT NULL default '',
+  zip varchar(12) NOT NULL default '',
+  cnt bigint(20) NOT NULL default '0',
+  isp char(1) NOT NULL default '',
+  block char(1) NOT NULL default '',
+  orgid varchar(32) NOT NULL default '',
+  oid varchar(32) NOT NULL default '',
+  ip varchar(39) NOT NULL default '',
+  naics varchar(10) NOT NULL default '',
+  primary_sic varchar(150) NOT NULL default '',
+  countrycode varchar(10) NOT NULL default '',
+  dunsnum int(11) NOT NULL default '0',
+  domestichqdunsnumber int(11) NOT NULL default '0',
+  hqdunsnumber int(11) NOT NULL default '0',
+  gltdunsnumber int(11) NOT NULL default '0',
+  countrycode3 char(3) NOT NULL default '',
+  audience varchar(125) NOT NULL default '',
+  audiencesegment varchar(125) NOT NULL default '',
+  b2b varchar(6) NOT NULL default '',
+  employeerange varchar(125) NOT NULL default '',
+  forbes2k varchar(6) NOT NULL default '',
+  fortune1k varchar(6) NOT NULL default '',
+  industry varchar(125) NOT NULL default '',
+  informationlevel varchar(6) NOT NULL default '',
+  latitude  double(16,4) NOT NULL default '0.0000',
+  longitude  double(16,4) NOT NULL default '0.0000',
+  phone varchar(25) NOT NULL default '',
+  revenuerange varchar(125) NOT NULL default '',
+  subindustry varchar(125) NOT NULL default '',
+  cov char(2) NOT NULL default '',
+  
+  KEY wdate (date, acct),
+   
+  KEY worg (org),
+  KEY wdomain (domain),
+   
+  KEY wcov (cov),
+  KEY wzip (zip),
+  KEY wind (industry),
+  KEY wcountry (country),
+    
+  KEY woid (oid),
+  KEY worgid (orgid)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 "
+
+ mysql -Af ${DB} -e "INSERT INTO  ${NEWTABLE}                   
+ (date, acct, org, domain, country, city, state, zip, cnt, isp, block, orgid, oid, ip, naics,
+ primary_sic, countrycode, dunsnum, domestichqdunsnumber, hqdunsnumber, gltdunsnumber,
+ countrycode3, audience, audiencesegment, b2b, employeerange, forbes2k, fortune1k, industry,
+ informationlevel, latitude, longitude, phone, revenuerange, subindustry, cov)
+ SELECT
+ date, acct, org, domain, country, city, state, zip, cnt, isp, block, orgid, oid, ip, naics,
+ primary_sic, countrycode, dunsnum, domestichqdunsnumber, hqdunsnumber, gltdunsnumber,
+ countrycode3, audience, audiencesegment, b2b, employeerange, forbes2k, fortune1k, industry,
+ informationlevel, latitude, longitude, phone, revenuerange, subindustry, cov
+ FROM ${OLDTABLE} "
+
+ echo "${OLDTABLE}"   
+ mysql -Af ${DB} -e "SELECT count(*) FROM ${OLDTABLE} "
+ echo "${NEWTABLE}"
+ mysql -Af ${DB} -e "SELECT count(*) FROM ${NEWTABLE} "
+
+
+ ### NEWS ACCT 
+ NEWTABLE="newsORGD${YR}W"
+ OLDTABLE="newsORGD${YR}"
+ 
+ mysql -Af ${DB} -e "DROP TABLE IF EXISTS ${NEWTABLE}"
+ 
+ mysql -Af ${DB} -e "
+ CREATE TABLE ${NEWTABLE} (
+  date varchar(4) NOT NULL default '',
+  acct bigint(20) NOT NULL default '0',
+  org varchar(125) NOT NULL default '',
+  domain varchar(125) NOT NULL default '',
+  country varchar(100) NOT NULL default '',
+  city varchar(100) NOT NULL default '',
+  state varchar(50) NOT NULL default '',
+  zip varchar(12) NOT NULL default '',
+  cnt bigint(20) NOT NULL default '0',
+  isp char(1) NOT NULL default '',
+  block char(1) NOT NULL default '',
+  orgid varchar(32) NOT NULL default '',
+  oid varchar(32) NOT NULL default '',
+  ip varchar(39) NOT NULL default '',
+  naics varchar(10) NOT NULL default '',
+  primary_sic varchar(150) NOT NULL default '',
+  countrycode varchar(10) NOT NULL default '',
+  dunsnum int(11) NOT NULL default '0',
+  domestichqdunsnumber int(11) NOT NULL default '0',
+  hqdunsnumber int(11) NOT NULL default '0',
+  gltdunsnumber int(11) NOT NULL default '0',
+  countrycode3 char(3) NOT NULL default '',
+  audience varchar(125) NOT NULL default '',
+  audiencesegment varchar(125) NOT NULL default '',
+  b2b varchar(6) NOT NULL default '',
+  employeerange varchar(125) NOT NULL default '',
+  forbes2k varchar(6) NOT NULL default '',
+  fortune1k varchar(6) NOT NULL default '',
+  industry varchar(125) NOT NULL default '',
+  informationlevel varchar(6) NOT NULL default '',
+  latitude  double(16,4) NOT NULL default '0.0000',
+  longitude  double(16,4) NOT NULL default '0.0000',
+  phone varchar(25) NOT NULL default '',
+  revenuerange varchar(125) NOT NULL default '',
+  subindustry varchar(125) NOT NULL default '',
+  cov char(2) NOT NULL default '',
+  
+  KEY wdate (date, acct),
+   
+  KEY worg (org),
+  KEY wdomain (domain),
+   
+  KEY wcov (cov),
+  KEY wzip (zip),
+  KEY wind (industry),
+  KEY wcountry (country),
+   
+  KEY woid (oid),
+  KEY worgid (orgid)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 "
+
+ mysql -Af ${DB} -e "INSERT INTO  ${NEWTABLE}                   
+ (date, acct, org, domain, country, city, state, zip, cnt, isp, block, orgid, oid, ip, naics,
+ primary_sic, countrycode, dunsnum, domestichqdunsnumber, hqdunsnumber, gltdunsnumber,
+ countrycode3, audience, audiencesegment, b2b, employeerange, forbes2k, fortune1k, industry,
+ informationlevel, latitude, longitude, phone, revenuerange, subindustry, cov)
+ SELECT
+ date, acct, org, domain, country, city, state, zip, cnt, isp, block, orgid, oid, ip, naics,
+ primary_sic, countrycode, dunsnum, domestichqdunsnumber, hqdunsnumber, gltdunsnumber,
+ countrycode3, audience, audiencesegment, b2b, employeerange, forbes2k, fortune1k, industry,
+ informationlevel, latitude, longitude, phone, revenuerange, subindustry, cov
+ FROM ${OLDTABLE} "
+
+ echo "${OLDTABLE}"   
+ mysql -Af ${DB} -e "SELECT count(*) FROM ${OLDTABLE} "
+ echo "${NEWTABLE}"
+ mysql -Af ${DB} -e "SELECT count(*) FROM ${NEWTABLE} "
+      
+ # PS ACCT 
+ NEWTABLE="tnetlogORGPS${YR}_${MM}W"
+ OLDTABLE="tnetlogORGPS${YR}_${MM}"
+ 
+ mysql -Af ${DB} -e "DROP TABLE IF EXISTS ${NEWTABLE}"
+ 
+ mysql -Af ${DB} -e "
+ CREATE TABLE ${NEWTABLE} (
+  date varchar(4) NOT NULL default '',
+  acct bigint(20) NOT NULL default '0',
+  org varchar(125) NOT NULL default '',
+  domain varchar(125) NOT NULL default '',
+  country varchar(100) NOT NULL default '',
+  city varchar(100) NOT NULL default '',
+  state varchar(50) NOT NULL default '',
+  zip varchar(12) NOT NULL default '',
+  cnt bigint(20) NOT NULL default '0',
+  isp char(1) NOT NULL default '',
+  block char(1) NOT NULL default '',
+  orgid varchar(32) NOT NULL default '',
+  oid varchar(32) NOT NULL default '',
+  ip varchar(39) NOT NULL default '',
+  naics varchar(10) NOT NULL default '',
+  primary_sic varchar(150) NOT NULL default '',
+  countrycode varchar(10) NOT NULL default '',
+  dunsnum int(11) NOT NULL default '0',
+  domestichqdunsnumber int(11) NOT NULL default '0',
+  hqdunsnumber int(11) NOT NULL default '0',
+  gltdunsnumber int(11) NOT NULL default '0',
+  countrycode3 char(3) NOT NULL default '',
+  audience varchar(125) NOT NULL default '',
+  audiencesegment varchar(125) NOT NULL default '',
+  b2b varchar(6) NOT NULL default '',
+  employeerange varchar(125) NOT NULL default '',
+  forbes2k varchar(6) NOT NULL default '',
+  fortune1k varchar(6) NOT NULL default '',
+  industry varchar(125) NOT NULL default '',
+  informationlevel varchar(6) NOT NULL default '',
+  latitude  double(16,4) NOT NULL default '0.0000',
+  longitude  double(16,4) NOT NULL default '0.0000',
+  phone varchar(25) NOT NULL default '',
+  revenuerange varchar(125) NOT NULL default '',
+  subindustry varchar(125) NOT NULL default '',
+  cov char(2) NOT NULL default '',
+  
+  KEY wdate (date, acct),
+   
+  KEY worg (org),
+  KEY wdomain (domain),
+   
+  KEY wcov (cov),
+  KEY wzip (zip),
+  KEY wind (industry),
+  KEY wcountry (country),
+    
+  KEY woid (oid),
+  KEY worgid (orgid)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 "
+
+ mysql -Af ${DB} -e "INSERT INTO  ${NEWTABLE}                   
+ (date, acct, org, domain, country, city, state, zip, cnt, isp, block, orgid, oid, ip, naics,
+ primary_sic, countrycode, dunsnum, domestichqdunsnumber, hqdunsnumber, gltdunsnumber,
+ countrycode3, audience, audiencesegment, b2b, employeerange, forbes2k, fortune1k, industry,
+ informationlevel, latitude, longitude, phone, revenuerange, subindustry, cov)
+ SELECT
+ date, acct, org, domain, country, city, state, zip, cnt, isp, block, orgid, oid, ip, naics,
+ primary_sic, countrycode, dunsnum, domestichqdunsnumber, hqdunsnumber, gltdunsnumber,
+ countrycode3, audience, audiencesegment, b2b, employeerange, forbes2k, fortune1k, industry,
+ informationlevel, latitude, longitude, phone, revenuerange, subindustry, cov
+ FROM ${OLDTABLE} "
+
+ echo "${OLDTABLE}"   
+ mysql -Af ${DB} -e "SELECT count(*) FROM ${OLDTABLE} "
+ echo "${NEWTABLE}"
+ mysql -Af ${DB} -e "SELECT count(*) FROM ${NEWTABLE} "
+
+
+echo
+echo "Done...";
+echo

@@ -1,0 +1,34 @@
+#!/bin/sh
+#
+
+echo "show databases"  | mysql -As innodb
+
+exit;
+
+ 
+echo "DROP TABLE tnetlogORGPSM "  | mysql -As thomas
+echo "DROP TABLE tnetlogORGDAllM  "  | mysql -As thomas
+echo "DROP TABLE tnetlogORGCATDWIZ "  | mysql -As thomas
+echo "DROP TABLE tnetlogORGSITEDM  "  | mysql -As thomas
+
+#FILE="RegData.txt";
+
+#rm -f /opt/tnet/${FILE}
+ 
+#echo "DELETE FROM visregtemp  "  | mysql -As thomas  
+
+#echo "INSERT IGNORE INTO visregtemp (org,city,state,zip,country,isp) SELECT org,city,state,zip,countrycode,isp FROM   tnetlogORGPSM  WHERE latitude='0.0001'"  | mysql -As thomas  
+
+#echo "INSERT IGNORE INTO visregtemp (org,city,state,zip,country,isp) SELECT org,city,state,zip,countrycode,isp FROM tnetlogORGDAllM WHERE latitude='0.0001'"  | mysql -As thomas  
+ 
+#echo "INSERT IGNORE INTO visregtemp (org,city,state,zip,country,isp) SELECT org,city,state,zip,countrycode,isp FROM tnetlogORGCATDWIZ WHERE latitude='0.0001' "  | mysql -As thomas
+
+#echo "INSERT IGNORE INTO visregtemp (org,city,state,zip,country,isp) SELECT org,city,state,zip,countrycode,isp FROM tnetlogORGSITEDM WHERE latitude='0.0001' "  | mysql -As thomas
+ 
+#echo "SELECT org,city,state,zip,country,isp FROM visregtemp order by org,city,state,zip, country "  | mysql -As thomas > ${FILE}
+ 
+#echo ${FILE} | mail -s "visregtemp script finished   " robertf@c.net
+
+  
+echo "Done...";
+exit;

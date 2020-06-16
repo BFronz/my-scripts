@@ -1,0 +1,85 @@
+#!/bin/sh
+#   
+# runs all org scripts
+# this will take a while and need to check all imports as they go
+# run as  ./load-tnet-org YYMM 
+# if you want to delete first run as ./load-tnet-org YYMM DELETE 
+
+  
+if [ -z $1 ]
+ then
+ echo ""
+ echo "Missing date: YYMM"
+ echo ""
+ exit;
+fi
+ 
+if [ -z $2 ]
+ then
+ echo ""
+ echo "Missing Delete Mode"
+ echo ""
+ exit;
+fi
+
+FDATE=$1
+DELETE=$2
+
+echo ""
+echo "Date: ${FDATE}  ${DELETE}"
+echo ""
+  
+
+echo "Site" 
+./load-org-drill-tnet-site.pl ${FDATE} ${DELETE}
+echo "------------------------------------" #
+
+echo "Adv" 
+./load-org-drill-tnet-adv.pl ${FDATE} ${DELETE}
+echo ""
+echo "------------------------------------" #
+
+echo "Cat" 
+./load-org-drill-tnet-cat.pl ${FDATE}  ${DELETE}
+echo ""
+echo "------------------------------------" #
+ 
+echo "News" 
+./load-org-drill-news.pl ${FDATE}  ${DELETE}
+echo ""
+echo "------------------------------------"
+
+echo "Product Search" 
+./load-org-drill-PS-adv.pl ${FDATE}  ${DELETE}
+echo ""
+echo "------------------------------------"
+
+echo "Flat Catnav" 
+./load-org-drill-tnet-flatcatnav.pl ${FDATE}  ${DELETE}
+./catnav-visitor-combo-extra  ${FDATE}    # delete is already in script
+echo "" 
+echo "------------------------------------"
+ 
+
+
+echo "Extra" 
+./load-org-extra.pl ${FDATE} ${DELETE}  
+echo ""
+echo "------------------------------------"
+
+
+echo "VTool"
+cd /usr/tnetlogs/wt/visitortool
+./vtool ${FDATE}
+cd /usr/tnetlogs/wt
+echo ""
+echo "------------------------------------" 
+ 
+ 
+echo "Check Tables Script. Look for missing data.";
+./checktables.pl ${FDATE}
+echo "------------------------------------"
+
+
+echo "Done..."
+echo ""

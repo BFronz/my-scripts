@@ -1,0 +1,113 @@
+#!/bin/sh
+#
+#
+#
+
+echo "tnetlogORGDWIZ"
+mysql -Af thomas -e "DROP TABLE IF EXISTS tnetlogORGDWIZ"
+ 
+date;
+
+for NAME in `cat mk-org-key-tables.ls`
+        do
+                echo "${NAME}"
+		
+		echo "ALTER TABLE ${NAME} ADD KEY (ip)"  | mysql -As thomas		 
+  
+        done
+
+
+ 
+  
+echo 
+mysql -Af thomas -e "CREATE TABLE tnetlogORGDWIZ (
+  date varchar(4) NOT NULL default '',
+  acct bigint(20) NOT NULL default '0',
+  org varchar(125) NOT NULL default '',
+  domain varchar(125) NOT NULL default '',
+  country varchar(100) NOT NULL default '',
+  city varchar(100) NOT NULL default '',
+  state varchar(50) NOT NULL default '',
+  zip varchar(12) NOT NULL default '',
+  cnt bigint(20) NOT NULL default '0',
+  isp char(1) NOT NULL default '',
+  block char(1) NOT NULL default '',
+  orgid varchar(32) NOT NULL default '',
+  oid varchar(32) NOT NULL default '',
+  ip varchar(39) NOT NULL default '',
+  naics varchar(10) NOT NULL default '',
+  primary_sic varchar(150) NOT NULL default '',
+  countrycode varchar(10) NOT NULL default '',
+  dunsnum int(11) NOT NULL default '0',
+  domestichqdunsnumber int(11) NOT NULL default '0',
+  hqdunsnumber int(11) NOT NULL default '0',
+  gltdunsnumber int(11) NOT NULL default '0',
+  countrycode3 char(3) NOT NULL default '',
+  audience varchar(125) NOT NULL default '',
+  audiencesegment varchar(125) NOT NULL default '',
+  b2b varchar(6) NOT NULL default '',
+  employeerange varchar(125) NOT NULL default '',
+  forbes2k varchar(6) NOT NULL default '',
+  fortune1k varchar(6) NOT NULL default '',
+  industry varchar(125) NOT NULL default '',
+  informationlevel varchar(6) NOT NULL default '',
+  latitude  double(16,4) NOT NULL default '0.0000',
+  longitude  double(16,4) NOT NULL default '0.0000',
+  phone varchar(25) NOT NULL default '',
+  revenuerange varchar(125) NOT NULL default '',
+  subindustry varchar(125) NOT NULL default '',
+  cov char(2) NOT NULL default '',
+  zcov char(2) NOT NULL DEFAULT '',
+  KEY wdate (date,acct,cov,zcov),
+  KEY worg (org),
+  KEY wdomain (domain),
+  KEY wzip (zip),
+  KEY wind (industry),
+  KEY wcountry (country),
+  KEY oid (oid),
+  KEY orgid (orgid),
+  KEY ip (ip)
+ ) ENGINE=MRG_MyISAM DEFAULT CHARSET=latin1 INSERT_METHOD=LAST UNION=(
+
+ newsORGD13W, newsORGD14W, newsORGD15W, newsORGD16W,
+
+ tnetlogORGPS13_01W, tnetlogORGPS13_02W, tnetlogORGPS13_03W, tnetlogORGPS13_04W,
+ tnetlogORGPS13_05W, tnetlogORGPS13_06W, tnetlogORGPS13_07W, tnetlogORGPS13_08W,
+ tnetlogORGPS13_09W, tnetlogORGPS13_10W, tnetlogORGPS13_11W, tnetlogORGPS13_12W,
+
+ tnetlogORGPS14_01W, tnetlogORGPS14_02W, tnetlogORGPS14_03W, tnetlogORGPS14_04W,
+ tnetlogORGPS14_05W, tnetlogORGPS14_06W, tnetlogORGPS14_07W, tnetlogORGPS14_08W,
+ tnetlogORGPS14_09W, tnetlogORGPS14_10W, tnetlogORGPS14_11W, tnetlogORGPS14_12W,
+
+ tnetlogORGPS15_01W, tnetlogORGPS15_02W, tnetlogORGPS15_03W, tnetlogORGPS15_04W,
+ tnetlogORGPS15_05W, tnetlogORGPS15_06W, tnetlogORGPS15_07W, tnetlogORGPS15_08W,
+ tnetlogORGPS15_09W, tnetlogORGPS15_10W, tnetlogORGPS15_11W, tnetlogORGPS15_12W,
+ 
+ tnetlogORGPS16_01W, tnetlogORGPS16_02W, tnetlogORGPS16_03W, tnetlogORGPS16_04W,
+ tnetlogORGPS16_05W, tnetlogORGPS16_06W, tnetlogORGPS16_07W, tnetlogORGPS16_08W,
+ tnetlogORGPS16_09W, tnetlogORGPS16_10W, tnetlogORGPS16_11W, tnetlogORGPS16_12W,  
+  
+ tnetlogORGD13_01W, tnetlogORGD13_02W, tnetlogORGD13_03W, tnetlogORGD13_04W,
+ tnetlogORGD13_05W, tnetlogORGD13_06W, tnetlogORGD13_07W, tnetlogORGD13_08W,
+ tnetlogORGD13_09W, tnetlogORGD13_10W, tnetlogORGD13_11W, tnetlogORGD13_12W,
+
+ tnetlogORGD14_01W, tnetlogORGD14_02W, tnetlogORGD14_03W, tnetlogORGD14_04W,
+ tnetlogORGD14_05W, tnetlogORGD14_06W, tnetlogORGD14_07W, tnetlogORGD14_08W,
+ tnetlogORGD14_09W, tnetlogORGD14_10W, tnetlogORGD14_11W, tnetlogORGD14_12W,
+
+ tnetlogORGD15_01W, tnetlogORGD15_02W, tnetlogORGD15_03W, tnetlogORGD15_04W,
+ tnetlogORGD15_05W, tnetlogORGD15_06W, tnetlogORGD15_07W, tnetlogORGD15_08W,
+ tnetlogORGD15_09W, tnetlogORGD15_10W, tnetlogORGD15_11W, tnetlogORGD15_12W,
+
+ tnetlogORGD16_01W, tnetlogORGD16_02W, tnetlogORGD16_03W, tnetlogORGD16_04W,
+ tnetlogORGD16_05W, tnetlogORGD16_06W, tnetlogORGD16_07W, tnetlogORGD16_08W,
+ tnetlogORGD16_09W, tnetlogORGD16_10W, tnetlogORGD16_11W, tnetlogORGD16_12W 
+)"
+mysql -Af thomas -e "SELECT count(*) FROM tnetlogORGDWIZ"
+
+
+date;
+
+
+echo mk-org-key | mail -s "mk-org-key finished" robertf@c.net
+  

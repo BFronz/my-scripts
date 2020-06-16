@@ -1,0 +1,23 @@
+#!/bin/sh
+#
+  
+echo
+echo "Delete from qlogH";
+echo "DELETE FROM qlogH"  | mysql -As thomas
+
+
+echo
+echo "Insert into qlogH"; 
+echo "INSERT INTO qlogH (date, heading,  covflag, us, conv)  
+SELECT date, heading, covflag, SUM(us) AS us, SUM(cd + em + lw + pc + pv + lc + vv + dv + iv + sm + pp + mv) 
+FROM thomqlogY 
+WHERE date in
+('1201','1202','1203','1204','1205','1206','1207','1208','1209','1210','1211','1212','1301','1302','1303','1304','1305','1306',
+'1307','1308','1309','1310','1311','1312','1401','1402','1403','1404','1405','1406','1407','1408','1409','1410','1411','1412',
+'1501','1502','1503','1504','1505','1506','1507','1508','1509','1510','1511','1512','1601','1602','1603','1604','1605','1606',
+'1607','1608','1609','1610','1611','1612','1701', '1702','1703','1704','1705','1706','1707','1708','1709','1710','1711')
+GROUP BY date, heading,  covflag"  | mysql -As thomas
+ 
+                                                           
+echo ""
+echo "Done..."

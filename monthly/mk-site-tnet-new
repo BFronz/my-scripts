@@ -1,0 +1,128 @@
+#!/bin/sh
+# 
+# Pulls and loads TNET site procs 
+# Pulls NEWS site procs
+# WebTrends 8
+#
+# params:  $1=proc $2=dset $3=group $4=national ${FROM} ${TO} ${SITE} $5=origin $6=exclude
+
+# Change these vars monthly
+# FIRST DAY OF MONTH to FIRST DAY OF MONTH
+
+source /usr/wt/reload.sh
+ 
+FROM="01/01/2016"  TO="02/01/2016"  FDATE="1601"
+FROM="02/01/2016"  TO="03/01/2016"  FDATE="1602"
+FROM="03/01/2016"  TO="04/01/2016"  FDATE="1603"
+FROM="04/01/2016"  TO="05/01/2016"  FDATE="1604"
+FROM="05/01/2016"  TO="06/01/2016"  FDATE="1605"
+FROM="06/01/2016"  TO="07/01/2016"  FDATE="1606"
+FROM="07/01/2016"  TO="08/01/2016"  FDATE="1607"
+FROM="08/01/2016"  TO="09/01/2016"  FDATE="1608"
+FROM="09/01/2016"  TO="10/01/2016"  FDATE="1609"
+FROM="10/01/2016"  TO="11/01/2016"  FDATE="1610"
+FROM="11/01/2016"  TO="12/01/2016"  FDATE="1611"
+FROM="12/01/2016"  TO="01/01/2017"  FDATE="1612"
+
+FROM="01/01/2017"  TO="02/01/2017"  FDATE="1701"
+FROM="02/01/2017"  TO="02/28/2017"  FDATE="1702"
+FROM="03/01/2017"  TO="03/31/2017"  FDATE="1703"
+ 
+OUTFILE="sitereport-tnet-${FDATE}.txt"
+echo "delete from thomtnetlogSITEN where date='${FDATE}';" > ${OUTFILE}     
+echo "insert into thomtnetlogSITEN set date='${FDATE}';" >> ${OUTFILE}
+ 
+function runproc () {
+  
+ ###nice ./get-procs.pl $1 $2 $3 $4 ${FROM} ${TO} ${SITE} $5 $6
+ 
+ val=`cut -f2 reports/${1}-${FDATE}.txt`
+
+ if [ $1 = "searchEngineRefs" ]; then
+  val=0
+
+  for cnt in `cut -f2 reports/${1}-${FDATE}.txt`
+   do
+    let val=val+cnt
+   done
+
+ fi
+  
+ echo "update tnetlogSITEN set ${FLD}='${val}' where date='${FDATE}';" >> ${OUTFILE}
+ #rm -f reports/${1} # removes xml file
+ #nice gzip reports/${1}
+} 
+ 
+#visits_tnet_news     
+#directRefs
+#searchEngineRefs
+
+SITE="T"  # TNET Procs
+
+FLD="ds"
+runproc dirSearches searches dirsearch 0
+               
+FLD="ws"
+runproc webResultsSearches searches websearch 0
+
+FLD="brand"         
+runproc bSearches searches bsearch 0
+
+FLD="us"
+runproc visits v visit 0   # now use number from combined TN  
+                 
+FLD="cp"
+runproc companyProfileViews hits comprofile 0
+
+FLD="cv"
+runproc productCatalogViews hits catview 0
+
+FLD="la"
+runproc supplierLinkClicks hits suplink 0 origin=Company+Profile+PDF+Thumbnail\&origin=Company+Profile+PDF+Title  exclude 
+
+FLD="mi"
+runproc moreInfoClicks hits moreinfo 0
+
+FLD="ec"
+runproc eMailColleague hits emailcol 0
+
+FLD="my"
+runproc myThomasSaves hits tsaves 0
+ 
+FLD="cd"
+runproc cadRegisterLinks hits cadlink 0 
+  
+
+ 
+FLD="lc"
+# http://thomasxml.insightrocket.com/xmlgrab.pl?start=10/01/2010&end=10/31/2010&dset=hitscatnavlink&site=T
+# runproc CatalogLinks hitscatnavlink 0 0
+runproc CatalogLinks hits catlink 0 
+ 
+
+# NEWS Procs
+
+SITE="N" 
+FLD="news_us" 
+#runproc visits_news v 0 0
+runproc  visits_tnet_news v 0 0
+ 
+
+# Combined TNET & NEWS procs
+
+SITE="TN"  
+FLD="tnet_news_us"
+runproc visits_tnet_news v 0 0
+    
+FLD="direct" 
+runproc directRefs v_directref directref  0
+ 
+FLD="scheng"
+runproc searchEngineRefs searchref 0 0 
+   
+# Load site report table
+mysql -Af thomas < ${OUTFILE}
+
+echo ""
+echo "Done..."
+echo ""

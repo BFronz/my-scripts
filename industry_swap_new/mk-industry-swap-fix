@@ -1,0 +1,29 @@
+#!/bin/sh
+#
+
+ 
+
+if [ -z $1 ]
+ then
+ echo ""
+ echo "Missing date: YYMM"
+ echo ""
+ exit;
+fi
+
+source /usr/wt/reload.sh
+
+FDATE=$1
+
+YY=${FDATE:0:2}
+MM=${FDATE:2:2}
+
+echo ""
+echo "Date: ${FDATE}"
+echo ""
+
+
+
+./charon.pl tnetlogORGD${YY}_${MM}       ${FDATE}
+./charon.pl tnetlogORGD${YY}_${MM}W      ${FDATE}
+

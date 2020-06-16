@@ -1,0 +1,99 @@
+#!/bin/sh
+#
+ 
+FILE="regcheck2.txt";
+ 
+rm -f /usr/tnetlogs/wt/${FILE}
+ 
+# TNET and PS adv
+echo "--- TNET PS adv ---";
+for TABLE in `cat /usr/tnetlogs/wt/regadvtables.ls`
+	do
+		echo "${TABLE}" 
+		echo "${TABLE}" >> ${FILE}  
+		echo "SELECT  count(*) FROM ${TABLE} " | mysql -As thomas >> ${FILE}   		
+		echo " " >> ${FILE}  
+	done
+
+
+# TNET SITE
+echo "--- TNET SITE ---";
+for TABLE in `cat /usr/tnetlogs/wt/regsitetables.ls`
+	do
+		echo "${TABLE}"
+		echo "${TABLE}" >> ${FILE} 
+		echo "SELECT  count(*) FROM ${TABLE} " | mysql -As thomas >> ${FILE}   		
+		echo " " >> ${FILE}  
+	done 
+ 
+
+# TNET WCAT
+echo "--- TNET WCAT ---";
+for TABLE in `cat /usr/tnetlogs/wt/regwcattables.ls`
+	do
+		echo "${TABLE}"
+		echo "${TABLE}" >> ${FILE} 
+		echo "SELECT  count(*) FROM ${TABLE} " | mysql -As thomas >> ${FILE}   		
+		echo " " >> ${FILE}  
+	done   
+ 
+
+# TNET CAT
+echo "--- TNET CAT ---";
+for TABLE in `cat /usr/tnetlogs/wt/regcattables.ls`
+	do
+		echo "${TABLE}"
+		echo "${TABLE}" >> ${FILE} 
+		echo "SELECT  count(*) FROM ${TABLE} " | mysql -As thomas >> ${FILE}   		
+		echo " " >> ${FILE}  
+	done  
+ 
+
+
+# FLAT
+echo "--- FLAT ---";
+for FDATE in `cat /usr/tnetlogs/wt/regdatetables.ls`
+	do 
+ 
+		YR=${FDATE:0:2}
+		MON=${FDATE:2:2}
+		TABLE="flat_catnav_ORG${YR}"
+
+		echo "${TABLE} ${FDATE}"
+		echo "${TABLE} ${FDATE}" >> ${FILE}
+		echo "SELECT  count(*) FROM ${TABLE}  WHERE date='${FDATE}' " | mysql -As thomas >> ${FILE}   		
+		echo " " >> ${FILE}  
+	done
+ 
+
+# NEWS SITE
+echo "--- NEWS SITE ---";
+for FDATE in `cat /usr/tnetlogs/wt/regdatetables.ls`
+	do 
+		YR=${FDATE:0:2}
+		MON=${FDATE:2:2}
+		TABLE="newsORGSITED${YR}"
+
+		echo "${TABLE} ${FDATE}"
+		echo "${TABLE} ${FDATE}" >> ${FILE}
+		echo "SELECT  count(*) FROM ${TABLE}  WHERE date='${FDATE}' " | mysql -As thomas >> ${FILE}   		
+		echo " " >> ${FILE}  
+	done 
+ 
+# NEWS ADV
+echo "--- NEWS adv ---";
+for FDATE in `cat /usr/tnetlogs/wt/regdatetables.ls`
+	do 
+		YR=${FDATE:0:2}
+		MON=${FDATE:2:2}
+		TABLE="newsORGD${YR}"
+
+		echo "${TABLE} ${FDATE}"
+		echo "${TABLE} ${FDATE}" >> ${FILE}
+		echo "SELECT  count(*) FROM ${TABLE}  WHERE date='${FDATE}' " | mysql -As thomas >> ${FILE}   		
+		echo " " >> ${FILE}   
+	done
+ 
+
+echo "Done...";
+  

@@ -1,0 +1,38 @@
+#!/bin/sh
+#
+# run as ./load-news-ad-all YYMM
+#
+ 
+if [ -z $1 ]
+ then
+ echo ""
+ echo "Missing date: YYMM"
+ echo ""
+ exit;
+fi
+
+
+FDATE=$1
+YY=${FDATE:0:2}
+MM=${FDATE:2:2}
+
+echo ""
+echo "Date: ${FDATE}"
+echo ""
+
+echo "Load Files into table"
+#./load-adfiles1.pl ${FDATE}
+
+ 
+echo "Load adclicks & ad adview files for the month"
+#./load-adfiles2.pl ${FDATE} 
+ 
+echo "Resolves IP addresses and loads them into a table"
+php -q load-adfiles3.php ${FDATE}
+ 
+echo "Loads master summary table"
+./load-adfiles4.pl ${FDATE}
+  
+
+echo "Done...";
+echo ""

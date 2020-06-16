@@ -1,0 +1,40 @@
+#!/bin/sh
+#
+
+
+
+ 
+   
+echo "vtool4";
+./vtool 1704
+
+
+echo "vtool5";
+./vtool 1705
+
+
+echo "vtool6";
+./vtool 1706
+
+
+echo "vtool7";
+./vtool 1707
+
+
+echo "vtool8";
+./vtool 1708
+
+
+
+echo "vtool9";
+./vtool 1709
+
+echo "vtool10";
+./vtool 1710
+
+
+ 
+
+
+
+echo "Done..."

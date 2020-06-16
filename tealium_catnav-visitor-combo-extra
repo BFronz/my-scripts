@@ -1,0 +1,44 @@
+#!/bin/sh
+#
+#  makes an extra table for catnav combo
+#
+
+if [ -z $1 ]
+ then
+ echo ""
+ echo "Missing YYMM"
+ echo ""
+ exit;
+fi
+
+source /usr/wt/reload.sh
+
+FDATE=$1
+
+YR=${FDATE:0:2}
+MON=${FDATE:2:2}
+
+echo ""
+echo "Date: ${FDATE} Year: ${YR} Month: ${MON}"
+echo ""
+
+echo "Delete where  date=${FDATE} "
+mysql -Af thomas -e " DELETE FROM  flat_catnav_ORG_alt${YR} WHERE  date=${FDATE} "
+echo ""
+
+echo "Insert"
+mysql -Af thomas -e "
+ INSERT INTO flat_catnav_ORG_alt${YR} (
+        date, cnid, tgramsid, sessiondatetime, ipaddress, transID, dom,     co, city, reg,   zip, country, naics,   lat,      longg,     isp, block, oid, primary_sic, countrycode, dunsnum, domestichqdunsnumber, hqdunsnumber, gltdunsnumber, countrycode3, audience, audiencesegment, b2b, employeerange, forbes2k, fortune1k, industry, informationlevel, phone, revenuerange, subindustry )
+ SELECT date, 0,     acct,    '',              ip,        0,       domain, org, city, state, zip, country, naics , latitude, longitude, isp,  block, oid, primary_sic, countrycode, dunsnum, domestichqdunsnumber, hqdunsnumber, gltdunsnumber, countrycode3, audience, audiencesegment, b2b, employeerange, forbes2k, fortune1k, industry, informationlevel, phone, revenuerange, subindustry
+ FROM  flat_catnav_ORG${YR} WHERE date=${FDATE}  AND org>'' AND org!='-' AND org!='?'  "
+
+
+echo ""
+echo "Table: flat_catnav_ORG_alt${YR} Date:${FDATE}   Total Counts"
+mysql -Af thomas -e "SELECT count(*) FROM  flat_catnav_ORG_alt${YR} WHERE  date=${FDATE} "
+
+
+
+echo ""
+echo "Done..."

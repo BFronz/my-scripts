@@ -1,0 +1,9 @@
+#!/bin/sh
+#
+#
+ 
+./mk-category-ken2.pl compressors
+  
+./mk-category-ken2.pl springs
+ 
+./mk-category-ken2.pl machining

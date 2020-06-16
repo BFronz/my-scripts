@@ -1,0 +1,51 @@
+#!/bin/sh
+# 
+# Makes/imports position data
+
+date
+
+source /usr/wt/reload.sh
+
+DATE=`date "+%y%m%d"`
+
+mysql -A tgrams -e "
+CREATE TABLE newrank (
+  acct bigint(20) NOT NULL DEFAULT '0',
+  heading bigint(20) NOT NULL DEFAULT '0',
+  area char(2) NOT NULL DEFAULT '',
+  rank varchar(18) NOT NULL DEFAULT '',
+  adv char(1) NOT NULL DEFAULT '',
+  premiums varchar(15) NOT NULL DEFAULT '',
+  parent bigint(20) DEFAULT NULL,
+  listrank int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (acct,heading,area),
+  KEY heading (heading),
+  KEY acct (acct),
+  KEY area (area)
+) ENGINE=MRG_MyISAM DEFAULT CHARSET=latin1 INSERT_METHOD=LAST UNION=(covlist,listings)" 
+
+
+
+mysql -ABs tgrams -e "select 
+ heading, acct, area, rank, premiums 
+ from newrank 
+ where heading>0 
+ order by heading, area, rank desc
+" > position.txt
+
+
+mysql -A tgrams -e "DROP TABLE newrank"
+
+ 
+# Reads position.txt writes pos.txt
+./mk-position.pl
+
+nice gzip -f position.txt
+ 
+mv -f pos.txt position.txt 
+ 
+mysqlimport -diL thomas position.txt
+ 
+
+date
+

@@ -1,0 +1,148 @@
+#!/bin/sh
+#
+#
+# Sync select tables from isotope to charon
+
+FROMDB="tnetbuild"
+TODB="tgrams"
+
+FROMHOST="--host=isotope.rds.c.net -utnet -p7zLdNrISma6Uft"
+TOHOST="--host= -u -p"
+ 
+DATADIR="/home/tnet/src/update_weekly/data"
+
+echo "Sync tables from isotope to charon"
+echo 
+
+rm -f data/tgramstables.ls
+ 
+echo "acctlink
+advertising
+adunits
+aliashead
+aliasmain
+autogenmain
+branchlink
+brandco
+brands
+ccp_content 
+ccp_document
+ccp_image   
+ccp_logo    
+ccp_video 
+cadelements
+communication
+company
+company_detail
+compparen
+covlist
+covprodhd
+contacts
+editstatus
+headings
+headings_splck
+list_activity
+listing
+listings
+main
+main_map
+modiso
+news
+officials
+officials_funct
+pdm
+position
+premiums
+previewads_active 
+ranking
+relamstr
+sso_profile
+srchbrand
+srchhead
+srchhead_splck
+srchmain
+tinheading
+tgramsstats
+wordbrand
+wordheading
+wordheading_splck
+wordmain
+webtraxs_accts" > ${DATADIR}/tgramstables.ls
+   
+
+
+date;
+ 
+for NAME in `cat ${DATADIR}/tgramstables.ls`
+        do
+                echo "${NAME}"
+ 
+                # check record counts, if isotope >0 then sync
+		I=`echo "SELECT count(*) FROM ${NAME}" | mysql -As ${FROMHOST} ${FROMDB}`
+                C=`echo "SELECT count(*) FROM ${NAME}" | mysql -As ${TODB}`
+                if [ "${I}" -gt "0" ];
+                        then
+                                echo "ok to sync ${NAME}  isotope: ${I} | charon: ${C}"
+                                mysqldump --opt --quick --single-transaction ${FROMHOST} ${FROMDB} ${NAME} | mysql ${TOHOST} ${TODB};
+                        else
+                                echo "ERROR!!! can not sync table ${NAME}  isotope: ${I} | charon: ${C}"
+                fi
+        done
+
+date;
+
+
+# extra news sync
+FROMDB="news"
+TODB="tgrams"
+
+rm -f data/news.ls
+ 
+echo "tnn_news" > ${DATADIR}/news.ls
+   
+date;
+ 
+for NAME in `cat ${DATADIR}/news.ls`
+        do
+                echo "${NAME}"
+ 
+                # check record counts, if isotope >0 then sync
+                I=`echo "SELECT count(*) FROM ${NAME}" | mysql -As ${FROMHOST} ${FROMDB}`
+                C=`echo "SELECT count(*) FROM ${NAME}" | mysql -As ${TODB}`
+                if [ "${I}" -gt "0" ];
+                        then
+                                echo "ok to sync ${NAME}  isotope: ${I} | charon: ${C}"
+                                mysqldump --opt --quick --single-transaction ${FROMHOST} ${FROMDB} ${NAME} | mysql ${TOHOST} ${TODB};
+                        else
+                                echo "ERROR!!! can not sync table ${NAME}  isotope: ${I} | charon: ${C}"
+                fi
+        done
+
+date;
+
+#TODB="directorytax"
+# 
+#rm -f data/tgramstables2.ls
+#echo "tax_categories
+#tax_headings
+#taxonomy" > ${DATADIR}/directorytaxtables.ls
+#
+#date;
+# 
+#for NAME in `cat ${DATADIR}/directorytaxtables.ls`
+#        do
+#                echo "${NAME}"
+#   
+#                # check record counts, if isotope >0 then sync
+#		I=`echo "SELECT count(*) FROM ${NAME}" | mysql -As ${FROMHOST} ${FROMDB}`
+#                C=`echo "SELECT count(*) FROM ${NAME}" | mysql -As ${TODB}`
+#                if [ "${I}" -gt "0" ];
+#                        then
+#                                echo "ok to sync ${NAME}  isotope: ${I} | charon: ${C}"
+#                                mysqldump --opt --quick --single-transaction ${FROMHOST} ${FROMDB} ${NAME} | mysql ${TOHOST} ${TODB};
+#                        else
+#                                echo "ERROR!!! can not sync table ${NAME}  isotope: ${I} | charon: ${C}"
+#                fi
+#        done
+# 
+#date;

@@ -1,0 +1,3 @@
+#
+
+mysqlimport -d bob  tnetlogORGflag.txt

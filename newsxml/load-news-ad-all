@@ -1,0 +1,62 @@
+#!/bin/sh
+# 
+# runs the tnet scripts
+# this will take a while and need to check all imports as they go
+# run as  ./load-news-ad-all YYMM 
+#
+# note to pull previous months, run manually as:
+# For May: http://news.tnt.com/tin_advertiser_stats.xml?startdate=2012-05-01&enddate=2012-05-30
+# So run below ./news-get-xml1-alt.pl 1205 2012-05-01 2012-05-30
+ 
+   
+if [ -z $1 ]
+ then
+ echo ""
+ echo "Missing date: YYMM"
+ echo ""
+ exit;
+fi
+
+source /usr/wt/reload.sh
+
+FDATE=$1
+
+YY=${FDATE:0:2}
+MM=${FDATE:2:2}
+ 
+echo ""
+echo "Date: ${FDATE}"
+echo ""
+ 
+#echo "Retrive News XML";
+#./news-get-xml1.pl ${FDATE}
+ 
+#echo "Parse News XML";
+#php -q news-xml-parse2.php ${FDATE}
+#mysqlimport -iL thomas /usr/wt/newsxml/news_ad_cat${YY}.txt
+ 
+echo "Load News data";
+#./news-get-xml-new-1.pl ${FDATE}
+  
+echo "Get News Images";
+./news-get-img3.pl ${FDATE}
+ 
+echo "Update News Flag";
+./update_news_flag.pl ${FDATE}
+
+echo "try-again-img";
+./try-again-new.pl  ${FDATE}
+
+
+echo ""
+echo "Bad IMG count:"
+echo "select count(*) as BADIMG_COUNT from news_ad_cat${YY} where badimg='Y' and date = ${FDATE} " | mysql -As thomas
+ 
+
+echo ""                                 
+echo "Copy any new News images from phobus:/usr/pdf/imagesx/ to mars:/www/tnetrpt/tnetrpt/imagesx"
+echo "" 
+
+
+echo "Done...";
+echo ""

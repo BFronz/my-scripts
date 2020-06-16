@@ -1,0 +1,80 @@
+#!/bin/sh
+#
+
+date;
+echo ""
+ 
+cd /usr/tnetlogs/wt
+
+do_set_vc () {
+
+ echo "Loading ${START} to ${STOP}"; 
+ echo "";     
+ 
+ echo "SELECT * INTO OUTFILE '/tmp/visitor_cat_tool_new${START}.txt' FROM thomvisitor_cat_tool LIMIT ${START}, ${STOP}";
+ echo ""; 
+      
+ mysql -Af thomas -e "SELECT * INTO OUTFILE '/tmp/visitor_cat_tool_new${START}.txt' FROM thomvisitor_cat_tool LIMIT ${START}, ${STOP}";
+  
+ mv /tmp/visitor_cat_tool_new${START}.txt /usr/tnetlogs/wt
+      
+ echo "-----------------------------------------------"
+ echo ""
+ #sleep 180
+ sleep 60
+} 
+
+#############
+ 
+START=0;
+STOP=1000000;
+do_set_vc; 
+ 
+START=1000000;
+STOP=1000000;
+do_set_vc; 
+
+START=2000000;
+STOP=1000000;
+do_set_vc; 
+
+START=3000000;
+STOP=1000000;
+do_set_vc;
+
+START=4000000;
+STOP=1000000;
+do_set_vc;
+
+START=5000000;
+STOP=1000000;
+do_set_vc;
+ 
+START=6000000;
+STOP=1000000;
+do_set_vc;
+
+START=7000000;
+STOP=1000000;
+do_set_vc;
+ 
+START=8000000;
+STOP=1000000;
+do_set_vc; 
+
+START=9000000;
+STOP=10000000;
+do_set_vc; 
+
+START=10000000;
+STOP=1000000;
+do_set_vc; 
+
+START=11000000;
+STOP=1000000;
+do_set_vc;
+ 
+  
+echo ""
+date;
+echo "Done..."

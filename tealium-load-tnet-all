@@ -1,0 +1,190 @@
+#!/bin/sh
+# 
+# runs the tnet scripts
+# this will take a while and need to check all imports as they go
+# run as  ./tealium-load-tnet-all YYMM 
+
+source /usr/wt/reload.sh
+   
+if [ -z $1 ]
+ then
+ echo ""
+ echo "Missing date: YYMM"
+ echo ""
+ exit;
+fi
+
+FDATE=$1
+
+YY=${FDATE:0:2}
+MM=${FDATE:2:2}
+
+case ${MM} in
+01)
+   QQ=1;
+   ;;
+02)
+   QQ=1
+   ;;
+03) 
+   QQ=1
+   ;;
+04)
+   QQ=2;
+   ;;
+05)
+   QQ=2
+   ;;
+06) 
+   QQ=2
+   ;;
+07)
+   QQ=3;
+   ;;
+08)
+   QQ=3
+   ;;
+09) 
+   QQ=3
+   ;;
+10)
+   QQ=4;
+   ;;
+11)
+   QQ=4
+   ;;
+12) 
+   QQ=4
+   ;;
+esac
+
+echo ""
+echo "Date: ${FDATE}"
+echo "Year: ${YY}";
+echo "Month: ${MM}";
+echo "Quarter: ${QQ}";
+echo ""
+  
+echo "------------------------------------"  
+echo "Load Supplier Report Summary Table Counts"
+#./load-artu.pl  ${FDATE}
+./load-artu-counts.pl  ${FDATE}
+ 
+  
+#echo "------------------------------------"  
+#echo "Load Asset Link Data";
+#./load-alinks.pl ${FDATE}
+ 
+echo "------------------------------------"  
+echo "Load CAD Data Used in CAD Activity"
+./load-CAD-md.pl ${FDATE}  
+echo "Don't forget to run mk-CAD-ip ${FDATE} # run this manually later on"
+      
+echo "------------------------------------"              
+echo "Load Registry Tables (updates contacts)"
+#./mk-reg-all ${FDATE}
+./tealium-mk-reg-all ${FDATE}
+  
+
+# echo "------------------------------------" 
+# echo "Load CCP Views"; 
+# ./load-ccp-views.pl ${FDATE}
+   
+# echo "------------------------------------" 
+# echo "Load AD Views from IR"; 
+# ./load-ad-views.pl ${FDATE} 
+
+# echo "------------------------------------" 
+# echo "Load AD Clicks from IR"; 
+# ./load-ad-clicks.pl ${FDATE} 
+ 
+
+# echo "------------------------------------" 
+# echo "Load Social Media "; 
+# ./load-social-media.pl ${FDATE} 
+
+# echo "------------------------------------"  
+# echo "Load Referer By Heading"
+# ./load-refhead.pl ${FDATE}
+
+#echo "------------------------------------" << NOT USED ANYMORE 
+#echo "Load Product Report Data - not collected now"
+#./load-PS-report.pl ${FDATE}
+ 
+ 
+# echo "------------------------------------"  
+# echo "Load hdgCovConv Data"
+# ./load-hdgCovConv.pl ${FDATE}
+
+# echo "------------------------------------"  
+echo "Load Flat Catnav Counts"
+#./load-catnav-flat.pl  ${FDATE}
+./load-catnav-flat-counts.pl ${FDATE}
+  
+ 
+# echo "------------------------------------"  
+# echo "User Sessions by Heading"
+# ./load-quick-us.pl ${FDATE}
+   
+echo "------------------------------------"  
+# echo "Loads PNN Data"
+# ./load-PNN.pl ${FDATE}
+# ./load-PNN-conv.pl ${FDATE}
+echo "Update PNN Data" 
+./pnn-update.pl ${FDATE}
+
+echo "------------------------------------"  
+echo "Non-Category Conversions Extra"
+#./load-non-category.pl ${FDATE}
+#./load-non-category-counts.pl ${FDATE}
+./load-non-category-extra.pl ${FDATE}
+ 
+  
+echo "------------------------------------"  
+echo "Load Quick Log Table for Query Tools Contacts"
+#./load-quick-log-new.pl  ${FDATE}
+./load-quick-contacts-new.pl ${FDATE}
+ 
+# echo "------------------------------------"  
+# echo "Site TNET Site report"
+# ./load-site-new.pl ${FDATE}
+# ./load-topcat.pl ${FDATE}
+                                    
+echo "Extra User Session & Conversion Summary Uses In Query Tools"
+./load-summaryu.pl ${YY}       
+./load-summaryc_new.pl ${YY} ${QQ} 
+./load-summaryc_new-NOCAT.pl ${YY} ${QQ}  
+ 
+# echo "------------------------------------"  
+# echo "Run some counts for scheduler"
+# ./scheduler-counts.pl ${FDATE}
+
+echo "------------------------------------"  
+echo "Word Heading Table";
+./mk-wordhead.pl
+
+echo "------------------------------------"  
+echo "Make Related Headings";
+./mk-rahg.pl
+  
+echo "------------------------------------"  
+echo "Check Tables Script. Look for missing data.";
+./checktables-tnet.pl ${FDATE}
+
+echo "------------------------------------"  
+echo "Reach local check for the month in thomas db"                                                  
+echo "There should be data for almost each day of the month"
+echo "SELECT report_date AS d, count(*) FROM thomCampaign_Event_Detail_v2 WHERE date=${FDATE} GROUP BY d" | mysql -As thomas  
+                    
+echo "------------------------------------"                                                                                                  
+echo "CallTracking check for the month in thomas db"                                                       
+echo "There should be data for almost each day of the month"
+echo "estara table";
+echo "SELECT DAYOFMONTH(created) AS d,count(*) FROM calltracking  WHERE date=${FDATE} GROUP BY d" | mysql -As thomas        
+echo "" 
+    
+echo "------------------------------------"  
+echo ""
+echo ${FDATE} | mail -s "Script load-tnet-all finished for ${FDATE}   " robertf@c.net
+echo "Done...";
+echo ""

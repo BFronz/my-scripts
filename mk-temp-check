@@ -1,0 +1,127 @@
+#!/bin/sh
+#
+ 
+FILE="regcheck.txt";
+ 
+rm -f /usr/tnetlogs/wt/${FILE}
+ 
+# TNET and PS adv
+echo "--- TNET PS adv ---";
+for TABLE in `cat /usr/tnetlogs/wt/regadvtables.ls`
+	do
+		echo "${TABLE}" 
+		echo "${TABLE}" >> ${FILE}  
+		echo "date	acct	org	domain	country	city	state	zip	cnt	isp	block	orgid	oid	ip	naics	primary_sic	countrycode	dunsnum	domestichqdunsnumber	hqdunsnumber	gltdunsnumber	countrycode3	audience	audiencesegment	b2b	employeerange	forbes2k	fortune1k	industry	informationlevel	latitude	longitude	phone	revenuerange	subindustry	cov	date	acct	org	domain	country	city	state	zip	cnt	isp	block	orgid	oid	ip	naics	primary_sic	countrycode	dunsnum	domestichqdunsnumber	hqdunsnumber	gltdunsnumber	countrycode3	audience	audiencesegment	b2b	employeerange	forbes2k	fortune1k	industry	informationlevel	latitude	longitude	phone	revenuerange	subindustry	cov" >> ${FILE}  
+		echo "SELECT * FROM ${TABLE} WHERE acct>0 LIMIT 5" | mysql -As thomas >> ${FILE}  
+		echo "date	acct	org	domain	country	city	state	zip	cnt	isp	block	orgid	oid	ip	naics	primary_sic	countrycode	dunsnum	domestichqdunsnumber	hqdunsnumber	gltdunsnumber	countrycode3	audience	audiencesegment	b2b	employeerange	forbes2k	fortune1k	industry	informationlevel	latitude	longitude	phone	revenuerange	subindustry	cov	date	acct	org	domain	country	city	state	zip	cnt	isp	block	orgid	oid	ip	naics	primary_sic	countrycode	dunsnum	domestichqdunsnumber	hqdunsnumber	gltdunsnumber	countrycode3	audience	audiencesegment	b2b	employeerange	forbes2k	fortune1k	industry	informationlevel	latitude	longitude	phone	revenuerange	subindustry	cov" >> ${FILE}  
+		echo "SELECT * FROM ${TABLE} WHERE acct>0  AND latitude='0.0001' LIMIT 5" | mysql -As thomas >> ${FILE}   
+		echo "SELECT  count(*) FROM ${TABLE} " | mysql -As thomas >> ${FILE}   		
+		echo " " >> ${FILE}  
+	done
+
+
+# TNET SITE
+echo "--- TNET SITE ---";
+for TABLE in `cat /usr/tnetlogs/wt/regsitetables.ls`
+	do
+		echo "${TABLE}"
+		echo "${TABLE}" >> ${FILE}  
+		echo "date	org	domain	country	city	state	zip	cnt	isp	block	orgid	oid	ip	naics	primary_sic	countrycode	dunsnum	domestichqdunsnumber	hqdunsnumber	gltdunsnumber	countrycode3	audience	audiencesegment	b2b	employeerange	forbes2k	fortune1k	industry	informationlevel	latitude	longitude	phone	revenuerange	subindustry	cov	date	acct	org	domain	country	city	state	zip	cnt	isp	block	orgid	oid	ip	naics	primary_sic	countrycode	dunsnum	domestichqdunsnumber	hqdunsnumber	gltdunsnumber	countrycode3	audience	audiencesegment	b2b	employeerange	forbes2k	fortune1k	industry	informationlevel	latitude	longitude	phone	revenuerange	subindustry	cov"  >> ${FILE}  
+		echo "SELECT * FROM ${TABLE} LIMIT 5" | mysql -As thomas >> ${FILE} 
+		echo "date	org	domain	country	city	state	zip	cnt	isp	block	orgid	oid	ip	naics	primary_sic	countrycode	dunsnum	domestichqdunsnumber	hqdunsnumber	gltdunsnumber	countrycode3	audience	audiencesegment	b2b	employeerange	forbes2k	fortune1k	industry	informationlevel	latitude	longitude	phone	revenuerange	subindustry	cov	date	acct	org	domain	country	city	state	zip	cnt	isp	block	orgid	oid	ip	naics	primary_sic	countrycode	dunsnum	domestichqdunsnumber	hqdunsnumber	gltdunsnumber	countrycode3	audience	audiencesegment	b2b	employeerange	forbes2k	fortune1k	industry	informationlevel	latitude	longitude	phone	revenuerange	subindustry	cov"  >> ${FILE}  	
+		echo "SELECT * FROM ${TABLE} WHERE latitude='0.0001' LIMIT 5" | mysql -As thomas >> ${FILE}   
+		echo "SELECT  count(*) FROM ${TABLE} " | mysql -As thomas >> ${FILE}   		
+		echo " " >> ${FILE}  
+	done 
+ 
+
+# TNET WCAT
+echo "--- TNET WCAT ---";
+for TABLE in `cat /usr/tnetlogs/wt/regwcattables.ls`
+	do
+		echo "${TABLE}"
+		echo "${TABLE}" >> ${FILE}  
+		echo "date	acct	heading	org	domain	country	city	state	zip	cnt	isp	block	orgid	oid	ip	naics	primary_sic	countrycode	dunsnum	domestichqdunsnumber	hqdunsnumber	gltdunsnumber	countrycode3	audience	audiencesegment	b2b	employeerange	forbes2k	fortune1k	industry	informationlevel	latitude	longitude	phone	revenuerange	subindustry	cov"  >> ${FILE}  
+		echo "SELECT * FROM ${TABLE} WHERE acct>0  AND heading>0 LIMIT 5" | mysql -As thomas >> ${FILE} 
+		echo "date	acct	heading	org	domain	country	city	state	zip	cnt	isp	block	orgid	oid	ip	naics	primary_sic	countrycode	dunsnum	domestichqdunsnumber	hqdunsnumber	gltdunsnumber	countrycode3	audience	audiencesegment	b2b	employeerange	forbes2k	fortune1k	industry	informationlevel	latitude	longitude	phone	revenuerange	subindustry	cov"  >> ${FILE}  
+		echo "SELECT * FROM ${TABLE} WHERE acct>0 and heading>0 AND latitude='0.0001' LIMIT 5" | mysql -As thomas >> ${FILE}   
+		echo "SELECT  count(*) FROM ${TABLE} " | mysql -As thomas >> ${FILE}   		
+		echo " " >> ${FILE}  
+	done   
+ 
+
+# TNET CAT
+echo "--- TNET CAT ---";
+for TABLE in `cat /usr/tnetlogs/wt/regcattables.ls`
+	do
+		echo "${TABLE}"
+		echo "${TABLE}" >> ${FILE}  
+		echo "date	acct	heading	org	domain	country	city	state	zip	cnt	isp	block	orgid	oid	ip	naics	primary_sic	countrycode	dunsnum	domestichqdunsnumber	hqdunsnumber	gltdunsnumber	countrycode3	audience	audiencesegment	b2b	employeerange	forbes2k	fortune1k	industry	informationlevel	latitude	longitude	phone	revenuerange	subindustry	cov"  >> ${FILE}  		
+		echo "SELECT * FROM ${TABLE} WHERE heading>0 LIMIT 5" | mysql -As thomas >> ${FILE} 
+		echo "date	acct	heading	org	domain	country	city	state	zip	cnt	isp	block	orgid	oid	ip	naics	primary_sic	countrycode	dunsnum	domestichqdunsnumber	hqdunsnumber	gltdunsnumber	countrycode3	audience	audiencesegment	b2b	employeerange	forbes2k	fortune1k	industry	informationlevel	latitude	longitude	phone	revenuerange	subindustry	cov"  >> ${FILE}  		
+		echo "SELECT * FROM ${TABLE} WHERE heading>0 AND latitude='0.0001' LIMIT 5" | mysql -As thomas >> ${FILE}   
+		echo "SELECT  count(*) FROM ${TABLE} " | mysql -As thomas >> ${FILE}   		
+		echo " " >> ${FILE}  
+	done  
+ 
+
+
+# FLAT
+echo "--- FLAT ---";
+for FDATE in `cat /usr/tnetlogs/wt/regdatetables.ls`
+	do 
+ 
+		YR=${FDATE:0:2}
+		MON=${FDATE:2:2}
+		TABLE="flat_catnav_ORG${YR}"
+
+		echo "${TABLE} ${FDATE}"
+		echo "${TABLE} ${FDATE}" >> ${FILE}  
+		echo "date	acct	org	domain	country	city	state	zip	cnt	isp	block	orgid	oid	ip	naics	primary_sic	countrycode	dunsnum	domestichqdunsnumber	hqdunsnumber	gltdunsnumber	countrycode3	audience	audiencesegment	b2b	employeerange	forbes2k	fortune1k	industry	informationlevel	latitude	longitude	phone	revenuerange	subindustry	cov	date	acct	org	domain	country	city	state	zip	cnt	isp	block	orgid	oid	ip	naics	primary_sic	countrycode	dunsnum	domestichqdunsnumber	hqdunsnumber	gltdunsnumber	countrycode3	audience	audiencesegment	b2b	employeerange	forbes2k	fortune1k	industry	informationlevel	latitude	longitude	phone	revenuerange	subindustry	cov" >> ${FILE}  
+		echo "SELECT * FROM ${TABLE} WHERE acct>0 AND date='${FDATE}' LIMIT 5" | mysql -As thomas >> ${FILE}  
+		echo "date	acct	org	domain	country	city	state	zip	cnt	isp	block	orgid	oid	ip	naics	primary_sic	countrycode	dunsnum	domestichqdunsnumber	hqdunsnumber	gltdunsnumber	countrycode3	audience	audiencesegment	b2b	employeerange	forbes2k	fortune1k	industry	informationlevel	latitude	longitude	phone	revenuerange	subindustry	cov	date	acct	org	domain	country	city	state	zip	cnt	isp	block	orgid	oid	ip	naics	primary_sic	countrycode	dunsnum	domestichqdunsnumber	hqdunsnumber	gltdunsnumber	countrycode3	audience	audiencesegment	b2b	employeerange	forbes2k	fortune1k	industry	informationlevel	latitude	longitude	phone	revenuerange	subindustry	cov" >> ${FILE}  
+		echo "SELECT * FROM ${TABLE} WHERE acct>0 AND date='${FDATE}' AND latitude='0.0001' LIMIT 5" | mysql -As thomas >> ${FILE}   
+		echo "SELECT  count(*) FROM ${TABLE}  WHERE date='${FDATE}' " | mysql -As thomas >> ${FILE}   		
+		echo " " >> ${FILE}  
+	done
+ 
+
+# NEWS SITE
+echo "--- NEWS SITE ---";
+for FDATE in `cat /usr/tnetlogs/wt/regdatetables.ls`
+	do 
+		YR=${FDATE:0:2}
+		MON=${FDATE:2:2}
+		TABLE="newsORGSITED${YR}"
+
+		echo "${TABLE} ${FDATE}"
+		echo "${TABLE} ${FDATE}" >> ${FILE}  
+		echo "date	org	domain	country	city	state	zip	cnt	isp	block	orgid	oid	ip	naics	primary_sic	countrycode	dunsnum	domestichqdunsnumber	hqdunsnumber	gltdunsnumber	countrycode3	audience	audiencesegment	b2b	employeerange	forbes2k	fortune1k	industry	informationlevel	latitude	longitude	phone	revenuerange	subindustry	cov" >> ${FILE}
+		echo "SELECT * FROM ${TABLE} WHERE date='${FDATE}' LIMIT 5" | mysql -As thomas >> ${FILE}  
+		echo "date	org	domain	country	city	state	zip	cnt	isp	block	orgid	oid	ip	naics	primary_sic	countrycode	dunsnum	domestichqdunsnumber	hqdunsnumber	gltdunsnumber	countrycode3	audience	audiencesegment	b2b	employeerange	forbes2k	fortune1k	industry	informationlevel	latitude	longitude	phone	revenuerange	subindustry	cov" >> ${FILE}
+		echo "SELECT * FROM ${TABLE} WHERE date='${FDATE}' AND latitude='0.0001' LIMIT 5" | mysql -As thomas >> ${FILE}   
+		echo "SELECT  count(*) FROM ${TABLE}  WHERE date='${FDATE}' " | mysql -As thomas >> ${FILE}   		
+		echo " " >> ${FILE}  
+	done 
+ 
+# NEWS ADV
+echo "--- NEWS adv ---";
+for FDATE in `cat /usr/tnetlogs/wt/regdatetables.ls`
+	do 
+		YR=${FDATE:0:2}
+		MON=${FDATE:2:2}
+		TABLE="newsORGD${YR}"
+
+		echo "${TABLE} ${FDATE}"
+		echo "${TABLE} ${FDATE}" >> ${FILE}  
+		echo "date	acct	org	domain	country	city	state	zip	cnt	isp	block	orgid	oid	ip	naics	primary_sic	countrycode	dunsnum	domestichqdunsnumber	hqdunsnumber	gltdunsnumber	countrycode3	audience	audiencesegment	b2b	employeerange	forbes2k	fortune1k	industry	informationlevel	latitude	longitude	phone	revenuerange	subindustry	cov" >> ${FILE}
+		echo "SELECT * FROM ${TABLE} WHERE date='${FDATE}' LIMIT 5" | mysql -As thomas >> ${FILE}  
+		echo "date	acct	org	domain	country	city	state	zip	cnt	isp	block	orgid	oid	ip	naics	primary_sic	countrycode	dunsnum	domestichqdunsnumber	hqdunsnumber	gltdunsnumber	countrycode3	audience	audiencesegment	b2b	employeerange	forbes2k	fortune1k	industry	informationlevel	latitude	longitude	phone	revenuerange	subindustry	cov"  >> ${FILE}
+		echo "SELECT * FROM ${TABLE} WHERE date='${FDATE}' AND latitude='0.0001' LIMIT 5" | mysql -As thomas >> ${FILE}   
+		echo "SELECT  count(*) FROM ${TABLE}  WHERE date='${FDATE}' " | mysql -As thomas >> ${FILE}   		
+		echo " " >> ${FILE}   
+	done
+ 
+
+echo "Done...";
+  

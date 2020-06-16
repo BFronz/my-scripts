@@ -1,0 +1,39 @@
+#!/bin/sh
+#
+# Creates visitor tool table
+
+if [ -z $1 ]
+ then
+ echo ""
+ echo "Missing YYMM"
+ echo ""
+ exit;
+fi
+ 
+FDATE=$1
+
+YR=${FDATE:0:2}
+MON=${FDATE:2:2}
+
+echo ""
+echo "Date: ${FDATE} Year: ${YR} Month: ${MON}"
+echo ""               
+                                        
+echo "Table  vtool${YR}_${MON}"
+
+mysql -Af thomas -e " SELECT * FROM vtool${YR}_${MON} "  > /usr/tnetlogs/wt/visitortool/vtool${YR}_${MON}.txt
+ 
+perl -p -i -e "s/&amp;/&/g"  /usr/tnetlogs/wt/visitortool/vtool${YR}_${MON}.txt
+ 
+mysqlimport -d thomas /usr/tnetlogs/wt/visitortool/vtool${YR}_${MON}.txt
+
+echo ""
+echo "Counts by origin"
+mysql -Af thomas -e "SELECT type, count(*) FROM vtool${YR}_${MON} group by type"              
+echo "Total Counts"
+mysql -Af thomas -e "SELECT count(*) FROM vtool${YR}_${MON} "              
+
+rm -f /usr/tnetlogs/wt/visitortool/vtool${YR}_${MON}.txt
+  
+echo ""
+echo "Done..."

@@ -1,0 +1,19 @@
+#!/bin/sh
+# 
+
+echo "try-again-img";
+
+
+
+
+
+
+./try-again-new.pl  1601
+
+./try-again-new.pl  1602
+
+./try-again-new.pl  1603
+ 
+
+echo ""
+echo "Done...";

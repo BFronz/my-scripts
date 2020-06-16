@@ -1,0 +1,38 @@
+#!/bin/sh
+#
+# Creates Wizard non merge tables 
+
+if [ -z $1 ]
+ then
+ echo ""
+ echo "Missing date: yymm"
+ echo ""
+ exit;
+fi
+
+FDATE=$1
+
+YR=${FDATE:0:2}
+MON=${FDATE:2:2}
+MM=${FDATE:2:2}
+  
+DB="thomas"
+ 
+
+echo "ACCT"; 
+
+### TNET ACCT 
+NEWTABLE="tnetlogORGD${YR}_${MM}W"
+mysql -Af ${DB} -e "DELETE FROM ${NEWTABLE} WHERE date='${FDATE}' "
+./make-wiz-tables-org.pl ${NEWTABLE}
+mysql -Af ${DB} -e "SELECT count(*) FROM ${NEWTABLE} "
+mysql -Af ${DB} -e "SELECT zcov,count(*) FROM ${NEWTABLE} GROUP BY zcov "
+
+
+
+echo ""
+echo "------------------------------------" 
+
+echo
+echo "Done...";
+echo

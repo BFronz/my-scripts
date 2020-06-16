@@ -1,0 +1,251 @@
+#!/bin/sh
+# 
+
+if [ -z $1 ]
+ then
+ echo "Missing Date: YYMM"
+ exit;
+fi
+
+source /usr/wt/reload.sh
+
+FDATE=$1
+
+
+ 
+./get-procs-only-new.pl   advAlink     ${FDATE}
+./get-procs-only-new.pl   advAlinkNews     ${FDATE}
+#./get-procs-only-new.pl   advCADActionDetail-new
+#./get-procs-only-new.pl   advCADActionDetail-new-1409.txt
+#./get-procs-only-new.pl   advCADActive
+./get-procs-only-new.pl   advCadLinksCat_c     ${FDATE}
+./get-procs-only-new.pl   advCadLinksCat_n     ${FDATE}
+./get-procs-only-new.pl   advCadLinksCat_t     ${FDATE}
+./get-procs-only-new.pl   advCadLinksCov_c     ${FDATE}
+./get-procs-only-new.pl   advCadLinksCov_n     ${FDATE}
+./get-procs-only-new.pl   advCadLinksCov_t     ${FDATE}
+./get-procs-only-new.pl   advCadLinksReg     ${FDATE}
+./get-procs-only-new.pl   advCadLinksRegCat     ${FDATE}
+./get-procs-only-new.pl   advCatalogLinkCatCov_c     ${FDATE}
+./get-procs-only-new.pl   advCatalogLinkCatCov_n     ${FDATE}
+./get-procs-only-new.pl   advCatalogLinkCatCov_t     ${FDATE}
+./get-procs-only-new.pl   advCatalogLinkCov_c     ${FDATE}
+./get-procs-only-new.pl   advCatalogLinkCov_n     ${FDATE}
+./get-procs-only-new.pl   advCatalogLinkCov_t     ${FDATE}
+./get-procs-only-new.pl   advCompProfileDisplayAd_t     ${FDATE}
+./get-procs-only-new.pl   advCompProfViewCat_c     ${FDATE}
+./get-procs-only-new.pl   advCompProfViewCat_n     ${FDATE}
+./get-procs-only-new.pl   advCompProfViewCat_t     ${FDATE}
+./get-procs-only-new.pl   advCompProfViewCov_c     ${FDATE}
+./get-procs-only-new.pl   advCompProfViewCov_n     ${FDATE}
+./get-procs-only-new.pl   advCompProfViewCov_t     ${FDATE}
+./get-procs-only-new.pl   advCompProfViewReg     ${FDATE}
+./get-procs-only-new.pl   advCompProfViewRegCat     ${FDATE}
+./get-procs-only-new.pl   advDocfViewCat_c     ${FDATE}
+./get-procs-only-new.pl   advDocfViewCat_n     ${FDATE}
+./get-procs-only-new.pl   advDocfViewCat_t     ${FDATE}
+./get-procs-only-new.pl   advDocfViewCCPid_t     ${FDATE}
+./get-procs-only-new.pl   advDocfViewCov_c     ${FDATE}
+./get-procs-only-new.pl   advDocfViewCov_n     ${FDATE}
+./get-procs-only-new.pl   advDocfViewCov_t     ${FDATE}
+./get-procs-only-new.pl   advEMailColleagueCat_c     ${FDATE}
+./get-procs-only-new.pl   advEMailColleagueCat_n     ${FDATE}
+./get-procs-only-new.pl   advEMailColleagueCat_t     ${FDATE}
+./get-procs-only-new.pl   advEMailColleagueCov_c     ${FDATE}
+./get-procs-only-new.pl   advEMailColleagueCov_n     ${FDATE}
+./get-procs-only-new.pl   advEMailColleagueCov_t     ${FDATE}
+./get-procs-only-new.pl   advEMailColleagueReg     ${FDATE}
+./get-procs-only-new.pl   advEMailColleagueRegCat     ${FDATE}
+./get-procs-only-new.pl   advImgViewCat_c     ${FDATE}
+./get-procs-only-new.pl   advImgViewCat_n     ${FDATE}
+./get-procs-only-new.pl   advImgViewCat_t     ${FDATE}
+./get-procs-only-new.pl   advImgViewCCPid_t     ${FDATE}
+./get-procs-only-new.pl   advImgViewCov_c     ${FDATE}
+./get-procs-only-new.pl   advImgViewCov_n     ${FDATE}
+./get-procs-only-new.pl   advImgViewCov_t     ${FDATE}
+./get-procs-only-new.pl   advItemDetailViews_t     ${FDATE}
+./get-procs-only-new.pl   advMapViewCat_c     ${FDATE}
+./get-procs-only-new.pl   advMapViewCat_n     ${FDATE}
+./get-procs-only-new.pl   advMapViewCat_t     ${FDATE}
+./get-procs-only-new.pl   advMapViewCov_c     ${FDATE}
+./get-procs-only-new.pl   advMapViewCov_n     ${FDATE}
+./get-procs-only-new.pl   advMapViewCov_t     ${FDATE}
+./get-procs-only-new.pl   advMyThomasSavesCat_c     ${FDATE}
+./get-procs-only-new.pl   advMyThomasSavesCat_n     ${FDATE}
+./get-procs-only-new.pl   advMyThomasSavesCat_t     ${FDATE}
+./get-procs-only-new.pl   advMyThomasSavesCov_c     ${FDATE}
+./get-procs-only-new.pl   advMyThomasSavesCov_n     ${FDATE}
+./get-procs-only-new.pl   advMyThomasSavesCov_t     ${FDATE}
+./get-procs-only-new.pl   advMyThomasSavesReg     ${FDATE}
+./get-procs-only-new.pl   advMyThomasSavesRegCat     ${FDATE}
+./get-procs-only-new.pl   advNewsFullStoryViews     ${FDATE}
+./get-procs-only-new.pl   advPressReleaseViews     ${FDATE}
+./get-procs-only-new.pl   advPreviewAd_t     ${FDATE}
+./get-procs-only-new.pl   advPRIDViews     ${FDATE}
+./get-procs-only-new.pl   advPRIDWebLinks     ${FDATE}
+./get-procs-only-new.pl   advProdCatalogViewCat_c     ${FDATE}
+./get-procs-only-new.pl   advProdCatalogViewCat_n     ${FDATE}
+./get-procs-only-new.pl   advProdCatalogViewCat_t     ${FDATE}
+./get-procs-only-new.pl   advProdCatalogViewCov_c     ${FDATE}
+./get-procs-only-new.pl   advProdCatalogViewCov_n     ${FDATE}
+./get-procs-only-new.pl   advProdCatalogViewCov_t     ${FDATE}
+./get-procs-only-new.pl   advProdCatalogViewReg     ${FDATE}
+./get-procs-only-new.pl   advProdCatalogViewRegCat     ${FDATE}
+./get-procs-only-new.pl   advProfPrintCat_c     ${FDATE}
+./get-procs-only-new.pl   advProfPrintCat_n     ${FDATE}
+./get-procs-only-new.pl   advProfPrintCat_t     ${FDATE}
+./get-procs-only-new.pl   advProfPrintCov_c     ${FDATE}
+./get-procs-only-new.pl   advProfPrintCov_n     ${FDATE}
+./get-procs-only-new.pl   advProfPrintCov_t     ${FDATE}
+./get-procs-only-new.pl   advPSProductDetailView     ${FDATE}
+./get-procs-only-new.pl   advPSTotalBrowseAllProductViews     ${FDATE}
+./get-procs-only-new.pl   advPSTotalBrowseProductLineViews     ${FDATE}
+./get-procs-only-new.pl   advPSTotalProdSearchPagesViewed     ${FDATE}
+./get-procs-only-new.pl   advPSTotalProductDetailViews     ${FDATE}
+./get-procs-only-new.pl   advPSTotalProfileViews     ${FDATE}
+./get-procs-only-new.pl   advSERefsTotal     ${FDATE}
+./get-procs-only-new.pl   advSocMedViewCat_c     ${FDATE}
+./get-procs-only-new.pl   advSocMedViewCatMT_c     ${FDATE}
+./get-procs-only-new.pl   advSocMedViewCatMT_n     ${FDATE}
+./get-procs-only-new.pl   advSocMedViewCatMT_t     ${FDATE}
+./get-procs-only-new.pl   advSocMedViewCat_n     ${FDATE}
+./get-procs-only-new.pl   advSocMedViewCat_t     ${FDATE}
+./get-procs-only-new.pl   advSocMedViewCov_c     ${FDATE}
+./get-procs-only-new.pl   advSocMedViewCovMT_c     ${FDATE}
+./get-procs-only-new.pl   advSocMedViewCovMT_n     ${FDATE}
+./get-procs-only-new.pl   advSocMedViewCovMT_t     ${FDATE}
+./get-procs-only-new.pl   advSocMedViewCov_n     ${FDATE}
+./get-procs-only-new.pl   advSocMedViewCov_t     ${FDATE}
+./get-procs-only-new.pl   advSupLinkClickCat_c     ${FDATE}
+./get-procs-only-new.pl   advSupLinkClickCat_n     ${FDATE}
+./get-procs-only-new.pl   advSupLinkClickCat_t     ${FDATE}
+./get-procs-only-new.pl   advSupLinkClickCov_c     ${FDATE}
+./get-procs-only-new.pl   advSupLinkClickCov_n     ${FDATE}
+./get-procs-only-new.pl   advSupLinkClickCov_t     ${FDATE}
+./get-procs-only-new.pl   advSupLinkClickReg     ${FDATE}
+./get-procs-only-new.pl   advSupLinkClickRegCat     ${FDATE}
+./get-procs-only-new.pl   advSupplierLinkClicksNews     ${FDATE}
+./get-procs-only-new.pl   advTotalAdClicks_t     ${FDATE}
+./get-procs-only-new.pl   advTotalPSCatalogPDFViews     ${FDATE}
+./get-procs-only-new.pl   advTotalPSLinksWebsite     ${FDATE}
+./get-procs-only-new.pl   advTotalPSRequestsInfo     ${FDATE}
+./get-procs-only-new.pl   advVideofViewCat_c     ${FDATE}
+./get-procs-only-new.pl   advVideofViewCat_n     ${FDATE}
+./get-procs-only-new.pl   advVideofViewCat_t     ${FDATE}
+./get-procs-only-new.pl   advVideofViewCCpid_t     ${FDATE}
+./get-procs-only-new.pl   advVideofViewCov_c     ${FDATE}
+./get-procs-only-new.pl   advVideofViewCov_n     ${FDATE}
+./get-procs-only-new.pl   advVideofViewCov_t     ${FDATE}
+./get-procs-only-new.pl   advVisits     ${FDATE}
+./get-procs-only-new.pl   advVisitsCat     ${FDATE}
+./get-procs-only-new.pl   advVisitsCatCov     ${FDATE}
+./get-procs-only-new.pl   advVisitsCov     ${FDATE}
+./get-procs-only-new.pl   advVisitsNational     ${FDATE}
+./get-procs-only-new.pl   advVisitsNationalCat     ${FDATE}
+./get-procs-only-new.pl   allAdClicks_t     ${FDATE}
+./get-procs-only-new.pl   allCategories     ${FDATE}
+./get-procs-only-new.pl   bSearches     ${FDATE}
+./get-procs-only-new.pl   cadRegisterLinks     ${FDATE}
+./get-procs-only-new.pl   CatalogLinks     ${FDATE}
+./get-procs-only-new.pl   CatFlatAssetDlViews     ${FDATE}
+./get-procs-only-new.pl   CatFlatAvePagePerSession     ${FDATE}
+./get-procs-only-new.pl   CatFlatAveSesDuration     ${FDATE}
+./get-procs-only-new.pl   CatFlatCAD     ${FDATE}
+./get-procs-only-new.pl   CatFlatItemDetailPages     ${FDATE}
+./get-procs-only-new.pl   CatFlatKeywordSearches     ${FDATE}
+./get-procs-only-new.pl   CatFlatPrintPages     ${FDATE}
+./get-procs-only-new.pl   CatFlatProductServicesLines     ${FDATE}
+./get-procs-only-new.pl   CatFlatRequestInformation     ${FDATE}
+./get-procs-only-new.pl   CatFlatRequestQuoteOrders     ${FDATE}
+./get-procs-only-new.pl   CatFlatSearchEngRefKeyword     ${FDATE}
+./get-procs-only-new.pl   CatFlatSearchEngRefKeywordOSS     ${FDATE}
+./get-procs-only-new.pl   CatFlatTotalPagesViewed     ${FDATE}
+./get-procs-only-new.pl   CatFlatUserEngagement     ${FDATE}
+./get-procs-only-new.pl   CatFlatUserSessions     ${FDATE}
+./get-procs-only-new.pl   CatFlatUsersSearchEng     ${FDATE}
+./get-procs-only-new.pl   catSERefsTotal     ${FDATE}
+./get-procs-only-new.pl   companyProfileViews     ${FDATE}
+./get-procs-only-new.pl   directRefs     ${FDATE}
+./get-procs-only-new.pl   dirSearches     ${FDATE}
+./get-procs-only-new.pl   eMailColleague     ${FDATE}
+./get-procs-only-new.pl   moreInfoClicks     ${FDATE}
+./get-procs-only-new.pl   myThomasSaves     ${FDATE}
+./get-procs-only-new.pl   NonCatAllLinksWebsite     ${FDATE}
+./get-procs-only-new.pl   NonCatBranchLocation     ${FDATE}
+./get-procs-only-new.pl   NonCatBrandAdLinksWebsite     ${FDATE}
+./get-procs-only-new.pl   NonCatBrandSearch     ${FDATE}
+./get-procs-only-new.pl   NonCatCADLibrary     ${FDATE}
+./get-procs-only-new.pl   NonCatCapabilities     ${FDATE}
+./get-procs-only-new.pl   NonCatCatalogSolutionActivity     ${FDATE}
+./get-procs-only-new.pl   NonCatCompanyNameSearch     ${FDATE}
+./get-procs-only-new.pl   NonCatDirectoryEmail     ${FDATE}
+./get-procs-only-new.pl   NonCatExternalSearch     ${FDATE}
+./get-procs-only-new.pl   NonCatLinkCatalogCAD     ${FDATE}
+./get-procs-only-new.pl   NonCatMapViews     ${FDATE}
+./get-procs-only-new.pl   NonCatNewsEmail     ${FDATE}
+./get-procs-only-new.pl   NonCatNewsReleaseLinksWebsite     ${FDATE}
+./get-procs-only-new.pl   NonCatPDFViewLinksWebsite     ${FDATE}
+./get-procs-only-new.pl   NonCatPreviewAdQuickview     ${FDATE}
+./get-procs-only-new.pl   NonCatProductSearch     ${FDATE}
+./get-procs-only-new.pl   NonCatProductSearchEmail     ${FDATE}
+./get-procs-only-new.pl   NonCatProductSearchItemDetailView     ${FDATE}
+./get-procs-only-new.pl   NonCatProductSearchLinksWebsite     ${FDATE}
+./get-procs-only-new.pl   NonCatProductSearchProductLineView     ${FDATE}
+./get-procs-only-new.pl   NonCatProfilePrintRequests     ${FDATE}
+./get-procs-only-new.pl   NonCatSupplierCompare     ${FDATE}
+./get-procs-only-new.pl   NonCattnetDirectory     ${FDATE}
+./get-procs-only-new.pl   NonCattnetNews     ${FDATE}
+./get-procs-only-new.pl   NonCatTotalCustomCompanyProfileActions     ${FDATE}
+./get-procs-only-new.pl   NonCatTotalEmailsColleagueMyThomasSaves     ${FDATE}
+./get-procs-only-new.pl   productCatalogViews     ${FDATE}
+./get-procs-only-new.pl   searchEngineRefs     ${FDATE}
+./get-procs-only-new.pl   supplierLinkClicks     ${FDATE}
+./get-procs-only-new.pl   topCategories     ${FDATE}
+./get-procs-only-new.pl   visits     ${FDATE}
+./get-procs-only-new.pl   VisitsCatCov     ${FDATE}
+./get-procs-only-new.pl   visitsNationalCat     ${FDATE}
+./get-procs-only-new.pl   visits_news     ${FDATE}
+./get-procs-only-new.pl   visits_tnet_news     ${FDATE}
+./get-procs-only-new.pl   webResultsSearches     ${FDATE}
+
+      
+./get-procs-only-new.pl   advOrgVisitsDrillCovNewReg ${FDATE}
+./get-procs-only-new.pl   advOrgVisitsDrillcovnewregnoCID ${FDATE}
+./get-procs-only-new.pl   org_DomainVisitsDrillReg ${FDATE}
+./get-procs-only-new.pl   advPSOrgDrillReg  ${FDATE}
+./get-procs-only-new.pl   CatFlatVisitorscovnewreg ${FDATE}
+./get-procs-only-new.pl   news_advOrgVisitsDrillcovnewreg ${FDATE}
+./get-procs-only-new.pl   news_advOrgVisitsDrillcovnewregnoCID ${FDATE}
+./get-procs-only-new.pl   OrgVisitsCatDrillReg ${FDATE}
+./get-procs-only-new.pl   OrgVisitsCatDrillCovNewReg ${FDATE}
+
+./get-procs-only-new.pl   orgDomainVisitsDrill     ${FDATE}
+./get-procs-only-new.pl   orgDomainVisitsDrillCov     ${FDATE}
+
+./get-procs-only-new.pl   advOrgVisitsDrillCov     ${FDATE}
+
+./get-procs-only-new.pl   OrgVisitsCatDrillCovNew     ${FDATE}
+./get-procs-only-new.pl   OrgVisitsCatDrillNew     ${FDATE}
+
+./get-procs-only-new.pl   advPSOrgDrillCov     ${FDATE}
+./get-procs-only-new.pl   CatFlatVisitorsCov     ${FDATE}
+ 
+./get-procs-only-new.pl   news_advOrgVisitsDrillCov     ${FDATE}
+#./get-procs-only-new.pl   news_orgDomainVisitsDrillCov     ${FDATE}
+./get-procs-only-new.pl   news_orgDomainVisitsDrillCov ${FDATE}
+./get-procs-only-new.pl   news_orgDomainVisitsDrillCovReg     ${FDATE}
+
+./get-procs-only-new.pl   hdgCovConv ${FDATE}
+  
+ 
+echo ${FDATE} | mail -s "Script parse-all finished for ${FDATE}   " robertf@c.net
+
+echo ""
+echo "Done..."
+echo ""
+ 
+
+
+ 
+
+

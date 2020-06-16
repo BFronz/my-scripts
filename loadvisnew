@@ -1,0 +1,129 @@
+#!/bin/sh
+#
+
+date;
+echo ""
+ 
+cd /usr/tnetlogs/wt
+
+
+do_set_v () {
+
+ echo "Loading ${START} to ${STOP}"; 
+
+ rm -f  /tmp/visitor_tool_new.txt;
+   
+ echo "";     
+ echo "SELECT * INTO OUTFILE '/tmp/visitor_tool_new.txt' FROM thomvisitor_tool LIMIT ${START}, ${STOP} "; 
+ echo "";
+ 
+ mysql -Af thomas -e "SELECT * INTO OUTFILE '/tmp/visitor_tool_new.txt' FROM thomvisitor_tool LIMIT ${START}, ${STOP} ";
+    
+ mysql -Af thomas -e "LOAD DATA INFILE '/tmp/visitor_tool_new.txt' IGNORE INTO TABLE thomvisitor_tool_new";
+ 
+ echo "" 
+
+ mysql -Af thomas -e "SELECT COUNT(*) FROM thomvisitor_tool_new"
+
+ echo ""
+ echo "-----------------------------------------------"
+ echo ""
+ sleep 10
+} 
+
+
+
+do_set_vc () {
+
+ rm -f /tmp/visitor_cat_tool_new.txt; 
+
+ echo "Loading ${START} to ${STOP}"; 
+ echo "";     
+
+ echo "SELECT";
+ echo ""; 
+     
+ mysql -Af thomas -e "SELECT * INTO OUTFILE '/tmp/visitor_cat_tool_new.txt' FROM thomvisitor_cat_tool LIMIT ${START}, ${STOP} ";
+    
+ sleep 180
+ echo "LOAD";
+
+ mysql -Af thomas -e "LOAD DATA INFILE '/tmp/visitor_cat_tool_new.txt' IGNORE INTO TABLE thomvisitor_cat_tool_new";
+ 
+ echo "" 
+
+ mysql -Af thomas -e "SELECT COUNT(*) FROM thomvisitor_cat_tool_new"
+
+ echo ""
+ echo "-----------------------------------------------"
+ echo ""
+ sleep 60
+} 
+
+START=0;
+STOP=750000;
+#do_set_v; 
+
+START=750000;
+STOP=1500000;
+#do_set_v; 
+
+
+#############
+ 
+START=0;
+STOP=1000000;
+#do_set_vc; 
+
+ 
+START=1000000;
+STOP=2000000;
+#do_set_vc; 
+
+
+START=2000000;
+STOP=3000000;
+do_set_vc; 
+
+START=3000000;
+STOP=4000000;
+do_set_vc;
+
+echo ""
+echo "Done..."
+exit;
+
+
+START=4000000;
+STOP=5000000;
+do_set_vc;
+
+START=5000000;
+STOP=6000000;
+do_set_vc;
+
+ 
+START=6000000;
+STOP=7000000;
+do_set_vc;
+
+START=7000000;
+STOP=8000000;
+do_set_vc;
+ 
+START=9000000;
+STOP=10000000;
+do_set_vc; 
+
+START=10000000;
+STOP=11000000;
+do_set_vc; 
+
+START=11000000;
+STOP=12000000;
+do_set_vc;
+ 
+  
+echo ""
+date;
+echo "Done..."

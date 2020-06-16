@@ -1,0 +1,53 @@
+#!/bin/sh
+#
+
+source /usr/wt/reload.sh
+
+if [ -z $1 ]
+ then
+ echo "Missing  date yymm"
+ exit;
+fi
+ 
+LOGDATE=$1;
+
+echo "Date: ${LOGDATE}"
+  
+#Loads registered user file by adv
+echo "load-reg"
+./load-reg.pl ${LOGDATE}
+echo " "
+
+# Get legacy data
+./mk-reg-history.pl ${LOGDATE}
+ 
+# Load registered user data by heading  
+echo "load-reg-cat"
+./load-reg-cat.pl ${LOGDATE}
+echo " "
+
+echo "load-reg-contacts.pl"
+./load-reg-contacts.pl ${LOGDATE}
+echo " "
+
+echo " load-reg-cat-contacts.pl"
+./load-reg-cat-contacts.pl  ${LOGDATE}
+echo ""
+ 
+
+FDATE=$1
+
+Y=${FDATE:0:2}
+M=${FDATE:2:2}
+
+#echo "${FDATE} Year ${Y} Month ${M}";
+
+# Load new tnet reg data
+LOGFILE="catreglog.txt"
+rm -f ${LOGFILE}
+echo "Loading ${LOGFILE}"
+echo "  SELECT date, heading, tinid, 'TNET'  from thomtnetlogREGCAT${Y} where date='${FDATE}'  "  | mysql -A thomas > ${LOGFILE}
+  
+mysqlimport -L tgrams ${DIR}/${LOGFILE}
+
+exit;

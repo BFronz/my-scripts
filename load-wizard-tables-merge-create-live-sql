@@ -1,0 +1,243 @@
+#!/bin/sh
+#
+# creates merge tables on charon
+
+
+source /usr/wt/reload.sh
+
+FDATE=$1
+
+YR=${FDATE:0:2}
+MON=${FDATE:2:2}
+
+
+DB="thomas"
+
+
+
+
+echo "tnetlogORGCATDWIZ"
+mysql -Af ${DB} -e "DROP TABLE IF EXISTS tnetlogORGCATDWIZ"
+mysql -Af ${DB} -e "CREATE TABLE         tnetlogORGCATDWIZ (
+  date varchar(4) NOT NULL default '',
+  acct bigint(20) NOT NULL default '0',
+  heading bigint(20) NOT NULL default '0',
+  org varchar(125) NOT NULL default '',
+  domain varchar(125) NOT NULL default '',
+  country varchar(100) NOT NULL default '',
+  city varchar(100) NOT NULL default '',
+  state varchar(50) NOT NULL default '',
+  zip varchar(12) NOT NULL default '',
+  cnt bigint(20) NOT NULL default '0',
+  isp char(1) NOT NULL default '',
+  block char(1) NOT NULL default '',
+  orgid varchar(32) NOT NULL default '',
+  oid varchar(32) NOT NULL default '',
+  ip varchar(39) NOT NULL default '',
+  naics varchar(10) NOT NULL default '',
+  primary_sic varchar(150) NOT NULL default '',
+  countrycode varchar(10) NOT NULL default '',
+  dunsnum int(11) NOT NULL default '0',
+  domestichqdunsnumber int(11) NOT NULL default '0',
+  hqdunsnumber int(11) NOT NULL default '0',
+  gltdunsnumber int(11) NOT NULL default '0',
+  countrycode3 char(3) NOT NULL default '',
+  audience varchar(125) NOT NULL default '',
+  audiencesegment varchar(125) NOT NULL default '',
+  b2b varchar(6) NOT NULL default '',
+  employeerange varchar(125) NOT NULL default '',
+  forbes2k varchar(6) NOT NULL default '',
+  fortune1k varchar(6) NOT NULL default '',
+  industry varchar(125) NOT NULL default '',
+  informationlevel varchar(6) NOT NULL default '',
+  latitude double(16,4) NOT NULL default '0.0000',
+  longitude double(16,4) NOT NULL default '0.0000',
+  phone varchar(25) NOT NULL default '',
+  revenuerange varchar(125) NOT NULL default '',
+  subindustry varchar(125) NOT NULL default '',
+  cov char(2) NOT NULL default '',
+  KEY wdate (date,heading,acct),
+  KEY wdate2 (date,heading),
+  KEY worg (org),
+  KEY wdomain (domain),
+  KEY wcov (cov),
+  KEY wzip (zip),
+  KEY wind (industry),
+  KEY wcountry (country),
+  KEY oid (oid),
+  KEY orgid (orgid)
+  ) ENGINE=MRG_MyISAM DEFAULT CHARSET=latin1 INSERT_METHOD=LAST UNION=(
+
+ tnetlogORGCATD13_01W, tnetlogORGCATD13_02W, tnetlogORGCATD13_03W, tnetlogORGCATD13_04W,
+ tnetlogORGCATD13_05W, tnetlogORGCATD13_06W, tnetlogORGCATD13_07W, tnetlogORGCATD13_08W,
+ tnetlogORGCATD13_09W, tnetlogORGCATD13_10W, tnetlogORGCATD13_11W, tnetlogORGCATD13_12W,
+
+ tnetlogORGCATD14_01W, tnetlogORGCATD14_02W, tnetlogORGCATD14_03W, tnetlogORGCATD14_04W,
+ tnetlogORGCATD14_05W, tnetlogORGCATD14_06W, tnetlogORGCATD14_07W, tnetlogORGCATD14_08W,
+ tnetlogORGCATD14_09W, tnetlogORGCATD14_10W, tnetlogORGCATD14_11W, tnetlogORGCATD14_12W,
+
+ tnetlogORGCATD15_01W, tnetlogORGCATD15_02W, tnetlogORGCATD15_03W, tnetlogORGCATD15_04W,
+ tnetlogORGCATD15_05W, tnetlogORGCATD15_06W, tnetlogORGCATD15_07W, tnetlogORGCATD15_08W,
+ tnetlogORGCATD15_09W, tnetlogORGCATD15_10W, tnetlogORGCATD15_11W, tnetlogORGCATD15_12W
+) "
+mysql -Af ${DB} -e "SELECT count(*) FROM tnetlogORGCATDWIZ"
+echo ""
+
+
+echo "tnetlogORGSITEDWIZ"
+mysql -Af ${DB} -e "DROP TABLE IF EXISTS tnetlogORGSITEDWIZ "
+mysql -Af ${DB} -e "CREATE TABLE         tnetlogORGSITEDWIZ (
+  date varchar(4) NOT NULL default '',
+  org varchar(125) NOT NULL default '',
+  domain varchar(125) NOT NULL default '',
+  country varchar(100) NOT NULL default '',
+  city varchar(100) NOT NULL default '',
+  state varchar(50) NOT NULL default '',
+  zip varchar(12) NOT NULL default '',
+  cnt bigint(20) NOT NULL default '0',
+  isp char(1) NOT NULL default '',
+  block char(1) NOT NULL default '',
+  orgid varchar(32) NOT NULL default '',
+  oid varchar(32) NOT NULL default '',
+  ip varchar(39) NOT NULL default '',
+  naics varchar(10) NOT NULL default '',
+  primary_sic varchar(150) NOT NULL default '',
+  countrycode varchar(10) NOT NULL default '',
+  dunsnum int(11) NOT NULL default '0',
+  domestichqdunsnumber int(11) NOT NULL default '0',
+  hqdunsnumber int(11) NOT NULL default '0',
+  gltdunsnumber int(11) NOT NULL default '0',
+  countrycode3 char(3) NOT NULL default '',
+  audience varchar(125) NOT NULL default '',
+  audiencesegment varchar(125) NOT NULL default '',
+  b2b varchar(6) NOT NULL default '',
+  employeerange varchar(125) NOT NULL default '',
+  forbes2k varchar(6) NOT NULL default '',
+  fortune1k varchar(6) NOT NULL default '',
+  industry varchar(125) NOT NULL default '',
+  informationlevel varchar(6) NOT NULL default '',
+  latitude  double(16,4) NOT NULL default '0.0000',
+  longitude  double(16,4) NOT NULL default '0.0000',
+  phone varchar(25) NOT NULL default '',
+  revenuerange varchar(125) NOT NULL default '',
+  subindustry varchar(125) NOT NULL default '',
+  cov char(2) NOT NULL default '',
+  KEY wdate (date),
+  KEY worg (org),
+  KEY wdomain (domain),
+  KEY wcov (cov),
+  KEY wzip (zip),
+  KEY wind (industry),
+  KEY wcountry (country),
+  KEY oid (oid),
+  KEY orgid (orgid)
+ ) ENGINE=MRG_MyISAM DEFAULT CHARSET=latin1 INSERT_METHOD=LAST UNION=(
+
+ newsORGSITED13W, newsORGSITED14W, newsORGSITED15W,
+
+ tnetlogORGPSSITE13W, tnetlogORGPSSITE14W, tnetlogORGPSSITE15W,
+
+ tnetlogORGSITED13_01W, tnetlogORGSITED13_02W, tnetlogORGSITED13_03W, tnetlogORGSITED13_04W,
+ tnetlogORGSITED13_05W, tnetlogORGSITED13_06W, tnetlogORGSITED13_07W, tnetlogORGSITED13_08W,
+ tnetlogORGSITED13_09W, tnetlogORGSITED13_10W, tnetlogORGSITED13_11W, tnetlogORGSITED13_12W,
+
+ tnetlogORGSITED14_01W, tnetlogORGSITED14_02W, tnetlogORGSITED14_03W, tnetlogORGSITED14_04W,
+ tnetlogORGSITED14_05W, tnetlogORGSITED14_06W, tnetlogORGSITED14_07W, tnetlogORGSITED14_08W,
+ tnetlogORGSITED14_09W, tnetlogORGSITED14_10W, tnetlogORGSITED14_11W, tnetlogORGSITED14_12W,
+
+ tnetlogORGSITED15_01W, tnetlogORGSITED15_02W, tnetlogORGSITED15_03W, tnetlogORGSITED15_04W,
+ tnetlogORGSITED15_05W, tnetlogORGSITED15_06W, tnetlogORGSITED15_07W, tnetlogORGSITED15_08W,
+ tnetlogORGSITED15_09W, tnetlogORGSITED15_10W, tnetlogORGSITED15_11W, tnetlogORGSITED15_12W
+)"
+mysql -Af ${DB} -e "SELECT count(*) FROM tnetlogORGSITEDWIZ"
+echo ""
+
+ 
+echo "tnetlogORGDWIZ"
+mysql -Af ${DB} -e "DROP TABLE IF EXISTS tnetlogORGDWIZ"
+mysql -Af ${DB} -e "CREATE TABLE tnetlogORGDWIZ (
+  date varchar(4) NOT NULL default '',
+  acct bigint(20) NOT NULL default '0',
+  org varchar(125) NOT NULL default '',
+  domain varchar(125) NOT NULL default '',
+  country varchar(100) NOT NULL default '',
+  city varchar(100) NOT NULL default '',
+  state varchar(50) NOT NULL default '',
+  zip varchar(12) NOT NULL default '',
+  cnt bigint(20) NOT NULL default '0',
+  isp char(1) NOT NULL default '',
+  block char(1) NOT NULL default '',
+  orgid varchar(32) NOT NULL default '',
+  oid varchar(32) NOT NULL default '',
+  ip varchar(39) NOT NULL default '',
+  naics varchar(10) NOT NULL default '',
+  primary_sic varchar(150) NOT NULL default '',
+  countrycode varchar(10) NOT NULL default '',
+  dunsnum int(11) NOT NULL default '0',
+  domestichqdunsnumber int(11) NOT NULL default '0',
+  hqdunsnumber int(11) NOT NULL default '0',
+  gltdunsnumber int(11) NOT NULL default '0',
+  countrycode3 char(3) NOT NULL default '',
+  audience varchar(125) NOT NULL default '',
+  audiencesegment varchar(125) NOT NULL default '',
+  b2b varchar(6) NOT NULL default '',
+  employeerange varchar(125) NOT NULL default '',
+  forbes2k varchar(6) NOT NULL default '',
+  fortune1k varchar(6) NOT NULL default '',
+  industry varchar(125) NOT NULL default '',
+  informationlevel varchar(6) NOT NULL default '',
+  latitude  double(16,4) NOT NULL default '0.0000',
+  longitude  double(16,4) NOT NULL default '0.0000',
+  phone varchar(25) NOT NULL default '',
+  revenuerange varchar(125) NOT NULL default '',
+  subindustry varchar(125) NOT NULL default '',
+  cov char(2) NOT NULL default '',
+
+  KEY wdate (date, acct),
+
+  KEY worg (org),
+  KEY wdomain (domain),
+
+  KEY wcov (cov),
+  KEY wzip (zip),
+  KEY wind (industry),
+  KEY wcountry (country),
+
+  KEY oid (oid),
+  KEY orgid (orgid)
+ ) ENGINE=MRG_MyISAM DEFAULT CHARSET=latin1 INSERT_METHOD=LAST UNION=(
+
+ newsORGD13W, newsORGD14W, newsORGD15W,
+
+ tnetlogORGPS13_01W, tnetlogORGPS13_02W, tnetlogORGPS13_03W, tnetlogORGPS13_04W,
+ tnetlogORGPS13_05W, tnetlogORGPS13_06W, tnetlogORGPS13_07W, tnetlogORGPS13_08W,
+ tnetlogORGPS13_09W, tnetlogORGPS13_10W, tnetlogORGPS13_11W, tnetlogORGPS13_12W,
+
+ tnetlogORGPS14_01W, tnetlogORGPS14_02W, tnetlogORGPS14_03W, tnetlogORGPS14_04W,
+ tnetlogORGPS14_05W, tnetlogORGPS14_06W, tnetlogORGPS14_07W, tnetlogORGPS14_08W,
+ tnetlogORGPS14_09W, tnetlogORGPS14_10W, tnetlogORGPS14_11W, tnetlogORGPS14_12W,
+
+ tnetlogORGPS15_01W, tnetlogORGPS15_02W, tnetlogORGPS15_03W, tnetlogORGPS15_04W,
+ tnetlogORGPS15_05W, tnetlogORGPS15_06W, tnetlogORGPS15_07W, tnetlogORGPS15_08W,
+ tnetlogORGPS15_09W, tnetlogORGPS15_10W, tnetlogORGPS15_11W, tnetlogORGPS15_12W,
+
+ tnetlogORGD13_01W, tnetlogORGD13_02W, tnetlogORGD13_03W, tnetlogORGD13_04W,
+ tnetlogORGD13_05W, tnetlogORGD13_06W, tnetlogORGD13_07W, tnetlogORGD13_08W,
+ tnetlogORGD13_09W, tnetlogORGD13_10W, tnetlogORGD13_11W, tnetlogORGD13_12W,
+
+ tnetlogORGD14_01W, tnetlogORGD14_02W, tnetlogORGD14_03W, tnetlogORGD14_04W,
+ tnetlogORGD14_05W, tnetlogORGD14_06W, tnetlogORGD14_07W, tnetlogORGD14_08W,
+ tnetlogORGD14_09W, tnetlogORGD14_10W, tnetlogORGD14_11W, tnetlogORGD14_12W,
+
+ tnetlogORGD15_01W, tnetlogORGD15_02W, tnetlogORGD15_03W, tnetlogORGD15_04W,
+ tnetlogORGD15_05W, tnetlogORGD15_06W, tnetlogORGD15_07W, tnetlogORGD15_08W,
+ tnetlogORGD15_09W, tnetlogORGD15_10W, tnetlogORGD15_11W, tnetlogORGD15_12W
+) "
+mysql -Af ${DB} -e "SELECT count(*) FROM tnetlogORGDWIZ"
+
+
+echo
+echo "Done..."
+echo
+
+

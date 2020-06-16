@@ -1,0 +1,43 @@
+#!/bin/sh
+# 
+#
+#
+
+
+$fdate   = $ARGV[0];
+if($fdate eq "") {print "\n\nForgot to add date yymm\n\n"; exit;}
+
+require "trd-reload.ph";
+
+$fyear    = "20" . substr($fdate, 0, 2);
+$yy       =  substr($fdate, 0, 2);
+$mm       =  substr($fdate, 2, 2);
+use DBI;
+$dbh      = DBI->connect("", "", "");
+ 
+DB="thomas";
+  
+ 
+# reload month table
+mysql -Af ${DB} -e "DROP TABLE IF EXISTS categorymonth"
+mysql -Af ${DB} -e "CREATE TABLE categorymonth (
+  heading bigint(20) NOT NULL default '0',
+  org     varchar(125) NOT NULL default '',
+  city    varchar(100) NOT NULL default '',
+  state   varchar(50)  NOT NULL default '',
+  zip     varchar(12)  NOT NULL default '',
+  oid     varchar(32)  NOT NULL default '',
+  KEY heading (heading,org),
+  KEY heading_2 (heading),
+  KEY oid (oid),
+  KEY org (org)) " 
+mysql -Af ${DB} -e "INSERT INTO categorymonth (heading,org,city,state,zip,oid)
+SELECT heading, org, city ,state, zip, oid  FROM categoryrollM
+WHERE date=${FDATE} AND heading>0 AND ISP='N'
+GROUP BY heading, org, city, state, zip "
+
+
+
+echo "" 
+echo "Done...";
+echo ""

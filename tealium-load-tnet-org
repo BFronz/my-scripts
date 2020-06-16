@@ -1,0 +1,86 @@
+#!/bin/sh
+# 
+# runs all org scripts
+# this will take a while and need to check all imports as they go
+# run as  ./load-tnet-org YYMM 
+  
+if [ -z $1 ]
+ then
+ echo ""
+ echo "Missing date: YYMM"
+ echo ""
+ exit;
+fi
+
+source /usr/wt/reload.sh
+ 
+FDATE=$1
+
+YY=${FDATE:0:2}
+MM=${FDATE:2:2}
+
+echo ""
+echo "Date: ${FDATE}"
+echo ""
+  
+# echo "Site + Site with Cov" 
+# ./load-org-drill-tnet-site-new.pl ${FDATE}
+# echo "------------------------------------" # 
+
+# echo "Adv" 
+# ./load-org-drill-tnet-adv.pl ${FDATE} 
+# echo ""
+# echo "------------------------------------" #
+
+# echo "Cat" 
+# ./load-org-drill-tnet-cat.pl ${FDATE} 
+# echo ""
+# echo "------------------------------------" #
+
+# echo "Cat Wiz" 
+# ./load-org-drill-tnet-cat-wiz.pl ${FDATE} 
+# echo ""
+# echo "------------------------------------" #
+ 
+# echo "News" 
+# ./load-org-drill-news.pl ${FDATE} 
+# echo ""
+# echo "------------------------------------"
+
+#echo "Product Search" << NOT USED ANYMORE
+#./load-org-drill-PS-adv.pl ${FDATE} 
+#echo ""
+#echo "------------------------------------"
+ 
+#echo "Flat Catnav" 
+#./load-org-drill-tnet-flatcatnav.pl ${FDATE} 
+./tealium_catnav-visitor-combo-extra  ${FDATE}    # delete is already in script
+echo "" 
+echo "------------------------------------"
+ 
+echo "Extra";
+./load-org-extra.pl ${FDATE} 
+echo ""
+echo "------------------------------------"
+
+echo "update tnetlogORGflagDbase";
+echo "insert ignore into thomtnetlogORGflagDbase (org) select org from tnetlogORGD${YY}_${MM}     where isp='Y' and date='${FDATE}' group by org "  |  mysql -As thomas
+#echo "insert ignore into thomtnetlogORGflagDbase (org) select org from tnetlogORGSITED${YY}_${MM} where isp='Y' and date='${FDATE}' group by org "  |  mysql -As thomas
+#echo "insert ignore into thomtnetlogORGflagDbase (org) select org from tnetlogORGCATD${YY}_${MM}  where isp='Y' and date='${FDATE}' group by org "  |  mysql -As thomas 
+
+echo "insert ignore into thomtnetlogORGflagDbase (org) select trim(org) as org from thommark_ispV2 "  |  mysql -As thomas 
+ 
+ 
+echo "Check Tables Script. Look for missing data.";
+./checktables.pl ${FDATE}
+echo "------------------------------------"
+
+
+
+
+echo ${FDATE} | mail -s "Script load-tnet-org finished for ${FDATE}   " robertf@c.net
+
+echo "Done..."
+
+
+ 

@@ -1,0 +1,66 @@
+#!/bin/sh
+#
+
+date;
+echo ""
+ 
+cd /usr/tnetlogs/wt
+
+
+do_set () {
+
+ echo "Loading ${TABLE}"; 
+ rm -f visitor_cat_tool_new.txt;
+ cp  ${TABLE} visitor_cat_tool_new.txt;
+ 
+ mysql -Af thomas -e "LOAD DATA INFILE '/usr/tnetlogs/wt/visitor_cat_tool_new.txt' IGNORE INTO TABLE thomvisitor_cat_tool_new";
+ 
+ echo "" 
+ mysql -Af thomas -e "SELECT COUNT(*) FROM thomvisitor_cat_tool_new"
+
+ echo ""
+ echo "-----------------------------------------------"
+ echo ""
+ sleep 180
+
+} 
+ 
+TABLE="visitor_cat_tool_new0.txt"
+do_set;
+
+TABLE="visitor_cat_tool_new1000000.txt"
+do_set;
+
+TABLE="visitor_cat_tool_new2000000.txt"
+do_set;
+
+TABLE="visitor_cat_tool_new3000000.txt"
+do_set;
+
+TABLE="visitor_cat_tool_new4000000.txt"
+do_set;
+
+TABLE="visitor_cat_tool_new5000000.txt"
+do_set;
+
+TABLE="visitor_cat_tool_new6000000.txt"
+do_set;
+
+TABLE="visitor_cat_tool_new7000000.txt"
+do_set;
+
+TABLE="visitor_cat_tool_new8000000.txt"
+do_set;
+
+TABLE="visitor_cat_tool_new9000000.txt"
+do_set;
+
+TABLE="visitor_cat_tool_new10000000.txt"
+do_set;
+
+TABLE="visitor_cat_tool_new11000000.txt"
+do_set;
+  
+echo ""
+date;
+echo "Done..."

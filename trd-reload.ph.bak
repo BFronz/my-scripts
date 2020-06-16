@@ -1,0 +1,411 @@
+$dbfdir = "/usr3/trdaily";
+
+$rootdir = "/www/thomas";
+
+$db = "trdaily";
+$data_source = "dbi:mysql:$db:localhost";
+$user = "";
+$auth = "";
+
+$MAXWORDLEN = 10;
+
+$rgnname{"02"} = "gdv";
+$rgnname{"04"} = "ene";
+$rgnname{"07"} = "wne";
+$rgnname{"08"} = "ga";
+$rgnname{"09"} = "ncts";
+$rgnname{"10"} = "gm";
+$rgnname{"11"} = "no";
+$rgnname{"12"} = "uny";
+$rgnname{"13"} = "ov";
+$rgnname{"14"} = "cc";
+$rgnname{"15"} = "tglf";
+$rgnname{"16"} = "txok";
+$rgnname{"17"} = "gc";
+$rgnname{"18"} = "scal";
+$rgnname{"19"} = "ncal";
+$rgnname{"20"} = "gf";
+$rgnname{"21"} = "se";
+$rgnname{"22"} = "nyj";
+$rgnname{"23"} = "pnw";
+
+$Trgnname{"02"} = "gdv";
+$Trgnname{"04"} = "ene";
+$Trgnname{"07"} = "wne";
+$Trgnname{"08"} = "ga";
+$Trgnname{"09"} = "ncts";
+$Trgnname{"10"} = "gm";
+$Trgnname{"11"} = "no";
+$Trgnname{"12"} = "uny";
+$Trgnname{"13"} = "ov";
+$Trgnname{"14"} = "macc";
+$Trgnname{"15"} = "tlg";
+$Trgnname{"16"} = "nto";
+$Trgnname{"17"} = "gc";
+$Trgnname{"18"} = "scal";
+$Trgnname{"19"} = "ncal";
+#$Trgnname{"20"} = "gf";
+$Trgnname{"20"} = "gfl";
+$Trgnname{"21"} = "se";
+$Trgnname{"22"} = "nyj";
+$Trgnname{"23"} = "pnw";
+
+#$co_name = "XXX I. B. M.";
+#$co_name = "XXX I.B.M.";
+#$co_name = "R & R Uniforms, Inc.";
+#$co_name = "U.S. Chrome Corp. of Pennsylvania";
+#$co_name = "Haye's Modems";
+
+sub CleanFlds {
+ ($name, $val) = @_;
+          
+ $val =~ s/^\s+//;
+ $val =~ s/\s+$//; 
+           
+ if($name eq "zip"   &&  ($val eq "Company" || $val  eq "ISP")) {$val="";}
+ if($name eq "state" &&  ($val eq "Company" || $val  eq "ISP")) {$val="";}
+ if($name eq "city"  &&  ($val eq "Company" || $val  eq "ISP")) {$val="";}
+    
+ if($val eq "-") { $val = "";}
+ if($val eq "?") { $val = "";}
+
+ if($val eq "No Value Found") { $val=""; }
+
+ $val =~ s/\'//g;
+ $val =~ s/\"//g;
+ $val =~ s/\\n//g; 
+ 
+ return $val;
+}  
+
+sub CleanOrg {
+ ($val) = @_;
+           
+ $val =~ s/^\s+//;
+ $val =~ s/\s+$//; 
+ $val =~ tr/[A-Z]/[a-z]/;         
+ if($val =~ /ip=/   ) {$val="";} 
+ 
+ return $val;
+}  
+
+
+sub CleanForeign {
+ ($x) = @_;
+ $x =~ s/^\s+//;
+ $x =~ s/\s+$//; 
+ $x =~ s/á/a/g;
+ $x =~ s/ã/a/g;
+ $x =~ s/å/A/g;
+ $x =~ s/À/A/g;
+ $x =~ s/Â/A/g;
+ $x =~ s/Ä/A/g;
+ $x =~ s/Å/A/g;
+ $x =~ s/è/E/g;
+ $x =~ s/ê/E/g;
+ $x =~ s/È/E/g;
+ $x =~ s/Ê/E/g;
+ $x =~ s/ì/i/g;
+ $x =~ s/î/i/g;
+ $x =~ s/Ì/I/g;
+ $x =~ s/Î/I/g;
+ $x =~ s/ò/o/g;
+ $x =~ s/ô/o/g;
+ $x =~ s/ö/o/g;
+ $x =~ s/ø/o/g;
+ $x =~ s/Ò/O/g;
+ $x =~ s/Ô/O/g;
+ $x =~ s/Ö/O/g;
+ $x =~ s/Ø/O/g;
+ $x =~ s/ù/u/g;
+ $x =~ s/û/u/g;
+ $x =~ s/Ù/U/g;
+ $x =~ s/Û/U/g;
+ $x =~ s/Ÿ/Y/g;
+ $x =~ s/ç/b/g;
+ $x =~ s/ß/B/g;
+ $x =~ s/Ī/I/g;
+ $x =~ s/ĭ/i/g;
+ $x =~ s/à/a/g;
+ $x =~ s/â/a/g;
+ $x =~ s/ä/a/g;
+ $x =~ s/æ/a/g;
+ $x =~ s/Á/A/g;
+ $x =~ s/Ã/A/g;
+ $x =~ s/Æ/E/g;
+ $x =~ s/é/e/g;
+ $x =~ s/ë/e/g;
+ $x =~ s/É/E/g;
+ $x =~ s/Ë/E/g;
+ $x =~ s/í/i/g;
+ $x =~ s/ï/i/g;
+ $x =~ s/Í/I/g;
+ $x =~ s/Ï/I/g;
+ $x =~ s/ó/o/g;
+ $x =~ s/õ/o/g;
+ $x =~ s/œ/o/g;
+ $x =~ s/Ó/O/g;
+ $x =~ s/Õ/O/g;
+ $x =~ s/ú/u/g;
+ $x =~ s/ü/u/g;
+ $x =~ s/Ú/U/g;
+ $x =~ s/Ü/U/g;
+ $x =~ s/¥/Y/g;
+ $x =~ s/Ç/C/g;
+ $x =~ s/ñ/n/g;
+ $x =~ s/Ī/I/g;
+ $x =~ s/Į/I/g;
+ return($x);
+}
+
+sub StateCheck {
+ ($st) = @_;
+ $stlen = length($st);
+   
+ if($st =~ /not set/ || $st =~ /\*/  || $st eq "-"  || $st eq "?") { $st=""; } # remove some junk
+ #if($st lt 100)    { $st=""; } # removes just "number" states
+ #if($stlen==1)    { $st=""; }  # removes single digit states
+
+ if($stlen > 2 )  { $stabv = $stlist{$st}; }
+ if($stabv ne "") { $st = $stabv;  }
+
+ return($st);
+}
+
+sub GetIP2Data {
+  $ip=$_[0];
+
+  #print "$org\t|\t";
+
+  $q = "SELECT l.*";
+  $q .= " FROM tgrams.ipmapping AS m, tgrams.iplookup AS l";
+  $q .= " WHERE m.ipfrag=substring_index('$ip','.',2) AND m.ipstart=l.ipstart AND m.ipend=l.ipend";
+  $q .= " AND inet_aton('$ip') BETWEEN l.ipstart AND l.ipend AND domain_name!='THIS FIELD WAS ADDED TO FIX SYNTAX ERROR' ";
+  $q .= " ORDER BY l.ipstart";
+  my $sth = $dbh->prepare($q);
+  if (!$sth->execute) { print "Error" . $tbh->errstr . "\n"; }
+  if (my $srow = $sth->fetchrow_arrayref)
+   {
+     #  ipstart 0,      ipend 1,   country_code 2, 
+     #  country_name 3, region 4,  city 5,        latitude 6, 
+     #  longitude 7, zipcode 8, timezone 9, isp_name 10,    domain_name 11
+ 
+    $org   = $$srow[10];
+    $city  = $$srow[5];
+    $state = $$srow[4];
+    $zip   = $$srow[8];
+    
+    $org   =~ tr/[A-Z]/[a-z]/; 
+    $city  =~ tr/[A-Z]/[a-z]/; 
+    $state =~ tr/[A-Z]/[a-z]/; 
+    $zip   =~ tr/[A-Z]/[a-z]/; 
+    
+    $org   =~ s/"//g;
+    $city  =~ s/"//g;    
+    $state =~ s/"//g;    
+    $zip   =~ s/"//g;    
+
+    $org   =~ s/'//g;
+    $city  =~ s/'//g;    
+    $state =~ s/'//g;    
+    $zip   =~ s/'//g;    
+   
+   # print "$org\n";     
+   }     
+  $sth->finish;
+
+
+  my @array1 = ($org, $city, $state, $zip);
+  return (@array1);
+}    
+
+
+sub ISPcheck {
+ ($org, $isp) = @_;
+    if($org =~ /.net/ || $org =~ /pool/ || $org =~ /pppox/ || $org =~ /internet/)                     { $isp="Y"; }
+    if($org =~ /broadband/ || $org =~ /network/ || $org =~ /telecom/ || $org =~ /telephone/)          { $isp="Y"; }
+    if($org =~ /communications/ || $org =~ /cable/ || $org =~ /adsl/ || $org =~ /telecommunications/) { $isp="Y"; }
+    if($org =~ /isp/ || $org =~ /dsl/ || $org =~ /chinanet/ || $org =~ /cablevision/)                 { $isp="Y"; }
+    if($org =~ /verizon/ || $org =~ /sprint/ || $org =~ /telenet/ || $org =~ /telecomunicaciones/)    { $isp="Y"; }
+    if($org =~ /wireless/ || $org =~ /skynet/ || $org =~ /vodaphone/ || $org =~ /att/)                { $isp="Y"; }
+    if($org =~ /comcast/ || $org =~ /cablenet/ || $org =~ /ethernet/ || $org =~ /at&t/)               { $isp="Y"; }
+    if($org =~ /qwest/  || $org =~ /service provider/ )                                               { $isp="Y"; }
+    if($org =~ /whirlpool/ )                                                                          { $isp="N"; }
+  return($isp);
+}
+
+sub MakeCleanName
+{
+  local($_c) = @_;
+
+  # Add a leading & trailing space
+  $_c = " $_c ";
+  # Convert to lowercase
+  $_c =~ tr/A-Z/a-z/;
+  # Remove extra spaces
+  $_c =~ s/ +/ /g;
+  # Remove hyphens & single quotes
+  $_c =~ s/[-\']//g;
+
+  # Reduce I.B.M. or I. B. M. to ibm
+  if ($_c =~ / (([a-z]\. ?)+) /)
+  {
+    $_match = $1;
+    $_fix = $_match;
+    $_fix =~ s/[ \.]//g;
+    $_match =~ s/\./\\./;
+    $_c =~ s/$_match/$_fix/g;
+  }
+
+  # Remove anything other than a letter, number or space
+  $_c =~ s/[^A-Za-z0-9 ]//g;
+  # Remove extra spaces again
+  $_c =~ s/ +/ /g;
+
+  $_c;
+}
+
+sub EdmstCleanName
+{
+  local($c) = @_;
+  $c = " " . lc($c) . " ";
+
+  # Single letters with periods are special cases
+  if ($c =~ /(( \w\.)+)/)
+  {
+    local($match) = $1;
+    local($fix) = $match;
+    $fix =~ s/[ \.]//g;
+    #$c =~ s/$match/ $fix/g;
+    $c =~ s/ ${fix}\./ $fix/g;
+  }
+
+  # Hypens, Slashes to spaces
+  $c =~ s/[\-\/]/ /g;
+  # "'s" is removed
+  #$c =~ s/\'s / /g;
+  $c =~ s/\'s,? / s /g;
+  # Remove single quotes
+  $c =~ s/[-\']//g;
+  # Remove anything other than a letter, number or space
+  $c =~ s/[^A-Za-z0-9 ]//g;
+  # Remove extra spaces
+  $c =~ s/\s+/ /g;
+
+  # Reduce consecutive single-char words to be one word
+  if ($c =~ /(( \w)+) /)
+  {
+    local($match) = $1;
+    local($fix) = $match;
+    $fix =~ s/ //g;
+    $c =~ s/$match/ $fix/g;
+  }
+
+  # Remove extra spaces
+  $c =~ s/ +/ /g;
+
+  $c;
+}
+
+sub EdmstCleanNameOld
+{
+  local($_c) = @_;
+
+  # Add a leading & trailing space
+  $_c = " $_c ";
+  # Convert to lowercase
+  $_c =~ tr/A-Z/a-z/;
+  # Hypens, Slashes to spaces
+  $_c =~ s/[\-\/]/ /g;
+  # Remove extra spaces
+  $_c =~ s/ +/ /g;
+  # "'s" is removed
+  #$_c =~ s/\'s / /g;
+  $_c =~ s/\'s,? / s /g;
+  # Remove single quotes
+  $_c =~ s/[-\']//g;
+
+  # Reduce I.B.M. or I. B. M. to ibm
+  if ($_c =~ / (([a-z]\. ?)+) /)
+  {
+    $_match = $1;
+    $_fix = $_match;
+    $_fix =~ s/[ \.]//g;
+    $_match =~ s/\./\\./;
+    $_c =~ s/$_match/$_fix/g;
+  }
+
+  # Remove anything other than a letter, number or space
+  $_c =~ s/[^A-Za-z0-9 ]//g;
+  # Remove extra spaces again
+  $_c =~ s/ +/ /g;
+
+  $_c;
+}
+
+sub MakeHeadDesc
+{
+  local($d) = @_;
+
+  # Capitalize Heading Description
+  $d = lc($d);
+  @words = split(/ +/, $d);
+  $d = "";
+  $j = 0;
+  while ($j < @words)
+  {
+    if ($j > 0) { $d .= " "; }
+    if ($words[$j] =~ /^\(/)
+    {
+      $words[$j] = substr($words[$j], 1, length($words[$j])-1);
+      $d .= "(";
+    }
+    $d .= ucfirst($words[$j]);
+    $j++;
+  }
+
+  # certain substrings in heading must be capitalized
+  # only on word-boudaries
+  # ac, cad, cae, cam, cnc, dc, edm, emi, iso
+  # Added: CD, CD-ROM, LCD, HVAC, CMM
+  $d =~ s/\bac\b/AC/gi;
+  $d =~ s/\bcad\b/CAD/gi;
+  $d =~ s/\bcae\b/CAE/gi;
+  $d =~ s/\bcam\b/CAM/gi;
+  $d =~ s/\bcnc\b/CNC/gi;
+  $d =~ s/\bdc\b/DC/gi;
+  $d =~ s/\bedm\b/EDM/gi;
+  $d =~ s/\bemi\b/EMI/gi;
+  $d =~ s/\biso\b/ISO/gi;
+  $d =~ s/\bcd\b/CD/gi;
+  $d =~ s/\bcd\-rom\b/CD-ROM/gi;
+  $d =~ s/\bcd\-i\b/CD-I/gi;
+  $d =~ s/\blcd\b/LCD/gi;
+  $d =~ s/\bhvac\b/HVAC/gi;
+  $d =~ s/\bcmm\b/CMM/gi;
+
+  # Added: scr, ups, rops, nc, ndt, rf, cip, hip, cvd, pvd, abs
+  $d =~ s/\bscr\b/SCR/gi;
+  $d =~ s/\bups\b/UPS/gi;
+  $d =~ s/\brops\b/ROPS/gi;
+  $d =~ s/\bnc\b/NC/gi;
+  $d =~ s/\bndt\b/NDT/gi;
+  $d =~ s/\brf\b/RF/gi;
+  $d =~ s/\bcip\b/CIP/gi;
+  $d =~ s/\bhip\b/HIP/gi;
+  $d =~ s/\bcvd\b/CVD/gi;
+  $d =~ s/\bpvd\b/PVD/gi;
+  $d =~ s/\babs\b/ABS/gi;
+  $d =~ s/\bpvc\b/PVC/gi;
+  $d =~ s/\brtm\b/RTM/gi;
+  $d =~ s/\brfi\b/RFI/gi;
+
+  # Added: I.D., O.D., A.C., D.C., E.D.M.
+  $d =~ s/i\.d\./I.D./gi;
+  $d =~ s/o\.d\./O.D./gi;
+  $d =~ s/a\.c\./A.C./gi;
+  $d =~ s/d\.c\./D.C./gi;
+  $d =~ s/e\.d\.m\./E.D.M./gi;
+
+  $d;
+}

@@ -1,0 +1,18 @@
+#!/bin/sh
+# 
+
+SCRIPT="load-tnet-org-N-2015"   
+ 
+./load-org-extra.pl 1501 
+./load-org-extra.pl 1502 
+ 
+ 
+echo ${SCRIPT} | mail -s "Script ${SCRIPT} finished  " robertf@c.net
+
+echo ""
+echo "Done..."
+
+
+
+
+

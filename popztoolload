@@ -1,0 +1,31 @@
+#!/bin/sh
+#
+#
+# load position_popz tables , change dates
+
+echo
+ 
+
+  
+
+echo "Loading position_popz_se"
+ 
+echo "delete from position_popz_se" | mysql -As thomas
+
+echo "INSERT  INTO position_popz_se (acct,heading,covflag,us)  SELECT acct,heading,covflag,sum(us)
+FROM  thomqlog16Y WHERE date in ( '1604','1605','1606' ) GROUP BY acct,heading,covflag " | mysql -As thomas 
+  
+echo "position_popz_se_total"
+
+echo "delete from position_popz_se_total" | mysql -As thomas
+
+echo "INSERT IGNORE INTO position_popz_se_total (heading,covflag,us) SELECT heading,covflag, 
+SUM(cnt) FROM quickUS16 WHERE date in ( '1604','1605','1606' ) GROUP BY heading,covflag" | mysql -As thomas 
+
+echo   
+echo "Done...";
+exit;
+
+
+
+ 

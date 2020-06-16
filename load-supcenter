@@ -1,0 +1,111 @@
+#!/bin/sh
+# 
+#
+#
+
+# change these each month  <<<!!!
+FDATE="1409"
+
+DB="thomas";
+  
+# change tables in the merge to get rolling 12 months  <<<!!! 
+mysql -Af ${DB} -e "DROP TABLE IF EXISTS categoryrollM "
+mysql -Af ${DB} -e "CREATE TABLE categoryrollM (
+  date varchar(4) NOT NULL default '',
+  acct bigint(20) NOT NULL default '0',
+  heading bigint(20) NOT NULL default '0',
+  org varchar(125) NOT NULL default '',
+  domain varchar(125) NOT NULL default '',
+  country varchar(100) NOT NULL default '',
+  city varchar(100) NOT NULL default '',
+  state varchar(50) NOT NULL default '',
+  zip varchar(12) NOT NULL default '',
+  cnt bigint(20) NOT NULL default '0',
+  isp char(1) NOT NULL default '',
+  block char(1) NOT NULL default '',
+  orgid varchar(32) NOT NULL default '',
+  oid varchar(32) NOT NULL default '',
+  ip varchar(39) NOT NULL default '',
+  naics varchar(10) NOT NULL default '',
+  primary_sic varchar(150) NOT NULL default '',
+  countrycode varchar(10) NOT NULL default '',
+  dunsnum int(11) NOT NULL default '0',
+  domestichqdunsnumber int(11) NOT NULL default '0',
+  hqdunsnumber int(11) NOT NULL default '0',
+  gltdunsnumber int(11) NOT NULL default '0',
+  countrycode3 char(3) NOT NULL default '',
+  audience varchar(125) NOT NULL default '',
+  audiencesegment varchar(125) NOT NULL default '',
+  b2b varchar(6) NOT NULL default '',
+  employeerange varchar(125) NOT NULL default '',
+  forbes2k varchar(6) NOT NULL default '',
+  fortune1k varchar(6) NOT NULL default '',
+  industry varchar(125) NOT NULL default '',
+  informationlevel varchar(6) NOT NULL default '',
+  latitude  double(16,4) NOT NULL default '0.0000' ,
+  longitude double(16,4) NOT NULL default '0.0000' ,
+  phone varchar(25) NOT NULL default '',
+  revenuerange varchar(125) NOT NULL default '',
+  subindustry varchar(125) NOT NULL default '',
+  cov char(2) NOT NULL default '',
+  KEY date (date,heading,acct,cov),
+  KEY oid (oid),
+  KEY heading (heading),
+  KEY orgid (orgid)
+) ENGINE=MRG_MyISAM INSERT_METHOD=LAST UNION=(
+tnetlogORGCATD13_10,
+tnetlogORGCATD13_11,
+tnetlogORGCATD13_12,
+tnetlogORGCATD14_01,
+tnetlogORGCATD14_02,
+tnetlogORGCATD14_03,
+tnetlogORGCATD14_04,
+tnetlogORGCATD14_05,
+tnetlogORGCATD14_06,
+tnetlogORGCATD14_07,
+tnetlogORGCATD14_08,
+tnetlogORGCATD14_09
+) "   
+
+ 
+# reload month table
+mysql -Af ${DB} -e "DROP TABLE IF EXISTS categorymonth"
+mysql -Af ${DB} -e "CREATE TABLE categorymonth (
+  heading bigint(20) NOT NULL default '0',
+  org     varchar(125) NOT NULL default '',
+  city    varchar(100) NOT NULL default '',
+  state   varchar(50)  NOT NULL default '',
+  zip     varchar(12)  NOT NULL default '',
+  oid     varchar(32)  NOT NULL default '',
+  KEY heading (heading,org),
+  KEY heading_2 (heading),
+  KEY oid (oid),
+  KEY org (org)) " 
+mysql -Af ${DB} -e "INSERT INTO categorymonth (heading,org,city,state,zip,oid)
+SELECT heading, org, city ,state, zip, oid  FROM categoryrollM
+WHERE date=${FDATE} AND heading>0 AND ISP='N'
+GROUP BY heading, org, city, state, zip "
+
+# reload year table
+mysql -Af ${DB} -e "DROP TABLE IF EXISTS categoryyear"
+mysql -Af ${DB} -e "CREATE TABLE categoryyear (
+  heading bigint(20) NOT NULL default '0',
+  org     varchar(125) NOT NULL default '',
+  city    varchar(100) NOT NULL default '',
+  state   varchar(50)  NOT NULL default '',
+  zip     varchar(12)  NOT NULL default '',
+  oid     varchar(32)  NOT NULL default '',
+  KEY heading (heading,org),
+  KEY heading_2 (heading),
+  KEY oid (oid),
+  KEY org (org)) " 
+mysql -Af ${DB} -e "INSERT INTO categoryyear (heading,org,city,state,zip,oid)
+SELECT heading, org, city ,state, zip, oid  FROM categoryrollM
+WHERE  heading>0 AND ISP='N'
+GROUP BY heading, org, city, state, zip "
+ 
+mysql -Af ${DB} -e "DROP TABLE IF EXISTS categoryrollM "
+
+echo "" 
+echo "Done...";
+echo ""

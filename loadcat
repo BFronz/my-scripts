@@ -1,0 +1,75 @@
+#!/bin/sh
+#
+
+date;
+echo ""
+ 
+cd /usr/tnetlogs/wt
+
+exit;
+
+do_set () {
+
+ echo "Loading ${TABLE}"; 
+ rm -f  visitor_cat_tool.txt;
+ cp  ${TABLE}  visitor_cat_tool.txt;
+ 
+ mysql -Af thomas -e "LOAD DATA INFILE '/usr/tnetlogs/wt/visitor_cat_tool.txt' IGNORE INTO TABLE thomvisitor_cat_tool";
+ 
+ echo "" 
+ mysql -Af thomas -e "SELECT COUNT(*) FROM thomvisitor_cat_tool"
+
+ echo ""
+ echo "-----------------------------------------------"
+ echo ""
+ sleep 10
+
+} 
+
+
+TABLE="visitor_cat_tool1.txt"
+#do_set; 
+
+TABLE="visitor_cat_tool1000000.txt"
+#do_set;
+
+TABLE="visitor_cat_tool2000000.txt"
+#do_set;
+
+TABLE="visitor_cat_tool3000000.txt"
+#do_set;
+
+TABLE="visitor_cat_tool4000000.txt"
+#do_set;
+
+TABLE="visitor_cat_tool5000000.txt"
+#do_set;
+
+TABLE="visitor_cat_tool6000000.txt"
+#do_set;
+
+TABLE="visitor_cat_tool7000000.txt"
+#do_set;
+
+TABLE="visitor_cat_tool8000000.txt"
+#do_set;
+
+TABLE="visitor_cat_tool9000000.txt"
+#do_set;
+
+TABLE="visitor_cat_tool10000000.txt"
+#do_set;
+ 
+TABLE="visitor_cat_tool11000000.txt"
+#do_set;
+
+TABLE="visitor_cat_tool12000000.txt"
+#do_set;
+
+TABLE="visitor_cat_tool13000000.txt"
+do_set;
+
+  
+echo ""
+date;
+echo "Done..."

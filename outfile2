@@ -1,0 +1,37 @@
+#!/bin/sh
+#
+
+FILE="high_level_figures_on_converted_visitors_12_months.txt";
+rm -f /usr/wt/${FILE}  
+
+echo " " >> ${FILE}
+echo " " >> ${FILE}
+
+ 
+echo "query 1";
+echo "Count of unique converted visitors against any advertiser/non-advertiser account (company org visitor or ISP visitor)" >> ${FILE}
+echo "select count(distinct concat(org,city,state,zip)) from thomtnetlogORGDWIZ 
+      where date in ('1507','1508','1509','1510','1511','1512','1601','1602','1603','1604','1605','1606') and acct>0 "  | mysql -As thomas >> ${FILE}
+echo " " >> ${FILE} 
+echo " " >> ${FILE}
+   
+ 
+echo "query 2"; 
+echo "Count of these visitors that did at least one conversion against a non-advertiser" >> ${FILE}
+echo "select count(distinct concat(org,o.city,o.state,o.zip)) from thomtnetlogORGDWIZ as o, tgrams.main as m 
+      where o.acct = m.acct and adv='' and date in ('1507','1508','1509','1510','1511','1512','1601','1602','1603','1604','1605','1606') and o.acct>0  " | mysql -As thomas >> ${FILE}
+echo " " >> ${FILE} 
+echo " " >> ${FILE}
+   
+echo "query 3";
+echo "Count of User Sessions tracked by those visitors" >> ${FILE}  
+echo "select sum(cnt) from thomtnetlogORGDWIZ 
+       where date in ('1507','1508','1509','1510','1511','1512','1601','1602','1603','1604','1605','1606') and acct>0 "  | mysql -As thomas >> ${FILE}
+ 
+    
+echo ${FILE} | mail -s "Script outfile2  finished " robertf@c.net 
+
+echo "Done...";
+exit;
+
+

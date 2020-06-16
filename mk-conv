@@ -1,0 +1,20 @@
+#!/bin/sh
+#
+# Makes conversion report, Modify perl scripts, run, open in Excel, format zip and post
+# Run each quarter
+  
+date
+
+source /usr/wt/reload.sh
+ 
+echo ""
+echo "mk-conv-AL-16-new"
+./mk-conv-AL-16-new.pl
+ 
+echo "mk-conv-MZ-16-new"
+echo ""
+./mk-conv-MZ-16-new.pl
+
+mail -s "Script mk-cov finished for ${FDATE}   " robertf@c.net
+ 
+date

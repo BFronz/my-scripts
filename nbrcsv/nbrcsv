@@ -1,0 +1,19 @@
+#!/bin/sh
+#
+  
+START=$(date +"%m-%d-%y %T")
+  
+./nbrcsv-new.pl
+
+END=$(date +"%m-%d-%y %T")
+
+echo
+echo "Start: ${START}"
+echo 
+echo "End: ${END}"
+ 
+echo Start: ${START}  End: ${END} | mail -s "Script nbrcsv has finished " robertf@c.net
+ 
+echo ""
+echo "Done..."
+echo ""

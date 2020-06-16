@@ -1,0 +1,20 @@
+#!/bin/sh
+#
+#
+#
+
+DD="2016_07"
+
+
+./dbase-NA-ip-load.pl  /usr/wt/badpai/pai_ad_click_${DD}.txt 0
+./dbase-NA-ip-load.pl  /usr/wt/badpai/pai_ad_view_${DD}.txt 0
+
+./dbase-NA-ip-load.pl  /usr/wt/badpai/branddom_ad_click_${DD}.txt 0
+./dbase-NA-ip-load.pl  /usr/wt/badpai/branddom_ad_view_${DD}.txt  0
+
+./dbase-NA-ip-load.pl  /usr/wt/badpai/phad_ad_click_${DD}.txt 0
+./dbase-NA-ip-load.pl  /usr/wt/badpai/phad_ad_impression_${DD}.txt  0
+
+date
+echo
+echo "Done...";

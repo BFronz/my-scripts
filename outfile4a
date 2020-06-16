@@ -1,0 +1,68 @@
+#!/bin/sh
+#
+#
+
+
+FILE="SiteVisitors2016-2.txt";
+echo "${FILE}"
+rm -f ${FILE} 
+echo "org	domain	country	city	state	zip	count	isp	ip	naics	primary_sic	countrycode	dunsnum	domestichqdunsnumber	hqdunsnumber	gltdunsnumber	countrycode3	audience	audiencesegment	b2b	employeerange	forbes2k	fortune1k	industry	informationlevel	latitude	longitude	phone	revenuerange	subindustry" > ${FILE}
+echo "SELECT org,domain,country,city,state,zip,sum(cnt),isp,ip,naics,primary_sic,countrycode,dunsnum,
+domestichqdunsnumber,hqdunsnumber,gltdunsnumber,countrycode3,audience,audiencesegment,b2b,employeerange,
+forbes2k,fortune1k,industry,informationlevel,latitude,longitude,phone,revenuerange,subindustry  
+FROM  tnetlogORGDWIZ_TEMP WHERE date IN ('1601','1602','1603','1604','1605','1606','1607','1608','1609','1610','1611','1612') AND block='N'
+GROUP BY  org,city,state,zip  ORDER BY org,city,state,zip " | mysql -As thomas >> ${FILE}
+echo "Done...";  
+exit;    
+ 
+FILE="flat_catnav_ORG_alt16.bakbak";
+rm -f ${FILE}  
+echo "select * from  flat_catnav_ORG_alt16 " | mysql -As thomas > ${FILE} 
+exit;
+
+FILE="flat_catnav_ORG_alt17_bak.txt";
+rm -f ${FILE}  
+echo "select * from flat_catnav_ORG_alt17_bak where date='1704'" | mysql -As thomas > ${FILE} 
+exit;
+
+
+FILE="tnetlogREG17.txt";
+rm -f ${FILE}  
+echo "select * from tnetlogREG17_bak where date='1704'" | mysql -As thomas > ${FILE} 
+exit;
+
+FILE="registration-dump.txt";
+rm -f ${FILE}  
+echo "uname	tinid	email	fname	lname	title	company	division	industry	jobfunction	addr1	addr2	city	state	country	zip	phone	fax	created	lastmod	lastlogin	lastaccess	origin	aboutus	oldtinid	department	origin_2	website	registration_type"  > ${FILE}
+echo " select uname,tinid,email,fname,lname,title,company,division,industry,jobfunction,addr1,addr2,city,state,country,zip,phone,fax,created,lastmod,lastlogin,lastaccess,origin,aboutus,oldtinid,department,origin_2,website,registration_type from mt_profile_history"  | mysql -As tgrams >> ${FILE} 
+    
+  
+exit;
+
+
+
+
+FILE="missing-news-images-2017.txt";
+rm -f ${FILE} 
+echo "acct	campaign id	camaign type	image url"  > ${FILE}
+echo " select AdvertiserCid,CampaignID, CampaignType, BannerImageURL  from news_ad_cat17 where badimg='Y' and date=1701;"  | mysql -As thomas >> ${FILE} 
+
+ 
+exit;
+
+FILE="preprocessing-all.txt";
+rm -f ${FILE} 
+echo "acct	visitor	adv	isp	block	tinid"  > ${FILE}
+echo "select acct,org,adv,isp,block,tinid from thomtnetlogORGD15_03_test where org>'' order by acct,org,tinid "  | mysql -As thomas >> ${FILE}
+  
+FILE="postprocessing-all.txt";
+rm -f ${FILE}
+echo "acct	visitor	adv	isp	block	tinid"  > ${FILE}
+echo "select acct,org,adv,isp,block,tinid from thomtnetlogORGD15_03_test2 where org>'' order by acct,org,tinid "  | mysql -As thomas >> ${FILE}
+
+echo "Done...";
+exit;
+
+
+
+ 

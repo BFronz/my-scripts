@@ -1,0 +1,60 @@
+#!/bin/sh
+# Makes and loads a copy of position (example: position06Q1) table based on current year and quarter. 
+ 
+# Get current month, year and quarter 
+MM="`date "+%m"`" 
+YY="`date "+%y"`" 
+case ${MM} in
+   "01") Q="1";;
+   "02") Q="1";;
+   "03") Q="1";;
+
+   "04") Q="2";;
+   "05") Q="2";;
+   "06") Q="2";;
+
+   "07") Q="3";;
+   "08") Q="3";;
+   "09") Q="3";;
+
+   "10") Q="4";;
+   "11") Q="4";;
+   "12") Q="4";;
+esac
+
+TABLE="position${YY}Q${Q}"
+FILE="${TABLE}.txt"  
+rm -f ${FILE} 
+ 
+# Make table. OK if already created
+mysql -As thomas -e "
+CREATE TABLE ${TABLE} (
+  acct bigint(20) NOT NULL default '0',
+  heading bigint(20) NOT NULL default '0',
+  cov char(2) NOT NULL default '',
+  pos int(11) NOT NULL default '0',
+  adv int(11) NOT NULL default '0',
+  pop int(11) NOT NULL default '0',
+  p1 int(11) NOT NULL default '0',
+  p2 int(11) NOT NULL default '0',
+  p3 int(11) NOT NULL default '0',
+  p4 int(11) NOT NULL default '0',
+  p5 int(11) NOT NULL default '0',
+  p10 int(11) NOT NULL default '0',
+  p15 int(11) NOT NULL default '0',
+  p20 int(11) NOT NULL default '0',
+  p25 int(11) NOT NULL default '0',
+  PRIMARY KEY  (acct,heading,cov),
+  KEY acct (acct),
+  KEY heading (heading),
+  KEY cov (cov)
+);
+"
+
+# Load data into file 
+echo " select * from position " | mysql -As tgrams > ${FILE} 
+     
+# Insert into current quarter position table
+mysqlimport -di thomas ${FILE}
+
+exit;

@@ -1,0 +1,407 @@
+REPORT PROCEDURE
++++++++++++++++++++++++++++
+
+RETRIEVE DATA (MONTHLY)
+ 
+ - Mark to load tables on charon
+ 
+ - Pull CAD data (can run this at the same time WebTrends is being pulled)
+   Data usually ready on the 1st 
+   Go to phobus:/usr/wt/
+   Run ./get-cad-new.pl start{mm/dd/yyyy} end{mm/dd/yyyy}
+
+ - Pull CATNAV data  (check for files first)
+   Data usually ready on the 2nd
+   phobus: /usr/wt/catnav
+   Pick up at: ftp.catnav.us
+   U: tgramuser P: $tgram$user$
+   7zip file located in /tgram/CN_ACTIVITY_REPORT
+   Look for the most recent files *mmddyyyy.7z  
+   To extract: 7za e myfiles.7z 
+   May need to run files through  ./nullfixall MMDDYYYY and maybe dos2unix - lot of data issues lately 
+   Need these files in /usr/wt/catnav
+     CATALOG_KEYWORD_SEARCHES_{date}.txt
+     INQUIRIES_{date}.txt
+     REFERRING_DOMAINS_{date}.txt
+     REFERRING_KEYWORD_SEARCHES_{date}.txt
+     USER_IP_ADDRESSES_{date}.txt
+     CN_ACTIVITY_MONTHLY_{date}.txt
+     PRODUCTS_COUNTS_{date}.txt
+     ENGAGEMENT_{date}.txt 
+ 
+- Additional News Data
+  Summary PDF, PAI/BAD data, NewsIP data
+  scp -r lovejoy.c.net:/usr/reporting/monthly_ad_reports/results_YYYYMM .
+  place file in appropriate directories	
+ 
+PROCESS TNET SUPPLIER REPORTS (MONTHLY)
+
+- Do Prep Work - (this is the only thing that can be run before receiving data)
+  Don't need WebTrends data for this. RUN NEAR THE LAST DAY OF THE MONTH
+  Go to phobus:/usr/wt
+  Run as ./prep-tnet YYMM
+  Note: If rank change (4 times a year: Feb 1, May 1, Aug 1 and Nov 1) must run in current rank
+ ./update-isps.pl  
+
+-  After the 1st
+   Run:   /home/tnet/src/update_weekly/mk-sync-isotope-charon-sso-contacts 
+   to sync contacts and sso_profile depending on end of month day
+
+- Load new registered users
+  ./mk-reg-history	
+ 
+     
+- Change dates in mars /web/tnet/inc/dates.inc on the 1st of the Month in Reachlocal Weekly section 
+   date to current month array, change $NEXT_MONTH var
+   
+- As soon as IPs files are ready, load dbase table 
+   files: Newsip, Catnav, CAD, BAD/PAI 
+   located in /usr/wt/dbase
+   run ./dbase-NA-ip-load.pl infile field-position
+   then run /usr/wt/dbase/dbase-load 
+   This needs to run before CAD ip, Newsip, Catnav processes are run
+
+- Drop merge tables on charon
+   Go to phobus:/usr/wt
+  ./monthly-merge-drop-sql YYMM   
+   
+- Load TNET data
+  Go to phobus:/usr/wt
+  ./tealium-load-tnet-all YYMM
+  At the end of this script are some data checks
+  Look over output
+
+- Load CAD IP's
+  php -q ./mk-CAD-ip.php YYMM
+    
+- Load CATNAV Detail Reports
+  cd phobus:/usr/wt/catnav
+  Run ./load-catnav-all-1 YYMM  MMDDYYYY
+  Run ./load-catnav-all-2 YYMM  MMDDYYYY 
+  Run ./load-catnav-user-engage.pl YYMM file
+  Run ./load-catnav-user-prodcount.pl YYMM file
+  
+- Run Special Reg Industry Swap
+  cd industry_swap_new
+  ./mk-industry-swap-reg
+   
+- Load Organization (Visitor) Data
+  Go to phobus:/usr/wt
+  Run  ./tealium-load-tnet-org YYMM
+
+- Load Wizard Tables
+  Go to phobus:/usr/wt
+  ./load-wizard-tables YYMM
+  must be only if load-tnet-org has finished  
+  
+PROCESS NEWS SUPPLIER REPORTS (MONTHLY)
+
+- Process News Ad Data
+  Go to phobus:/usr/wt/newsxml
+  Move month_full.csv from results_YYYYMM
+  convert csv to txt
+  Follow directions in readme 	 
+  Run ./load-news-ad-all YYMM
+  Copy any new News images from phobus:/usr/pdf/imagesx/ to mars:/usr/pdf/imagesx
+  Run ./news-tilead-update4.pl YYMM
+  Then check file network_ad_update.txt and run mysql thomas < network_ad_update.txt
+  If images look off run  ./try-again-new.pl YYMM  
+  Check for new campaigns: select CampaignType,count(*) from news_ad_catYY where date='YYMM' group by CampaignType;	
+ 
+- Process News Data
+  Go to  phobus:/usr/wt/news
+  Run ./load-news-all YYMM 
+  At the end of the script are some data dumps & copies
+  If they don't copy: 
+   copy /tmp/news_conversions${YY}* to  hutch:/www/tnetadmin/files
+   copy /tmp/tnetlogPNN${YY}*       to  hutch:/www/tnetadmin/files 
+   
+- Get totals from News PDF plug in newsSITEN table
+   Fill in the numbers and run in mysql -A thomas
+   UPDATE thomnewsSITEN SET
+   companyads      =  Company Full Story Banner Ad total #,
+   spon_cat_imp    =  Center Banner ads,
+   cat_tile_ad_imp =  Right Column Banner Ads Total #
+   WHERE date=YYMM;
+   To check: SELECT date,companyads,spon_cat_imp,cat_tile_ad_imp FROM thomnewsSITEN ORDER BY date;
+ 
+- Process news ad reverse IP reporting 
+  The files will probably look like: ad_view_YYYY_MM.txt  && ad_click_YYYY_MM.txt 
+  phobus:/usr/wt/newsip/adclicks & adviews directores respectively  
+  Go to phobus:/usr/wt/newsip/ 
+  Run ./load-news-ad-all YYMM
+
+- Process  News Letter Ad data
+  Go to /usr/wt/adxtenit
+  Change date in ad-xtenit script
+  Run ./ad-xtenit
+  Copy new images from phobus:/usr/pdf/imagesx/newsletter to mars:/usr/pdf/imagesx/newsletter
+  scp phobus:/usr/pdf/imagesx/newsletter/*.* . 
+ 
+- Load ads from server 
+  run as./load-ad-views-news.pl YYMM infile adtype (pai, bad or phd)
+  loads Preview Ad Inclusion, Brand Ad Dominance & Paid Ad Heading Dominance  clicks and views
+  get 6 files from results_YYYYMM 
+  in place in /usr/wt/badpai and run
+  ./load-ad-views-news-org1.pl YYMM infile adtype (pai, bad or phd) action (view or click)
+  ./load-ad-views-news-org2.pl YYMM  (copy new images live)
+  ./load-ad-views-news-org3.pl YYMM
+  php -q load-ad-views-news-org4.php YYMM 
+
+- Load adroll data
+  Go to /usr/wt/adroll
+  Change dates
+  run ./mk-adroll 		
+  Then copy images to mars:  scp  phobus:/usr/adroll/*.gif .
+   
+- Make new thumbnail images.
+  sync to po tnetlogADviewsServerYY 
+  sync to po news_ad_catYY   
+  mars:/usr/tnet/news_images/size-news-images YYMM
+  
+- Run clean-ISPs-new on mars & phobus
+  run phobus:/usr/wt/clean-ISPs-new
+  run mars:/usr/tnet/clean-ISPs-new
+
+  
+PROCESS REPORTING TOOLS (MONTHLY)
+
+- Run Industry Swap
+  cd industry_swap_new
+  ./mk-industry-swap YYMM 
+  
+- Load Visitor Tool
+  cd /usr/wt/visitortool
+  run ./vtool YYMM
+  NOTE: must be run after all visitor data has been loaded 
+  
+- Load Formers tables
+  Go to phobus:/usr/wt/formers
+  Run  ./mk-formers  
+  Note: Have to adjust code in load-formers-hd.pl after each "Position" change
+  and also look over all scripts at year end/begining
+
+- TestDrive Report (this can always be run last)
+  Go to phobus:/usr/wt/
+  Run ./testdrive_cnts YYMM
+  
+- Create the Advertiser Contact Conversions Report.
+  Go to phobus:/usr/wt/accr
+  Run ./mk-accr YYMM
+  Copy accr_rpt_new_YYMM.txt to hutch:/www/tnetadmin/reports
+  Add new report to hutch:/www/tnetadmin/reports/advcontconv.html.
+
+- Load visitor tool data
+  Go to phobus:/usr/wt/visitor
+  Run ./load-visitor-tool-new.pl YYMM
+  Run ./mk-word-tables YYMM
+ 
+ 
+- Load Webtraxs Cross Analysis reporting data - directions in all scripts ld-webtraxs-data1 to 4
+  Prep:  
+   devil: /usr/webtraxs-lor run ld-webtraxs-data1
+   Do this on before the 5th of the month.
+  
+  Pull IR Data:
+  Check that date is loaded into charon.thomas table LORdataYY_MM
+  Then run:  
+   ./ld-webtraxs-data2-new LORdataYY_MM YYYYMM
+   ./ld-webtraxs-data2-new YYYYMM
+   then run ./ld-webtraxs-data3.pl
+   to check run ./ld-webtraxs-data4
+ 
+  Process Webtraxs data:
+   Let Patrick know that this data has been loaded.
+   Ask when this is complete. 
+  
+  Check ERROR records in nohup.out. Let Pat know and rerun as replace.
+  Run: grep -i error nohup.out
+
+  Load webtraxs_cross table & change date:
+   script and run ./update-LOR-country.pl  normalizes country
+   Go to phobus:/usr/tnelogs/wt/webtraxs and run ./load-webtraxs
+   After complete go to phobus:/home/tnet/src/dbsync  (as user tnet)
+   run ./charon-to-po   thomas webtraxs_cross
+   On mars:/web/tnet/inc/dates.inc   change $WEBTRAXS_TEST, $RPTDATELOR & $max_lor_date
+   Also change: dates_dash.inc, dates_array.inc, dates_dash_array.inc and dates_array_mst.inc
+   
+   
+- Popz data
+  cd /usr/wt
+  Check all dates and run: 	
+   ./popztool-get-se.pl
+   ./popztool.pl
+  
+
+- Make AE tool data
+ ./mk-qlogH	
+
+
+- Make Catetgory Family - run as root
+  cd /usr/wt/category_family
+  ./mk-category-all	
+  cd mars:/usr/tnet/family_pdf 
+  ./mk-family-pdfs.pl
+        
+
+- Run 12 Families
+  cd /usr/wt/All_Families
+  look at readme file
+  change dates and run joe-17-Families-alt-newest.pl
+
+
+-  Run make-positionPOP 
+   phobus:/usr/wt
+   change date/table and run make-positionPOP	 
+
+
+
+SPECIAL REPORTS (QUARTELY)
+
+- Load nbrcsv data
+  go to phobus:/usr/wt/nbrcsv
+  change dates and run ./nbrcsv-short.pl  
+
+- Make a dump of new registry data.
+  Go to phobus:/usr/wt
+  Change unix time and file name  in mk-regdump-new.pl
+  Unix can be found here: http://tnetrpt.c.net/checktime.phtml
+  Run ./mk-regdump-new.pl
+  Copy file tnetRegistry##.csv to mars:/usr/pdf/csv/catreg
+  Add new csv on bottom  /www/tnetrpt/tnetrpt/inc/regvsearch.inc 
+ 
+- Special ReachLocal Report for Leandro
+  Go to phobus:/usr/wt
+  Run as ./rlocal-special-rpt.pl startdate(yymmdd) enddate(yymmdd)
+  Example: ./rlocal-special-rpt.pl 100101 100531 
+  Post file at hutch:/www/tnetadmin/files
+ 
+-  Special Heading reports - run each new rank quarter.
+   phobus:/usr/wt 
+   Run ./cidcatpop.pl YY Q
+   gzip and copy cidcatpop.txt to devil.ec2.c.net:/usr/tnetbuild/dump
+   run ld-IR-tables-data
+
+ 
+
+- change dates in /www/tnetrpt/tnetrpt/inc/countries.inc  
+
+EXTRA
+
+- Create merge tables on charon
+   Go to phobus:/usr/wt
+   NOTE: Modify monthly-merge-create-sql slightly EACH monthly & year     
+  ./monthly-merge-create-sql YYMM 
+  
+    
+- Every new rank run for Rank Gap Report
+  mars:/usr/tgrams/rankgapnewest.pl
+ 
+
+DATA REPORTS
+
+- Change and run check-adv-all-2012.pl < not used
+
+
+SYNCING 
+- Run the database syncing scripts
+  Go to phobus:/home/tnet/src/update_monthly  
+  run as sudo su - tnet
+  ./sync-merge-tables  YYMM
+  ./sync-tables YYMM
+ 
+
+MAKE REPORTS LIVE (MONTHLY)
+
+- Make reports available for Super Users (/Ken/Joe/Adam) to QC
+  Go to /web/tnet/inc/dates.inc
+  Look for instructions there
+ 
+
+- Once reports are given a final OK go back to mars: /web/tnet/inc/dates.inc
+  Turn on Client Center reports add new dates in devil:/www/tnetcc/inc/config_rpt.inc
+ 
+
+- Make tnetteal report live 
+
+POST FILES
+- go to phobus:/home/tnet/src/postQlog
+  ./update-jones YYMM  positionYY{Q}Q
+  Run ./update-popz  every new quarter
+ 
+
+EXTRA   
+- Check and/or set New Rank (position tables) defaults
+  4 times a year: Feb 1, May 1, Aug 1 and Nov 1
+  The rank file script is run by R on phobus:/usr/tgrams/readme/mk-rank-new
+  Makes and loads in thomas db a copy of the quarterly positionYYQQ table
+  We need to check for this table and change the default set in:
+  mars:/www/tnetrpt/tnetrpt/inc/quickrptselect_new.inc
+  Also make sure the the tgrams db position table is current & correct  
+ 
+  Note: Have to adjust code in load-formers-hd.pl after each "Position" change
+  and also look over all scripts at year end/begining
+  Look at phobus:/usr/wt/formers/load-formers-hd.pl 
+ 
+ 
+- Year-end Report MST for Pat D. located in phobus:/usr/wt/accr/mst-yearend-new.pl
+
+ 
+- Make YEAR CATEGORY SUMMARY REPORT 
+  Go to phobus:/usr/wt
+  Need to change dates in the following  mk-conv-AL-16-new.pl and mk-conv-MZ-16-new.pl
+  Run ./mk-conv
+  Format Excel(Naming Convention: CategorySummaryReportQuarterQ_YYYY.xls  )
+  Use the .txt files for the Excel Spreadsheet (open three separate sheets A-M and N-Z)
+  Zip and post to mars:/usr/pdf/zip
+  Posted under "Category Reports" on index page mars:/www/tnetrpt/tnetrpt/inc/index_new.inc
+
+
+- prep pdf directories for CC - run as root
+  mars /usr/tgrams/prep-dir 
+ 
+- check formersreport.inc dates at year end.
+
+- check all /temp directories in /www/tnetrpt/....  delete if space needed
+  
+CONTACTS
+ 
+- tnet
+  Kenneth Lettow <KLettow@tnt.com>,
+  Ashley Tsang <atsang@tnt.com>,
+  Teerawat Touranont <ttouranont@tnt.com>
+ 
+- Insight Rocket
+  David Millrod dmillrod@insightrocket.com
+  David Smith <dsmith@insightrocket.com>
+ 
+- Thomas News data
+  Jeff Chamberlain jeff@c.net
+  Bruce Jenkins    bruce@c.net
+
+- Audit numbers
+  NLewis@tnt.com
+
+- CAD files/problems
+  Knudsen, Mark" MKnudsen@tnt.com
+  Nevsky, Georgy (Consultant) GNevsky@tnt.com
+  Holcomb, Andra  AHolcomb@tnt.com
+
+- Catalog Navigator
+  Surdykowski, Lester LSurdykowski@tnt.com
+  Knudsen, Mark  MKnudsen@tnt.com
+  Nevsky, Georgy (Consultant) GNevsky@tnt.com
+
+
+-----------------------------------------------------
+Call Check
+
+SELECT report_date AS d, count(*) FROM thomCampaign_Event_Detail_v2 WHERE date=YYMM  GROUP BY d
+                    
+SELECT DAYOFMONTH(created) AS d,count(*) FROM calltracking  WHERE date=YYMM GROUP BY d
+
+scp tds2.ec2.c.net:/www/tnetcc/inc/rpt_config.inc 
+
+insert ignore into thomtnetlogORGflagDbase (org) select org from tnetlogORGD17M where isp='Y'  and acct>0 ;
+insert ignore into thomtnetlogORGflagDbase (org) select org from tnetlogORGCATDWIZ  where isp='Y' and acct>0 and date in ('1701','1702','1703','1704','1705','1706','1707','1708','1709','1710','1711') ;
+  

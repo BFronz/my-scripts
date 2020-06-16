@@ -1,0 +1,52 @@
+#!/bin/sh
+#
+# Creates Wizard non merge tables 
+SCRIPT="load-wizard-tables-all"
+
+#./load-wizard-tables  1301
+#./load-wizard-tables  1302
+#./load-wizard-tables  1303
+#./load-wizard-tables  1304
+#./load-wizard-tables  1305
+#./load-wizard-tables  1306
+#./load-wizard-tables  1307
+#./load-wizard-tables  1308
+#./load-wizard-tables  1309
+#./load-wizard-tables  1310
+#./load-wizard-tables  1311
+#./load-wizard-tables  1312
+
+
+#./load-wizard-tables  1401
+#./load-wizard-tables  1402
+#./load-wizard-tables  1403
+#./load-wizard-tables  1404
+#./load-wizard-tables  1405
+#./load-wizard-tables  1406
+#./load-wizard-tables  1407
+#./load-wizard-tables  1408
+#./load-wizard-tables  1409
+#./load-wizard-tables  1410
+#./load-wizard-tables  1411
+#./load-wizard-tables  1412
+                          
+#./load-wizard-tables  1501
+#./load-wizard-tables  1502
+#./load-wizard-tables  1503
+#./load-wizard-tables  1504
+#./load-wizard-tables  1505
+#./load-wizard-tables  1506
+#./load-wizard-tables  1507
+#./load-wizard-tables  1508
+#./load-wizard-tables  1509
+#./load-wizard-tables  1510
+#./load-wizard-tables  1511
+#./load-wizard-tables  1512
+ 
+echo ${SCRIPT} | mail -s "Script finished  ${SCRIPT}   " robertf@c.net
+                          
+
+
+echo
+echo "Done...";
+echo

@@ -1,0 +1,34 @@
+#!/bin/sh
+#
+# Registration History
+
+
+#if [ -z $1 ]
+# then
+# echo "Missing  date yymm"
+#fi
+
+source /usr/wt/reload.sh
+
+LOGDATE=$1;
+
+echo "Date: ${LOGDATE}"
+ 
+
+# Load new tnet data
+# REGFILE="mt_profile_history.txt" 
+# rm -f ${REGFILE}
+# echo "Loading ${REGFILE}" 
+# echo "SELECT uname, pword, tinid, email, fname, lname, title, company, division, industry, jobfunction, addr1, addr2, city, state, country, zip, phone, fax, created, lastmod, lastlogin, lastaccess, origin, aboutus, '' from tgrams.mt_profile "  | mysql -A tgrams > ${REGFILE}
+# mysqlimport -rL tgrams ${DIR}/${REGFILE} 
+  
+
+# Load new sso tnet data
+REGFILE="mt_profile_history.txt" 
+rm -f ${REGFILE}
+echo "Loading ${REGFILE}" 
+echo "SELECT uname, pword, tinid, email, fname, lname, title, company, division, industry, jobfunction, addr1, addr2, city, state, country, zip, phone, fax, created, lastmod, lastlogin, lastaccess, origin, aboutus, oldtinid,department,origin_2,website,registration_type from tgrams.sso_profile "  | mysql -A tgrams > ${REGFILE}
+mysqlimport -rL tgrams ${DIR}/${REGFILE} 
+      
+
+  
